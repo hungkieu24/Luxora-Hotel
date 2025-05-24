@@ -45,8 +45,11 @@ public class LoginServlet extends HttpServlet {
                response.sendRedirect("admindashboard.jsp");// phản hồi lại trang page mặc định khi đăng nhập vào của admin
            }
            // tương tự như các useraccount còn lại 
+           else if(user.getRole().equals("Customer")){
+               response.sendRedirect("homepage");
+           }
            else{
-               response.sendRedirect("home");// phản hồi lại trang home mặc định khi đăng nhập vào của customer
+               response.sendRedirect("homepage");// phản hồi lại trang home mặc định khi đăng nhập vào của customer
            }
        } else{
            request.setAttribute("error", "Invalid credentials or account banned");

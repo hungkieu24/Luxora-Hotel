@@ -32,16 +32,12 @@
                 <p style="color: red; font-size: 10px">${error}</p>
             </c:if>
             <button>Log In</button>
-            <div class="bottom-row">
-                <div class="social">
-                    <a href="#">
-                        <div class="go"><i class="fab fa-google"></i> Google</div>
-                    </a>
-                </div>
-                <div class="register-text">
-                   You don't have an account? <a href="#">Register</a>
-                </div>
+            <div class="social">
+                <a href="#">
+                    <div class="go"><i class="fab fa-google"></i> Google</div>
+                </a>
             </div>
+            <h4>You don't have an account ?<a href="#">Register</a></h4>
         </form>
     </body>
 </html>

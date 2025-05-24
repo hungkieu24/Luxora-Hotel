@@ -12,6 +12,7 @@ package Model;
 public class UserAccount {
     private String id;
     private String username;
+    private String password;
     private String email;
     private String avatar_url;
     private String role;
@@ -21,9 +22,10 @@ public class UserAccount {
     public UserAccount() {
     }
 
-    public UserAccount(String id, String username, String email, String avatar_url, String role, String status, String create_at, String string7) {
+    public UserAccount(String id, String username, String password, String email, String avatar_url, String role, String status, String create_at) {
         this.id = id;
         this.username = username;
+        this.password = password;
         this.email = email;
         this.avatar_url = avatar_url;
         this.role = role;
@@ -46,6 +48,15 @@ public class UserAccount {
     public void setUsername(String username) {
         this.username = username;
     }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    
 
     public String getEmail() {
         return email;

@@ -35,4 +35,19 @@ public class UserAccountDAO extends DBContext  {
         }
         return null;
     }
+    public static void main(String[] args) {
+        UserAccountDAO dao = new UserAccountDAO();
+
+        String username = "nguyenvanA";
+        String password = "hashed_pass1";
+
+        UserAccount user = dao.login(username, password);
+
+        if (user != null) {
+            System.out.println("Đăng nhập thành công!");
+            System.out.println(user.getStatus());  // in ra thông tin user
+        } else {
+            System.out.println("Đăng nhập thất bại. Sai tài khoản hoặc mật khẩu.");
+        }
+    }
 }
