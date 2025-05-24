@@ -130,3 +130,19 @@ button {
 .social a{
     text-decoration: none;
 }
+.bottom-row {
+    margin-top: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.register-text {
+    color: #ffffff;
+    font-size: 14px;
+}
+
+.register-text a {
+    color: #ffffff;
+    text-decoration: underline;
+}
