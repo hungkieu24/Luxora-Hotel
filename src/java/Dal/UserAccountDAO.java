@@ -101,5 +101,44 @@ public class UserAccountDAO extends DBContext {
         return null;
     }
 
-    
+    public UserAccount getUserById(String id) {
+        String sql = "SELECT * FROM UserAccount WHERE id = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return new UserAccount(
+                        rs.getString("id"),
+                        rs.getString("username"),
+                        rs.getString("password"),
+                        rs.getString("email"),
+                        rs.getString("avatar_url"),
+                        rs.getString("role"),
+                        rs.getString("status"),
+                        rs.getString("created_at")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public boolean updateUserInfo(String userId, String username, String email, String avatarUrl) {
+        String sql = "UPDATE UserAccount SET username = ?, email = ?, avatar_url = ? WHERE id = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, username);
+            ps.setString(2, email);
+            ps.setString(3, avatarUrl);
+            ps.setString(4, userId);
+
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0; // Return true if update was successful
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

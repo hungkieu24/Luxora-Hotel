@@ -5,6 +5,9 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -12,52 +15,54 @@
         <title>Edit Profile</title>
         <link rel="stylesheet" href="css/editProfile.css">
     </head>
-    <body>
+    <body >
+
         <div class="container">
-        <div class="sidebar">
-            <img src="img/avatar.jpg" alt="Profile Avatar"/>
-            <p>Rank: Gold</p>
-            <p>Accumulated Points: <a href="#">5000</a></p>
-            <ul>
-                <li><a href="#" class="Personal-link">Personal Info</a></li>
-                <li><a href="#" class="Booking-link">Booking History</a></li>
-                <li><a href="#" class="Your-link">Your Booking</a></li>
-                <li><a href="#" class="Loyalty-link">Loyalty Status</a> </li>
-                <li><a href="#" class="Security-link">Security</a></li>
-                <li><a href="#" class="Change-link">Change Password</a></li>
-                <li><a href="#" class="home-link">Home</a></li>
-            </ul>
-            
-        </div>
-        <div class="main-content">
-            <h2>Personal Information</h2>
-            <p>View and update your personal details.</p>
-            <div class="avatar-section">
-                <img src="img/avatar.jpg" alt="Avatar"/>
-                <p>Choose file to change avatar</p>
-                <input type="file" id="avatar-upload">
+            <div class="sidebar">
+                <img class="avatar" src="./img/avatar/${ua.getAvatar_url()}" alt="Profile Avatar"/>
+                <p>Rank: ${lp.getLevel()}</p>
+                <p>Accumulated Points: <a href="#">${lp.getPoints()}</a></p>
+                <ul>
+                    <li><a href="editProfile">Personal Info</a></li>
+                    <li><a href="bookingHistory">Booking History</a></li>
+                    <li><a href="#">Your Booking</a></li>
+                    <li><a href="#">Loyalty Status</a> </li>
+                    <li><a href="#">Security</a></li>
+                    <li><a href="#">Change Password</a></li>
+                    <li><a href="homepage" class="home-link">Home</a></li>
+                </ul>
+
             </div>
-            <form action="editProfile" method="post">
-                <div class="form-group">
-                    <label>Name</label>
-                    <input type="text" value="" name="name">
+            <div class="main-content">
+                <h2>Personal Information</h2>
+                <p>View and update your personal details.</p>
+                <form action="editProfile" method="post" enctype="multipart/form-data">
+                <div class="avatar-section">
+                    <img class="avatar" src="./img/avatar/${ua.getAvatar_url()}" alt="Avatar"/>
+                    <p>Choose file to change avatar</p>
+                    <input type="file" id="avatar-upload" name="avatar">
                 </div>
-                <div class="form-group">
-                    <label>Phone Number</label>
-                    <input type="text" value="" name="phone">
-                </div>
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" value="" name="email">
-                </div>
-                <div class="form-group">
-                    <label>CC/CD Number</label>
-                    <input type="text" value="" name="cccd">
-                </div>
-                <button type="button" class="cancel-btn">Cancel</button>
-                <button type="button" class="save-btn">Save Change</button>
-            </form>
+                
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" value="${ua.getUsername()}" name="username">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" value="${ua.getEmail()}" name="email">
+                    </div>
+
+                    <button type="button" class="cancel-btn">Cancel</button>
+                    <button type="submit" class="save-btn">Save Change</button>
+                    <c:if test="${not empty message}">
+                        <p style="color: red; font-size: 20px">${message}</p>
+                    </c:if>
+
+                </form>
+            </div>
         </div>
-    </div>
-    </body>
+
+
+    </body >
 </html>
