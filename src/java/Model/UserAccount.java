@@ -97,5 +97,10 @@ public class UserAccount {
     public void setCreate_at(String create_at) {
         this.create_at = create_at;
     }
+
+    @Override
+    public String toString() {
+        return "UserAccount{" + "id=" + id + ", username=" + username + ", password=" + password + ", email=" + email + ", avatar_url=" + avatar_url + ", role=" + role + ", status=" + status + ", create_at=" + create_at + '}';
+    }
     
 }

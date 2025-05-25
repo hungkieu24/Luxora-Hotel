@@ -33,7 +33,7 @@
             </c:if>
             <button>Log In</button>
             <div class="social">
-                <a href="#">
+                <a href="https://accounts.google.com/o/oauth2/auth?scope=email%20profile&redirect_uri=http://localhost:8080/LuxoraHotel/login&response_type=code&client_id=202740089898-biog485gnu7f0i8v8q0sma4bjtl6effc.apps.googleusercontent.com">
                     <div class="go"><i class="fab fa-google"></i> Google</div>
                 </a>
             </div>
