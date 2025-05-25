@@ -71,11 +71,12 @@ public class EditProfileServlet extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         UserAccountDAO uad = new UserAccountDAO();
-        UserAccount ua = uad.getUserById("U001");
+        UserAccount user = (UserAccount) session.getAttribute("user");
+        UserAccount ua = uad.getUserById(user.getId());
         session.setAttribute("ua", ua);
         
         LoyaltyPointDAO lpd = new LoyaltyPointDAO();
-        LoyaltyPoint lp = lpd.getLoyaltyPointByUserId("U001");
+        LoyaltyPoint lp = lpd.getLoyaltyPointByUserId(user.getId());
         session.setAttribute("lp", lp);
         request.getRequestDispatcher("editProfile.jsp").forward(request, response);
     }
@@ -95,6 +96,7 @@ public class EditProfileServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         HttpSession session = request.getSession();
         UserAccountDAO uad = new UserAccountDAO();
+        UserAccount user = (UserAccount) session.getAttribute("user");
 
         UploadImage up = new UploadImage();
         String UPLOAD_DIR = "/img/avatar";
@@ -102,7 +104,7 @@ public class EditProfileServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
 
         // Đường dẫn lưu trữ trong dự án
-        UserAccount ub = uad.getUserById("U001");
+        UserAccount ub = uad.getUserById(user.getId());
         String image = ub.getAvatar_url();
         String pathHost = getServletContext().getRealPath("");
         String finalPath = pathHost.replace("build\\", ""); 
@@ -124,10 +126,10 @@ public class EditProfileServlet extends HttpServlet {
             session.setAttribute("email", email);
         }
 
-        boolean updated = uad.updateUserInfo("U001", username, email, fileName);
+        boolean updated = uad.updateUserInfo(user.getId(), username, email, fileName);
         
         if (updated) {
-            UserAccount ua = uad.getUserById("U001");
+            UserAccount ua = uad.getUserById(user.getId());
             session.setAttribute("ua", ua);
             session.setAttribute("message", "Information updated successfully!");
         } else {
