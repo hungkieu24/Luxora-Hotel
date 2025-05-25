@@ -44,6 +44,78 @@ public class UserAccountDAO extends DBContext {
         return null;
     }
 
+    public boolean register(String username, String password, String email, String avatar_url) {
+        try {
+            // 1. Tìm ID lớn nhất hiện có
+            String getMaxIdSql = "SELECT MAX(CAST(SUBSTRING(id, 2, LEN(id)) AS INT)) AS maxId FROM UserAccount";
+            PreparedStatement ps1 = connection.prepareStatement(getMaxIdSql);
+            ResultSet rs = ps1.executeQuery();
+
+            String newId = "U001";
+            if (rs.next()) {
+                int maxId = rs.getInt("maxId");
+                newId = String.format("U%03d", maxId + 1);
+            }
+
+            // 2. Thêm người dùng mới
+            String insertSql = "INSERT INTO UserAccount (id, username, password, email, avatar_url, role, status) "
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+            PreparedStatement ps2 = connection.prepareStatement(insertSql);
+            ps2.setString(1, newId);
+            ps2.setString(2, username);
+            ps2.setString(3, password);
+            ps2.setString(4, email);
+            ps2.setString(5, avatar_url);     // avatar_url = NULL
+            ps2.setString(6, "Customer");               // default role
+            ps2.setString(7, "Active");                 // default status
+
+            int rows = ps2.executeUpdate();
+            return rows > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean isEmailExist(String email) {
+        String sql = "SELECT 1 FROM UserAccount WHERE email = ? AND status = 'Active'";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+            return rs.next(); // Trả về true nếu tồn tại và status là Active
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public UserAccount getUserByEmail(String email) {
+        String sql = "SELECT * FROM UserAccount WHERE email = ? AND status = 'Active'";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return new UserAccount(
+                        rs.getString("id"),
+                        rs.getString("username"),
+                        rs.getString("password"),
+                        rs.getString("email"),
+                        rs.getString("avatar_url"),
+                        rs.getString("role"),
+                        rs.getString("status"),
+                        rs.getString("created_at")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
     public UserAccount saveUserToDatabase(String email, String name, String avatar_url) {
         try {
             String checkSql = "SELECT * FROM UserAccount WHERE email= ?";
