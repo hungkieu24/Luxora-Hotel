@@ -3,4 +3,12 @@
     <welcome-file-list>
         <welcome-file>homepage</welcome-file>
     </welcome-file-list>
+     <servlet>
+        <servlet-name>editProfile</servlet-name>
+        <servlet-class>Controller.EditProfileServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>editProfile</servlet-name>
+        <url-pattern>/editProfile</url-pattern>
+    </servlet-mapping>
 </web-app>

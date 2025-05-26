@@ -72,8 +72,6 @@ public class EditProfileServlet extends HttpServlet {
         HttpSession session = request.getSession();
         UserAccountDAO uad = new UserAccountDAO();
         UserAccount user = (UserAccount) session.getAttribute("user");
-        UserAccount ua = uad.getUserById(user.getId());
-        session.setAttribute("ua", ua);
         
         LoyaltyPointDAO lpd = new LoyaltyPointDAO();
         LoyaltyPoint lp = lpd.getLoyaltyPointByUserId(user.getId());
@@ -104,8 +102,7 @@ public class EditProfileServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
 
         // Đường dẫn lưu trữ trong dự án
-        UserAccount ub = uad.getUserById(user.getId());
-        String image = ub.getAvatar_url();
+        String image = user.getAvatar_url();
         String pathHost = getServletContext().getRealPath("");
         String finalPath = pathHost.replace("build\\", ""); 
         String uploadPath = finalPath + UPLOAD_DIR;
@@ -130,7 +127,7 @@ public class EditProfileServlet extends HttpServlet {
         
         if (updated) {
             UserAccount ua = uad.getUserById(user.getId());
-            session.setAttribute("ua", ua);
+            session.setAttribute("user", ua);
             session.setAttribute("message", "Information updated successfully!");
         } else {
             session.setAttribute("message", "Update information failed!");

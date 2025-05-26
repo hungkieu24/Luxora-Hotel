@@ -19,12 +19,12 @@
 
         <div class="container">
             <div class="sidebar">
-                <img class="avatar" src="./img/avatar/${ua.getAvatar_url()}" alt="Profile Avatar"/>
+                <img class="avatar" src="./img/avatar/${sessionScope.user.getAvatar_url()}" alt="Profile Avatar"/>
                 <p>Rank: ${lp.getLevel()}</p>
                 <p>Accumulated Points: <a href="#">${lp.getPoints()}</a></p>
                 <ul>
                     <li><a href="editProfile">Personal Info</a></li>
-                    <li><a href="bookingHistory">Booking History</a></li>
+                    <li><a href="bookingHistory.jsp">Booking History</a></li>
                     <li><a href="#">Your Booking</a></li>
                     <li><a href="#">Loyalty Status</a> </li>
                     <li><a href="#">Security</a></li>
@@ -37,20 +37,20 @@
                 <h2>Personal Information</h2>
                 <p>View and update your personal details.</p>
                 <form action="editProfile" method="post" enctype="multipart/form-data">
-                <div class="avatar-section">
-                    <img class="avatar" src="./img/avatar/${ua.getAvatar_url()}" alt="Avatar"/>
-                    <p>Choose file to change avatar</p>
-                    <input type="file" id="avatar-upload" name="avatar">
-                </div>
-                
+                    <div class="avatar-section">
+                        <img class="avatar" src="./img/avatar/${sessionScope.user.getAvatar_url()}" alt="Avatar"/>
+                        <p>Choose file to change avatar</p>
+                        <input type="file" id="avatar-upload" name="avatar">
+                    </div>
+
                     <div class="form-group">
                         <label>Username</label>
-                        <input type="text" value="${ua.getUsername()}" name="username">
+                        <input type="text" value="${sessionScope.user.getUsername()}" name="username">
                     </div>
 
                     <div class="form-group">
                         <label>Email</label>
-                        <input type="email" value="${ua.getEmail()}" name="email">
+                        <input type="email" value="${sessionScope.user.getEmail()}" name="email">
                     </div>
 
                     <button type="button" class="cancel-btn">Cancel</button>
@@ -63,6 +63,6 @@
             </div>
         </div>
 
-
+        
     </body >
 </html>
