@@ -18,7 +18,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description" content="">
         <meta name="author" content="Ansonika">
-        <title>PARADISE - Hotel and Bed&Breakfast Site Template</title>
+        <title>PARADISE - Hotel</title>
 
         <!-- Favicons-->
         <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
@@ -60,8 +60,8 @@
                             <a href="#" class="closebt open_close_menu"><i class="bi bi-x"></i></a>
                             <div class="logo_panel"><img src="img/logo_sticky.png" width="135" height="45" alt=""></div>
                             <nav id="mainNav">
-                                <ul>
-                                    <li class="submenu">
+                                <ul class="navBarList_Hompage">
+<!--                                    <li class="submenu">
                                         <a href="#0" class="show-submenu">Home</a>
                                         <ul>
                                             <li><a href="index222.html">Home Video Bg</a></li>
@@ -71,7 +71,7 @@
                                             <li><a href="index-5.html">Home Parallax</a></li>
                                             <li><a href="index-6.html">Home Parallax 2</a></li>
                                         </ul>
-                                    </li>
+                                    </li>-->
                                     <li class="submenu">
                                         <a href="#0" class="show-submenu">Rooms & Suites</a>
                                         <ul>
@@ -82,7 +82,7 @@
                                             <li><a href="room-details-booking.html">Working Booking Request</a></li>
                                         </ul>
                                     </li>
-                                    <li class="submenu">
+<!--                                    <li class="submenu">
                                         <a href="#0" class="show-submenu">Other Pages</a>
                                         <ul>
                                             <li><a href="gallery.html">Masonry Gallery</a></li>
@@ -97,10 +97,19 @@
                                             <li><a href="menu-3.html">Menu Version 3</a></li>
                                             <li><a href="menu-4.html">Menu Version 4</a></li>
                                         </ul>
-                                    </li>
+                                    </li>-->
                                     <li><a href="about.html">About</a></li>
                                     <li><a href="contacts.html">Contacts</a></li>
-                                    <li><a href="#booking_section" class="btn_1">Book Now</a></li>
+                                    <c:if test="${sessionScope.user == null}">
+                                        <li><a href="login.jsp">Login</a></li>
+                                        <li><a href="register.jsp" class="btn_1">Register</a></li>
+                                    </c:if>
+                                    <c:if test="${sessionScope.user != null}">
+                                        <li><a href="#">${sessionScope.user.getUsername()}</a></li>
+                                        <li><a href="#">
+                                               <img src="./img/avatar.jpg" alt="" class="top-act__avatar" />  
+                                        </a></li>
+                                    </c:if>
                                 </ul>
                             </nav>
                         </div>
@@ -124,33 +133,35 @@
                             <h3 class="slide-animated two">A unique Experience<br>where to stay</h3>
                             <div class="row justify-content-center slide-animated three">
                                 <div class="col-xl-10">
-                                    <div class="row g-0 booking_form">
-                                        <div class="col-lg-4 ">
-                                            <div class="form-group">
-                                                <input class="form-control" type="text" name="dates" placeholder="Check in / Check out" readonly="readonly">
-                                                <i class="bi bi-calendar2"></i>
+                                    <form action="searchroom">
+                                        <div class="row g-0 booking_form">
+                                            <div class="col-lg-4 ">
+                                                <div class="form-group">
+                                                    <input class="form-control" type="text" name="dates" placeholder="Check in / Check out" readonly="readonly">
+                                                    <i class="bi bi-calendar2"></i>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-3 col-sm-6 pe-lg-0 pe-sm-1">
+                                                <div class="qty-buttons">
+                                                    <label>Adults</label>
+                                                    <input type="button" value="+" class="qtyplus" name="adults">
+                                                    <input type="text" name="adults" id="adults" value="" class="qty form-control">
+                                                    <input type="button" value="-" class="qtyminus" name="adults">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-3 col-sm-6 ps-lg-0 ps-sm-1">
+                                                <div class="qty-buttons">
+                                                    <label>Childs</label>
+                                                    <input type="button" value="+" class="qtyplus" name="childs">
+                                                    <input type="text" name="childs" id="childs" value="" class="qty form-control">
+                                                    <input type="button" value="-" class="qtyminus" name="childs">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <input type="submit" class="btn_search" value="Search">
                                             </div>
                                         </div>
-                                        <div class="col-lg-3 col-sm-6 pe-lg-0 pe-sm-1">
-                                            <div class="qty-buttons">
-                                                <label>Adults</label>
-                                                <input type="button" value="+" class="qtyplus" name="adults">
-                                                <input type="text" name="adults" id="adults" value="" class="qty form-control">
-                                                <input type="button" value="-" class="qtyminus" name="adults">
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-3 col-sm-6 ps-lg-0 ps-sm-1">
-                                            <div class="qty-buttons">
-                                                <label>Childs</label>
-                                                <input type="button" value="+" class="qtyplus" name="childs">
-                                                <input type="text" name="childs" id="childs" value="" class="qty form-control">
-                                                <input type="button" value="-" class="qtyminus" name="childs">
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-2">
-                                            <input type="submit" class="btn_search" value="Search">
-                                        </div>
-                                    </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
