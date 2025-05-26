@@ -4,11 +4,11 @@ import Model.Room;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
+import DBcontext.DBContext;
 /**
  * RoomDAO for handling Room database operations.
  */
-public class RoomDAO extends util.DBConnection {
+public class RoomDAO extends DBContext {
 
     public Room getRoomById(int id) {
         Room room = null;
