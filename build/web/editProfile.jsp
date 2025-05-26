@@ -23,7 +23,7 @@
                 <p>Rank: ${lp.getLevel()}</p>
                 <p>Accumulated Points: <a href="#">${lp.getPoints()}</a></p>
                 <ul>
-                    <li><a href="editProfile">Personal Info</a></li>
+                    <li><a href="editProfile">Personal Info 1111</a></li>
                     <li><a href="bookingHistory.jsp">Booking History</a></li>
                     <li><a href="#">Your Booking</a></li>
                     <li><a href="#">Loyalty Status</a> </li>
