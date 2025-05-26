@@ -34,7 +34,7 @@
 
             </div>
             <div class="main-content">
-                <h2>Personal Information</h2>
+                <h2>Personal Information hhhhhhh</h2>
                 <p>View and update your personal details.</p>
                 <form action="editProfile" method="post" enctype="multipart/form-data">
                     <div class="avatar-section">
