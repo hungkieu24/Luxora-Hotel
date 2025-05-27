@@ -71,7 +71,12 @@ public class EditProfileServlet extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         UserAccountDAO uad = new UserAccountDAO();
-        UserAccount user = (UserAccount) session.getAttribute("user");
+        Object account = session.getAttribute("user");
+        if (account == null) {
+            response.sendRedirect("login.jsp");
+            return;
+        }
+        UserAccount user = (UserAccount) account;
         
         LoyaltyPointDAO lpd = new LoyaltyPointDAO();
         LoyaltyPoint lp = lpd.getLoyaltyPointByUserId(user.getId());

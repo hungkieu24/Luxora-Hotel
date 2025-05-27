@@ -105,7 +105,7 @@
                                         <li><a href="register.jsp" class="btn_1">Register</a></li>
                                     </c:if>
                                     <c:if test="${sessionScope.user != null}">
-                                        <li><a href="editProfile.jsp">${sessionScope.user.getUsername()}</a></li>
+                                        <li><a href="editProfile">${sessionScope.user.getUsername()}</a></li>
                                         <li><a href="#">
                                                <img src="./img/avatar.jpg" alt="" class="top-act__avatar" />  
                                         </a></li>
