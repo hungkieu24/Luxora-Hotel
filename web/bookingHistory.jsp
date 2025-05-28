@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.List" %>
-<%@ page import="model.Booking" %>
+<%@ page import="Model.Booking" %>
 <%
     String userId = (String) request.getAttribute("user_id");
     List<Booking> bookings = (List<Booking>) request.getAttribute("bookings");

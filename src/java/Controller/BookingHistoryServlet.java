@@ -1,6 +1,6 @@
-package controller;
+package Controller;
 
-import dao.BookingDAO;
+import Dal.BookingDAO;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
@@ -9,7 +9,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
-import model.Booking;
+import Model.Booking;
 
 @WebServlet(urlPatterns={"/booking-history"})
 public class BookingHistoryServlet extends HttpServlet {
