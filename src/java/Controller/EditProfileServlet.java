@@ -17,7 +17,7 @@ import jakarta.servlet.http.HttpSession;
 import Model.LoyaltyPoint;
 import Model.UserAccount;
 import org.eclipse.jdt.internal.compiler.util.Messages;
-import tool.UploadImage;
+import Utility.UploadImage;
 
 /**
  *
