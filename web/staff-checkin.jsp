@@ -8,50 +8,83 @@
 <html>
 <head>
     <title>Check-in/Check-out</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 </head>
-<body>
-    <h1>Check-in / Check-out</h1>
-    <a href="staff-dashboard">← Back to Dashboard</a>
-    <table border="1" cellpadding="4">
-        <tr>
-            <th>ID</th>
-            <th>Customer</th>
-            <th>Rooms</th>
-            <th>Check-in</th>
-            <th>Check-out</th>
-            <th>Status</th>
-            <th>Action</th>
-        </tr>
-        <%
-        if (bookings != null && !bookings.isEmpty()) {
-            for (Booking b : bookings) {
-        %>
-        <tr>
-            <td><%= b.getId() %></td>
-            <td><%= b.getUserName() %></td>
-            <td><%= b.getRoomNumbers() %></td>
-            <td><%= b.getCheckIn() %></td>
-            <td><%= b.getCheckOut() %></td>
-            <td><%= b.getStatus() %></td>
-            <td>
-                <form method="post" action="staff-checkin" style="display:inline;">
-                    <input type="hidden" name="bookingId" value="<%= b.getId() %>"/>
-                    <input type="hidden" name="action" value="checkin"/>
-                    <input type="submit" value="Check-in"/>
-                </form>
-                <form method="post" action="staff-checkin" style="display:inline;">
-                    <input type="hidden" name="bookingId" value="<%= b.getId() %>"/>
-                    <input type="hidden" name="action" value="checkout"/>
-                    <input type="submit" value="Check-out"/>
-                </form>
-            </td>
-        </tr>
-        <%
-            }
-        } else {
-        %>
-        <tr><td colspan="7">No bookings today.</td></tr>
-        <% } %>
-    </table>
+<body class="bg-light">
+<div class="container py-5">
+    <div class="d-flex mb-3">
+        <a href="staff-dashboard" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
+    <div class="card shadow-sm">
+        <div class="card-header bg-success text-white">
+            <h2 class="mb-0"><i class="bi bi-check2-square"></i> Check-in / Check-out</h2>
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>Customer</th>
+                        <th>Rooms</th>
+                        <th>Check-in</th>
+                        <th>Check-out</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <%
+                if (bookings != null && !bookings.isEmpty()) {
+                    for (Booking b : bookings) {
+                %>
+                <tr>
+                    <td><%= b.getId() %></td>
+                    <td><i class="bi bi-person-circle"></i> <%= b.getUserName() %></td>
+                    <td><i class="bi bi-door-closed"></i> <%= b.getRoomNumbers() %></td>
+                    <td><span class="badge bg-info text-dark"><%= b.getCheckIn() %></span></td>
+                    <td><span class="badge bg-info text-dark"><%= b.getCheckOut() %></span></td>
+                    <td>
+                        <% String status = b.getStatus().toLowerCase(); %>
+                        <span class="badge 
+                            <% if(status.contains("checkedin")) { %>bg-success
+                            <% } else if(status.contains("checkedout")) { %>bg-secondary
+                            <% } else if(status.contains("cancel")) { %>bg-danger
+                            <% } else { %>bg-primary<% } %>">
+                            <%= b.getStatus() %>
+                        </span>
+                    </td>
+                    <td>
+                        <form method="post" action="staff-checkin" style="display:inline;">
+                            <input type="hidden" name="bookingId" value="<%= b.getId() %>"/>
+                            <input type="hidden" name="action" value="checkin"/>
+                            <button class="btn btn-success btn-sm mb-1" <%= status.contains("checkedin") ? "disabled" : "" %>>
+                                <i class="bi bi-box-arrow-in-right"></i> Check-in
+                            </button>
+                        </form>
+                        <form method="post" action="staff-checkin" style="display:inline;">
+                            <input type="hidden" name="bookingId" value="<%= b.getId() %>"/>
+                            <input type="hidden" name="action" value="checkout"/>
+                            <button class="btn btn-secondary btn-sm" <%= status.contains("checkedout") ? "disabled" : "" %>>
+                                <i class="bi bi-box-arrow-left"></i> Check-out
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                <%
+                    }
+                } else {
+                %>
+                <tr>
+                    <td colspan="7" class="text-center text-muted">No bookings today.</td>
+                </tr>
+                <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 </body>
 </html>
