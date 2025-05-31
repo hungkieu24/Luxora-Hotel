@@ -8,6 +8,8 @@ import DBcontext.DBContext;
 import java.sql.*;
 import Model.UserAccount;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -115,7 +117,7 @@ public class UserAccountDAO extends DBContext {
         }
         return null;
     }
-    
+
     public UserAccount saveUserToDatabase(String email, String name, String avatar_url) {
         try {
             String checkSql = "SELECT * FROM UserAccount WHERE email= ?";
@@ -213,4 +215,79 @@ public class UserAccountDAO extends DBContext {
             return false;
         }
     }
+
+    public UserAccount getHotelOwner() {
+        String sql = "SELECT TOP 1 * FROM UserAccount WHERE role = 'HotelOwner' AND status = 'Active'";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                Timestamp ts = rs.getTimestamp("created_at");
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                String createdAt = (ts != null) ? sdf.format(ts) : null;
+
+                return new UserAccount(
+                        rs.getString("id"),
+                        rs.getString("username"),
+                        rs.getString("password"),
+                        rs.getString("email"),
+                        rs.getString("avatar_url"),
+                        rs.getString("role"),
+                        rs.getString("status"),
+                        createdAt
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null; // Không tìm thấy hotel owner hoặc lỗi xảy ra
+    }
+
+    public List<UserAccount> getAllStaff() {
+        List<UserAccount> staffList = new ArrayList<>();
+        String sql = "SELECT * FROM UserAccount WHERE role = 'Staff'";
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                UserAccount staff = new UserAccount(
+                        rs.getString("id"),
+                        rs.getString("username"),
+                        rs.getString("password"),
+                        rs.getString("email"),
+                        rs.getString("avatar_url"),
+                        rs.getString("role"),
+                        rs.getString("status"),
+                        rs.getString("created_at"),
+                        rs.getString("phonenumber")
+                );
+                staffList.add(staff);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return staffList;
+    }
+
+    public boolean updateUserRoleToManager(String userId) {
+        String sql = "UPDATE UserAccount SET role = 'Manager' WHERE id = ?";
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, userId);
+
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
 }
