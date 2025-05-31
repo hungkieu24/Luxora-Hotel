@@ -58,6 +58,11 @@
                             <label>Email</label>
                             <input type="email" value="${sessionScope.user.getEmail()}" name="email">
                         </div>
+                        
+                        <div class="form-group">
+                            <label>Phone number</label>
+                            <input type="tel" value="${sessionScope.user.getPhonenumber()}" name="phonenumber">
+                        </div>
 
                         <button type="button" class="cancel-btn" onclick="window.location.reload();">Cancel</button>
 
