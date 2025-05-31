@@ -30,8 +30,6 @@
     grid-column: span 3; /* phần địa chỉ cụ thể chiếm cả hàng */
 }
 
-
-
 .wrapper {
     position: relative;
     width: 400px; /* đủ để chứa ảnh + độ lệch */

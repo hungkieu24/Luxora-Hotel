@@ -64,7 +64,7 @@
                                             </button>
                                         </div>
                                     </form>
-                                    <button class="btn btn--primary btn--rounded js-toggle" toggle-target="#add-product-modal">Add Branch</button>
+                                    <button class="btn btn--primary btn--rounded js-toggle" toggle-target="#add-modal">Add Branch</button>
                                 </div>
 
                                 <div class="row gy-3">
@@ -164,7 +164,8 @@
                                             value="${s.getId()}" 
                                             data-username="${s.getUsername()}" 
                                             data-email="${s.getEmail()}" 
-                                            data-phone="${s.getPhonenumber()}">
+                                            data-phone="${s.getPhonenumber()}"
+                                            data-imageUrl="${s.getAvatar_url()}">
                                             Id: ${s.getId()}, Role: ${s.getRole()}, userName: ${s.getUsername()}
                                         </option>
                                     </c:forEach>
@@ -334,149 +335,174 @@
         </div>
 
         <!-- Modal: Add modal -->
-        <div id="add-modal" class="modal hide">
+        <div id="add-modal" class="modal modal--bigest hide">
             <div class="modal__content">
                 <div class="modal__heading">Add Branch</div>
-                <form action="edit-product" method="post" enctype="multipart/form-data" id="add-product-form" class="form form-card">
+                <h3 style="font-size: 1.8rem; font-weight: 700; margin: 10px 0">Manager</h3>
+                <form action="branchEventHandler" method="post" enctype="multipart/form-data" id="add-form" class="form form-card">
                     <input type="hidden" name="action" value="add">
-                    <!-- Form row 1 -->
+                    <input type="hidden" name="ownerId" value="${owner.getId()}">
+                    <!-- Form row 1: Manager -->
                     <div class="form__row">
                         <div class="form__group">
+                            <label for="" class="form__label form-card__label">Avatar</label>
                             <div class="form__avatar-preview">
                                 <img 
                                     src="" 
-                                    alt="Current Product" 
-                                    name="product-previewAdd"
+                                    alt="Image" 
+                                    name="image-manager"
                                     class="avatar-preview"
-                                    id="avatar-previewAdd"
+                                    id="avatar-previewView-add"
                                     />
                             </div>
                         </div>
                         <div class="form__group">
-                            <label class="form__label form-card__label">
-                                Product Image
-                            </label>
+                            <label for="chooseManager" class="form__label form-card__label">Choose staff to become manager</label>
                             <div class="form__text-input">
-                                <input
-                                    type="file"
-                                    name="productImageAdd"
-                                    id="productImageAdd"
-                                    class="form__input avatar-input"
-                                    accept=".jpg,.jpeg,.png"
-                                    required
-                                    />
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Form row 2 -->
-                    <div class="form__row">
-                        <div class="form__group">
-                            <label for="productNameAdd" class="form__label form-card__label">Product Name</label>
-                            <div class="form__text-input">
-                                <input type="text" name="productNameAdd" id="productNameAdd" class="form__input" placeholder="Product Name"/>
-                            </div>
-                            <p class="form__error"></p>
-                        </div>
-                        <div class="form__group">
-                            <label for="quantityAdd" class="form__label form-card__label">Quantity Per Unit</label>
-                            <div class="form__text-input">
-                                <input type="text" name="quantityAdd" id="quantityAdd" class="form__input" placeholder="Quantity Per Unit" />
-                            </div>
-                            <p class="form__error"></p>
-                        </div>
-                    </div>
-
-                    <div class="form__row">
-                        <div class="form__group">
-                            <label for="productDescriptionAdd" class="form__label form-card__label">Product Description</label>
-                            <div class="form__text-area">
-                                <textarea
-                                    name="productDescriptionAdd"
-                                    id="productDescriptionAdd"
-                                    placeholder="Product Description"
-                                    class="form__text-area-input"
-                                    required
-                                    ></textarea>
-                            </div>
-                            <p class="form__error"></p>
-                        </div>
-                    </div>
-
-                    <!-- Form row 3 -->
-                    <div class="form__row">
-                        <div class="form__group">
-                            <label for="unitPriceAdd" class="form__label form-card__label">Unit Price</label>
-                            <div class="form__text-input">
-                                <input type="text" name="unitPriceAdd" id="unitPriceAdd" class="form__input" placeholder="Unit Price"/>
-                            </div>
-                            <p class="form__error"></p>
-                        </div>
-                        <div class="form__group">
-                            <label for="unitsInStockAdd" class="form__label form-card__label">
-                                Units In Stock
-                            </label>
-                            <div class="form__text-input">
-                                <input type="text" name="unitsInStockAdd" id="unitsInStockAdd" placeholder="Units In Stock" class="form__input"/>
-                            </div>
-                            <p class="form__error"></p>
-                        </div>
-                    </div>
-
-                    <div class="form__row">
-                        <div class="form__group">
-                            <label for="discountAdd" class="form__label form-card__label">
-                                Discount
-                            </label>
-                            <div class="form__text-input">
-                                <input type="text" name="discountAdd" placeholder="Discount" id="discountAdd" class="form__input"/>
-                            </div>
-                            <p class="form__error"></p>
-                        </div>
-                        <div class="form__group">
-                            <label for="ratingAdd" class="form__label form-card__label">
-                                Rating
-                            </label>
-                            <div class="form__text-input">
-                                <input type="text" name="ratingAdd" placeholder="Rating" id="ratingAdd" class="form__input"/>
-                            </div>
-                            <p class="form__error"></p>
-                        </div>
-                    </div>
-
-                    <!-- Form row 4 -->
-                    <div class="form__row">
-                        <div class="form__group">
-                            <label for="chooseSupplierAdd" class="form__label form-card__label">Choose Supplier</label>
-                            <div class="form__text-input">
-                                <select required style="width: 100%" class="form__select chooseSupplierAdd" id="chooseSupplierAdd" name="chooseSupplierAdd">
-                                    <option value="">Choose Supplier</option>
-                                    <c:forEach items="${listSupply}" var="s">
-                                        <option value="${s.getSupplierID()}">${s.getSupplierName()}</option>
-                                    </c:forEach>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form__group">
-                            <label for="chooseCategoryAdd" class="form__label form-card__label">Choose Category</label>
-                            <div class="form__text-input">
-                                <select required style="width: 100%" class="form__select chooseCategoryAdd" id="chooseCategoryAdd" name="chooseCategoryAdd">
-                                    <option value="">Choose Category</option>
-                                    <c:forEach items="${listCategory}" var="s">
-                                        <option value="${s.getCategoryID()}">${s.getCategoryName()}</option>
+                                <select class="form__select" style="width: 100%" id="chooseManager" name="staffID">
+                                    <option value="" selected>Choose Staff</option>
+                                    <c:forEach items="${staffList}" var="s">
+                                        <option 
+                                            value="${s.getId()}" 
+                                            data-username="${s.getUsername()}" 
+                                            data-email="${s.getEmail()}" 
+                                            data-phone="${s.getPhonenumber()}"
+                                            data-imageUrl="${s.getAvatar_url()}">
+                                            Id: ${s.getId()}, Role: ${s.getRole()}, Username: ${s.getUsername()}
+                                        </option>
                                     </c:forEach>
                                 </select>
                             </div>
                         </div>
                     </div>
+
+                    <!-- Manager info auto-fill -->
+                    <div class="form__row">
+                        <div class="form__group">
+                            <label class="form__label form-card__label">User Name</label>
+                            <div class="form__text-input">
+                                <input type="text" name="userName" id="userName-add" class="form__input" placeholder="User Name" readonly/>
+                            </div>
+                        </div>
+                        <div class="form__group">
+                            <label class="form__label form-card__label">Email</label>
+                            <div class="form__text-input">
+                                <input type="email" name="Email" id="Email-add" class="form__input" placeholder="Email" readonly/>
+                            </div>
+                        </div>
+                        <div class="form__group">
+                            <label class="form__label form-card__label">Phone</label>
+                            <div class="form__text-input">
+                                <input type="text" name="phone" id="phone-add" class="form__input" placeholder="Phone" readonly/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="cart-info__separate"></div>
+
+                    <h3 style="font-size: 1.8rem; font-weight: 700; margin: 10px 0">Branch</h3>
+
+                    <!-- Branch Info -->
+                    <div class="form__row">
+                        <div class="form__group">
+                            <label class="form__label form-card__label">Branch Name</label>
+                            <div class="form__text-input">
+                                <input type="text" name="branchName" id="branchName-add" class="form__input" placeholder="Branch Name"/>
+                            </div>
+                            <p class="form__error"></p>
+                        </div>
+                        <div class="form__group">
+                            <label class="form__label form-card__label">Phone</label>
+                            <div class="form__text-input">
+                                <input type="text" name="branchPhone" id="branchPhone-add" class="form__input" placeholder="Branch Phone"/>
+                            </div>
+                            <p class="form__error"></p>
+                        </div>
+                        <div class="form__group">
+                            <label class="form__label form-card__label">Email</label>
+                            <div class="form__text-input">
+                                <input type="email" name="branchEmail" id="branchEmail-add" class="form__input" placeholder="Branch Email"/>
+                            </div>
+                            <p class="form__error"></p>
+                        </div>
+                    </div>
+
+                    <!-- Address -->
+                    <div class="form__row" id="addressAdd">
+                        <div class="form__group">
+                            <label class="form__label form-card__label">Province</label>
+                            <div class="form__text-input">
+                                <select class="form__select province address__select" id="province-add" name="province">
+                                    <option value="">Choose province</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form__group">
+                            <label class="form__label form-card__label">District</label>
+                            <div class="form__text-input">
+                                <select class="form__select district address__select" id="district-add" name="district">
+                                    <option value="">Choose district</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form__group">
+                            <label class="form__label form-card__label">Ward</label>
+                            <div class="form__text-input">
+                                <select class="form__select ward address__select" id="ward-add" name="ward">
+                                    <option value="">Choose ward</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form__row">
+                        <div class="form__group">
+                            <label class="form__label form-card__label">Address</label>
+                            <div class="form__text-input">
+                                <input type="text" name="branchAddress" id="branchAddress-add" class="form__input address" placeholder="Address"/>
+                            </div>
+                            <p class="form__error"></p>
+                        </div>
+                    </div>
+                    <div class="form__row">
+                        <div class="form__group">
+                            <label class="form__label form-card__label">Specific Address</label>
+                            <div class="form__text-input">
+                                <input type="text" name="specificAddress" id="specificAddress-add" class="form__input" placeholder="Specific address"/>
+                            </div>
+                            <p class="form__error"></p>
+                        </div>
+                    </div>
+                    
+
+                    <!-- Images -->
+                    <div class="form__row">
+                        <div class="form__group">
+                            <label class="form__label form-card__label">Image Preview</label>
+                            <div class="wrapper" id="imagePreviewWrapper-add">
+                                <div class="images">
+                                    <img class="images_img" src="" alt="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form__group">
+                            <label class="form__label form-card__label">Choose Image</label>
+                            <div class="form__text-input">
+                                <input type="file" name="branchImgs" id="imageInput-add" multiple accept="image/*">
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="form-card__bottom">
-                        <a href="../admin/manage-product" class="btn btn--text">Cancel</a>
+                        <a href="../admin/branch" class="btn btn--text">Cancel</a>
                         <button type="submit" class="btn btn--primary btn--rounded">Add</button>
                     </div>
                 </form>
             </div>
             <div class="modal__overlay js-toggle" toggle-target="#add-modal"></div>
         </div>
+
 
         <!-- Modal delete -->
         <div id="delete-modal" class="modal modal--small hide">
@@ -528,11 +554,26 @@
                 const username = selectedOption.getAttribute("data-username") ?? "need to set";
                 const email = selectedOption.getAttribute("data-email") ?? "need to set";
                 const phone = selectedOption.getAttribute("data-phone") ?? "need to set";
-
+                const imageUrl = selectedOption.getAttribute("data-imageUrl") ?? "need to set";
                 // Gán vào các input
                 document.getElementById("userName").value = username;
                 document.getElementById("Email").value = email;
                 document.getElementById("phone").value = phone;
+                document.getElementById("avatar-previewView").src = imageUrl;
+            });
+            document.getElementById("chooseManager").addEventListener("change", function () {
+                const selectedOption = this.options[this.selectedIndex];
+
+                // Lấy dữ liệu từ option được chọn
+                const username = selectedOption.getAttribute("data-username") ?? "need to set";
+                const email = selectedOption.getAttribute("data-email") ?? "need to set";
+                const phone = selectedOption.getAttribute("data-phone") ?? "need to set";
+                const imageUrl = selectedOption.getAttribute("data-imageUrl") ?? "need to set";
+                // Gán vào các input
+                document.getElementById("userName-add").value = username;
+                document.getElementById("Email-add").value = email;
+                document.getElementById("phone-add").value = phone;
+                document.getElementById("avatar-previewView-add").src = imageUrl;
             });
         </script>
 
@@ -580,7 +621,6 @@
                         .catch(err => console.error("Lỗi fetch:", err));
             }
 
-
             function fillModalDelete(branchID) {
                 console.log("branchID: ", branchID);
                 fetch("/ParadiseHotel/admin/branchEventHandler?branchID=" + branchID)
@@ -593,29 +633,25 @@
                         })
                         .catch(err => console.error("Lỗi fetch:", err));
             }
-
-
             initButtons("edit.js-toggle", "data-actor-id", fillModalEdit);
             initButtons("delete.js-toggle", "data-actor-id", fillModalDelete);
 
         </script>
         <script>
             Validator({
-                form: '#add-product-form',
+                form: '#add-form',
                 formGroupSelector: '.form__group',
                 errorSelector: '.form__error',
                 rules: [
-                    Validator.isRequired('#branchNamew', 'Please enter the full name of the branch'),
-                    Validator.maxLength('#productNameAdd', 30),
-                    Validator.isRequired('#quantityAdd', 'Please enter the quantity per unit'),
-                    Validator.isRequired('#productDescriptionAdd', 'Please enter the product description'),
-                    Validator.isRequired('#unitPriceAdd', 'Please enter the product price'),
-                    Validator.isRequired('#unitsInStockAdd', 'Please enter the quantity of the product'),
-                    Validator.isRequired('#discountAdd', 'Please enter the discount percentage'),
-                    Validator.isNumber('#ratingAdd'),
+                    Validator.isRequired('#branchName-add', 'Please enter the full name of the branch'),
+                    Validator.maxLength('#branchPhone-add', 10),
+                    Validator.isPhoneNumber('#branchPhone-add', 'Please enter branch phone number'),
+                    Validator.isRequired('#branchEmail-add', 'Please enter branch email'),
+                    Validator.isEmail('#branchEmail-add', 'This field must be an email'),
+                    Validator.isRequired('#branchAddress-add', 'Please enter the branch address'),
                 ],
                 onsubmit: function (formValue) {
-                    document.querySelector('#add-product-form').submit();
+                    document.querySelector('#add-form').submit();
                 }
             })
 
@@ -635,8 +671,6 @@
                     document.querySelector('#edit-form').submit();
                 }
             })
-
-
         </script>
 
     </body>

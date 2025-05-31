@@ -239,4 +239,28 @@ public class HotelBranchDAO extends DBcontext.DBContext {
         return false;
     }
 
+    public boolean addHotelBranch(HotelBranch branch) {
+        String sql = "INSERT INTO HotelBranch (name, address, phone, email, image_url, owner_id, manager_id) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, branch.getName());
+            ps.setString(2, branch.getAddress());
+            ps.setString(3, branch.getPhone());
+            ps.setString(4, branch.getEmail());
+            ps.setString(5, branch.getImage_url());
+            ps.setString(6, branch.getOwner_id());
+            ps.setString(7, branch.getManager_id());
+
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
 }

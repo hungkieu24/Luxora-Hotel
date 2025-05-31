@@ -80,14 +80,14 @@ public class branchEventHandlerServlet extends HttpServlet {
         HotelBranchDAO branchDAO = new HotelBranchDAO();
         HotelBranch branch = branchDAO.getHotelBranchById(branchID);
 
-        String folderPath = getServletContext().getRealPath("/img/HotelBranchID_" + branchID);
+        String folderPath = getServletContext().getRealPath(branch.getImage_url());
         File folder = new File(folderPath);
         File[] files = folder.listFiles((dir, name) -> name.toLowerCase().matches(".*\\.(jpg|jpeg|png|gif)$"));
 
         List<String> imagePaths = new ArrayList<>();
         if (files != null) {
             for (File file : files) {
-                imagePaths.add("../img/HotelBranchID_" + branchID  + "/" + file.getName());
+                imagePaths.add("../" + branch.getImage_url() + "/" + file.getName());
             }
         }
 
@@ -116,6 +116,12 @@ public class branchEventHandlerServlet extends HttpServlet {
         HttpSession session = request.getSession();
         String action = request.getParameter("action");
         String branchIDString = request.getParameter("branchID");
+        String staffID = request.getParameter("staffID");
+        String branchName = request.getParameter("branchName");
+        String branchPhone = request.getParameter("branchPhone");
+        String branchEmail = request.getParameter("branchEmail");
+        String branchAddress = request.getParameter("branchAddress");
+        String branchImgs = request.getParameter("branchImgs");
         HotelBranchDAO branchDAO = new HotelBranchDAO();
 
         if (branchIDString == null && action.equals("edit")) {
@@ -125,18 +131,26 @@ public class branchEventHandlerServlet extends HttpServlet {
         }
         if (branchIDString != null && action.equals("edit")) {
             int branchID = Integer.parseInt(branchIDString);
-            String staffID = request.getParameter("staffID");
-            String branchName = request.getParameter("branchName");
-            String branchPhone = request.getParameter("branchPhone");
-            String branchEmail = request.getParameter("branchEmail");
-            String branchAddress = request.getParameter("branchAddress");
-            String branchImgs = request.getParameter("branchImgs");
             HotelBranch existingBranch = branchDAO.getHotelBranchByIdSimple(branchID);
 
             if (staffID == null || staffID.isEmpty()) {
                 updateBranchInfo(request, session, branchDAO, existingBranch, branchName, branchAddress, branchPhone, branchEmail, branchImgs);
             } else {
-                assignManagerAndUpdateBranch(session, branchDAO, existingBranch, staffID, branchName, branchAddress, branchPhone, branchEmail);
+                assignManagerAndUpdateBranch(request, session, branchDAO, existingBranch, staffID, branchName, branchAddress, branchPhone, branchEmail);
+            }
+        }
+
+        if (action.equals("add")) {
+            String ownerId = request.getParameter("ownerId");
+            String specificAddress = request.getParameter("specificAddress");
+            String address = branchAddress;
+            if(specificAddress != null || !specificAddress.isEmpty()) {
+                address = specificAddress + ", " + branchAddress;
+            }
+            if (staffID == null || staffID.isEmpty()) {
+                addBranchInfo(request, session, branchDAO, branchName, address, branchPhone, branchEmail, ownerId, null);
+            } else {
+                assignManagerAndAddBranch(request, session, branchDAO, staffID, address, branchAddress, branchPhone,ownerId, staffID);
             }
         }
 
@@ -171,7 +185,7 @@ public class branchEventHandlerServlet extends HttpServlet {
 
         UploadMultyImage uploader = new UploadMultyImage();
 
-        String UPLOAD_DIR = "/img/HotelBranchID_" + oldBranch.getId();
+        String UPLOAD_DIR = oldBranch.getImage_url();
         String pathHost = getServletContext().getRealPath("");
         String uploadPath = pathHost.replace("build\\", "") + UPLOAD_DIR;
         String uploadPath2 = pathHost + UPLOAD_DIR;
@@ -187,19 +201,83 @@ public class branchEventHandlerServlet extends HttpServlet {
                 success ? "success" : "error");
     }
 
-    private void assignManagerAndUpdateBranch(HttpSession session, HotelBranchDAO dao, HotelBranch oldBranch,
-            String newManagerID, String name, String address, String phone, String email) {
+    private void assignManagerAndUpdateBranch(HttpServletRequest request, HttpSession session, HotelBranchDAO dao, HotelBranch oldBranch,
+            String newManagerID, String name, String address, String phone, String email) throws ServletException, IOException {
         UserAccountDAO accountDAO = new UserAccountDAO();
         if (!accountDAO.updateUserRoleToManager(newManagerID)) {
             setSessionMessage(session, "Failure to update role!", "error");
             return;
         }
 
+        UploadMultyImage uploader = new UploadMultyImage();
+
+        String UPLOAD_DIR = "/img/HotelBranchID_" + oldBranch.getId();
+        String pathHost = getServletContext().getRealPath("");
+        String uploadPath = pathHost.replace("build\\", "") + UPLOAD_DIR;
+        String uploadPath2 = pathHost + UPLOAD_DIR;
+
+        List<String> uploadedFiles = uploader.uploadImages(request, "branchImgs", uploadPath);
+        List<String> uploadedFiles2 = uploader.uploadImages(request, "branchImgs", uploadPath2);
+
         HotelBranch updated = new HotelBranch(oldBranch.getId(), name, address, phone, email,
                 oldBranch.getImage_url(), oldBranch.getOwner_id(), newManagerID);
 
         boolean success = dao.updateHotelBranch(updated);
         setSessionMessage(session, success ? "Update successful!" : "Failure to update!",
+                success ? "success" : "error");
+    }
+
+    private void addBranchInfo(HttpServletRequest request, HttpSession session, HotelBranchDAO dao,
+            String name, String address, String phone, String email,
+            String ownerID, String managerID) throws ServletException, IOException {
+        UploadMultyImage uploader = new UploadMultyImage();
+
+        // Tạm thời tạo một folder tên theo thời gian để upload ảnh
+        String folderName = "HotelBranch_" + System.currentTimeMillis();
+        String UPLOAD_DIR = "/img/" + folderName;
+
+        String pathHost = getServletContext().getRealPath("");
+        String uploadPath = pathHost.replace("build\\", "") + UPLOAD_DIR;
+        String uploadPath2 = pathHost + UPLOAD_DIR;
+
+        List<String> uploadedFiles = uploader.uploadImages(request, "branchImgs", uploadPath);
+        List<String> uploadedFiles2 = uploader.uploadImages(request, "branchImgs", uploadPath2);
+
+        HotelBranch newBranch = new HotelBranch(0, name, address, phone, email,
+                UPLOAD_DIR, ownerID, managerID);
+
+        boolean success = dao.addHotelBranch(newBranch);
+        setSessionMessage(session, success ? "Add branch successful!" : "Failure to add branch!",
+                success ? "success" : "error");
+    }
+
+    private void assignManagerAndAddBranch(HttpServletRequest request, HttpSession session, HotelBranchDAO dao,
+            String name, String address, String phone, String email,
+            String ownerID, String newManagerID) throws ServletException, IOException {
+        UserAccountDAO accountDAO = new UserAccountDAO();
+
+        if (!accountDAO.updateUserRoleToManager(newManagerID)) {
+            setSessionMessage(session, "Failure to update role!", "error");
+            return;
+        }
+
+        UploadMultyImage uploader = new UploadMultyImage();
+
+        String folderName = "HotelBranch_" + System.currentTimeMillis();
+        String UPLOAD_DIR = "/img/" + folderName;
+
+        String pathHost = getServletContext().getRealPath("");
+        String uploadPath = pathHost.replace("build\\", "") + UPLOAD_DIR;
+        String uploadPath2 = pathHost + UPLOAD_DIR;
+
+        List<String> uploadedFiles = uploader.uploadImages(request, "branchImgs", uploadPath);
+        List<String> uploadedFiles2 = uploader.uploadImages(request, "branchImgs", uploadPath2);
+
+        HotelBranch newBranch = new HotelBranch(0, name, address, phone, email,
+                UPLOAD_DIR, ownerID, newManagerID);
+
+        boolean success = dao.addHotelBranch(newBranch);
+        setSessionMessage(session, success ? "Add branch successful!" : "Failure to add branch!",
                 success ? "success" : "error");
     }
 
