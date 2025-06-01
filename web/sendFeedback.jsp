@@ -26,15 +26,15 @@
 
                 <ul>
                     <li><a href="#">Booking Room</a></li>
-                    <li><a href="#">My Booking Room</a></li>
-                    <li><a href="sendFeedback.jsp">Feedback Room</a></li>
+                    <li><a href="myBooking">My Booking Room</a></li>
+                    <li><a href="sendFeedback">Feedback Room</a></li>
                 </ul>
 
             </div>
             <div class="main-content">
                 <h2>Welcome dear customers!</h2>
                 <p>Please leave your comments here so we can know your experience.</p>
-                <form action="send" method="post">                      
+                <form action="sendFeedback" method="post">                      
                     <div class="form-group">
                         <label>Overall Rating (1-5 Stars)</label>
                         <div class="star-rating">
@@ -80,34 +80,48 @@
                         <p style="color: red; font-size: 20px">${message}</p>
                     </c:if>
 
-                        
-                        
-                         <div class="feedback-table">
-                        <h3>Feedback List</h3>
-                        <table border="1">
-                            <thead>
-                                <tr>
-                                    <th>Username</th>
-                                    <th>Booking ID</th>
-                                    <th>Rating</th>
-                                    <th>Comment</th>
-                                    <th>Created At</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <c:forEach var="feedback" items="${list}">
-                                    <tr>
-                                        <td>${feedback.username}</td>
-                                        <td>${feedback.booking_id}</td>
-                                        <td>${feedback.rating}</td>
-                                        <td>${feedback.comment}</td>
-                                        <td><fmt:formatDate value="${feedback.created_at}" pattern="dd-MM-yyyy HH:mm:ss"/></td>
-                                    </tr>
-                                </c:forEach>
-                            </tbody>
-                        </table>
-                    </div>
                 </form>
+
+                <div class="feedback-table">
+                    <h3>Feedback For Our Hotel</h3>
+                    <table border="1">
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Rating</th>
+                                <th>Comment</th>
+                                <th>Created At</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <c:forEach var="feedback" items="${listFeedback}">
+                                <tr>
+                                    <td>${feedback.username}</td>
+                                    <td>${feedback.rating}</td>
+                                    <td>${feedback.comment}</td>
+                                    <td><fmt:formatDate value="${feedback.created_at}" pattern="dd-MM-yyyy HH:mm:ss"/></td>
+                                </tr>
+                            </c:forEach>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pagination">
+                    <c:if test="${currentPage > 1}">
+                        <a href="?page=${currentPage - 1}"  class="prev"> Previous</a>
+                    </c:if>
+
+                    <c:forEach var="i" begin="1" end="${totalPages}">
+                        <a href="?page=${i}" class="${i == currentPage ? 'active' : ''}">${i}</a>
+                    </c:forEach>
+
+                    <c:if test="${currentPage < totalPages}">
+                        <a href="?page=${currentPage + 1}" class="next">Next</a>
+                    </c:if>
+                </div>
+                
+                
+                
             </div>
         </div>
 

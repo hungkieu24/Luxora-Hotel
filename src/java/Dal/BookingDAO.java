@@ -2,6 +2,7 @@ package Dal;
 
 import Model.Booking;
 import Model.Room;
+import java.sql.Timestamp;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -231,4 +232,19 @@ public class BookingDAO extends DBcontext.DBContext {
     }
     return booking;
 }
+    public boolean cancelBooking(int bookingId, String cancelReason) {
+        String sql = "UPDATE Booking SET status = 'CANCELLED', cancel_reason = ?, cancel_time = ? WHERE id = ? AND status IN ('Pending', 'Confirmed')";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, cancelReason);
+            ps.setTimestamp(2, new Timestamp(System.currentTimeMillis())); // Thời gian hủy
+            ps.setInt(3, bookingId);
+            int rowsAffected = ps.executeUpdate();
+            ps.close();
+            return rowsAffected > 0; // Trả về true nếu cập nhật thành công
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

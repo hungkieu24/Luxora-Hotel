@@ -28,7 +28,7 @@ import java.util.List;
  *
  * @author KTC
  */
-@WebServlet(name = "SendFeedbackServlet", urlPatterns = {"/send"})
+@WebServlet(name = "SendFeedbackServlet", urlPatterns = {"/sendFeedback"})
 public class SendFeedbackServlet extends HttpServlet {
 
     /**
@@ -69,11 +69,19 @@ public class SendFeedbackServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-                FeedbackDAO feedbackDAO = new FeedbackDAO();
-
-        List<Feedback> list = feedbackDAO.getAllFeedBack();
-        request.setAttribute("list", list);
-
+        FeedbackDAO feedbackDAO = new FeedbackDAO();
+        int page = 1; // trang đầu tiên
+        int pageSize = 5; // 1 trang có 5 row
+        
+        int feedbackListSize = feedbackDAO.getAllFeedBack().size();
+        int totalPages = (int) Math.ceil((double) feedbackListSize / pageSize);
+        List<Feedback> listFeedback = feedbackDAO.getListFeedbackByPage(page, pageSize);
+        if (request.getParameter("page") != null) {
+            page = Integer.parseInt(request.getParameter("page"));
+        }
+        request.setAttribute("listFeedback", listFeedback);
+        request.setAttribute("currentPage", page);
+        request.setAttribute("totalPages", totalPages);
         // Forward back to the JSP page to display the message
         request.getRequestDispatcher("sendFeedback.jsp").forward(request, response);
     }
@@ -92,14 +100,17 @@ public class SendFeedbackServlet extends HttpServlet {
         HttpSession session = request.getSession();
         UserAccountDAO uad = new UserAccountDAO();
         UserAccount user = (UserAccount) session.getAttribute("user");
-
+        if (user == null) {
+            response.sendRedirect("./login.jsp");
+            return;
+        }
         BookingDAO bkd = new BookingDAO();
         Booking bk = (Booking) session.getAttribute("bk");
         bk = bkd.getBookingByUserId(user.getId());
         FeedbackDAO feedbackDAO = new FeedbackDAO();
 
         if (user == null) {
-            response.sendRedirect("login.jsp");
+            response.sendRedirect("./login.jsp");
             return;
         }
 
@@ -123,12 +134,9 @@ public class SendFeedbackServlet extends HttpServlet {
         } catch (Exception e) {
             request.setAttribute("message", "Error submitting feedback: " + e.getMessage());
         }
-        
-        List<Feedback> list = feedbackDAO.getAllFeedBack(); 
-        request.setAttribute("list", list);
-                request.getRequestDispatcher("sendFeedback.jsp").forward(request, response);
 
-        
+        response.sendRedirect("./sendFeedback");
+
     }
 
     /**
