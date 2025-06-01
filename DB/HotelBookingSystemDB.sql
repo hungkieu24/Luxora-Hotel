@@ -1,3 +1,13 @@
+﻿USE master
+GO
+
+-- Xóa database nếu đã tồn tại và tạo mới
+IF EXISTS (SELECT * FROM sys.databases WHERE name = 'HotelBookingSystemDB')
+BEGIN
+    ALTER DATABASE HotelBookingSystemDB SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+    DROP DATABASE HotelBookingSystemDB;
+END
+GO
 CREATE DATABASE HotelBookingSystemDB
 GO
 
