@@ -26,7 +26,7 @@
 
                 <ul>
                     <li><a href="#">Booking Room</a></li>
-                    <li><a href="myBooking">My Booking Room</a></li>
+                    <li><a href="myBooking">Your Room</a></li>
                     <li><a href="sendFeedback">Feedback Room</a></li>
                 </ul>
 

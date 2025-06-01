@@ -89,7 +89,12 @@ public class FeedbackDAO extends DBcontext.DBContext {
 
     public List<Feedback> getListFeedbackByPage(int page, int pageSize) {
         List<Feedback> feedbackList = new ArrayList<>();
-        String sql = "SELECT * FROM Feedback ORDER BY id OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+        String sql = "SELECT f.booking_id, f.rating, f.comment, f.created_at, u.username "
+                + "FROM Feedback f "
+                + "JOIN UserAccount u ON f.user_id = u.id "
+                + "WHERE f.status = 'Visible' "
+                + "ORDER BY f.id "
+                + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, (page - 1) * pageSize);
@@ -98,15 +103,11 @@ public class FeedbackDAO extends DBcontext.DBContext {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 Feedback feedback = new Feedback(
-                        rs.getInt("id"),
-                        rs.getString("user_id"),
                         rs.getInt("booking_id"),
                         rs.getInt("rating"),
                         rs.getString("comment"),
-                        rs.getString("image_url"),
                         rs.getTimestamp("created_at"),
-                        rs.getString("status"),
-                        rs.getString("admin_action")
+                        rs.getString("username")
                 );
                 feedbackList.add(feedback);
             }
@@ -116,4 +117,5 @@ public class FeedbackDAO extends DBcontext.DBContext {
 
         return feedbackList;
     }
+
 }

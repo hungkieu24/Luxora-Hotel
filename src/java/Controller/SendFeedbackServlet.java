@@ -69,20 +69,18 @@ public class SendFeedbackServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        FeedbackDAO feedbackDAO = new FeedbackDAO();
         int page = 1; // trang đầu tiên
         int pageSize = 5; // 1 trang có 5 row
-        
-        int feedbackListSize = feedbackDAO.getAllFeedBack().size();
-        int totalPages = (int) Math.ceil((double) feedbackListSize / pageSize);
-        List<Feedback> listFeedback = feedbackDAO.getListFeedbackByPage(page, pageSize);
         if (request.getParameter("page") != null) {
             page = Integer.parseInt(request.getParameter("page"));
         }
+        FeedbackDAO feedbackDAO = new FeedbackDAO();
+        int feedbackListSize = feedbackDAO.getAllFeedBack().size();
+        int totalPages = (int) Math.ceil((double) feedbackListSize / pageSize);
+        List<Feedback> listFeedback = feedbackDAO.getListFeedbackByPage(page, pageSize);
         request.setAttribute("listFeedback", listFeedback);
         request.setAttribute("currentPage", page);
         request.setAttribute("totalPages", totalPages);
-        // Forward back to the JSP page to display the message
         request.getRequestDispatcher("sendFeedback.jsp").forward(request, response);
     }
 
