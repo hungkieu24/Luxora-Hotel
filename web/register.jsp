@@ -85,7 +85,7 @@
                     <div class="go" style="width: 100%"><i class="fab fa-google"></i> Google</div>
                 </a>
             </div>
-            <h4>You already have an account ?  <a href="login.jsp" style="color: #7a7aff">Login</a></h4>
+            <h4>You already have an account ?  <a href="./login.jsp" style="color: #7a7aff">Login</a></h4>
         </form>
         <script src="./js/validationForm.js"></script>
         <script>
