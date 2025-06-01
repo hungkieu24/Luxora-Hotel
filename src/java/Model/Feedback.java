@@ -19,7 +19,7 @@ public class Feedback {
     private Timestamp created_at;
     private String status;
     private String admin_action;
-
+    private String username;
     public Feedback() {
     }
 
@@ -35,6 +35,22 @@ public class Feedback {
         this.admin_action = admin_action;
     }
 
+    public Feedback(int booking_id, int rating, String comment, Timestamp created_at, String username) {
+        this.booking_id = booking_id;
+        this.rating = rating;
+        this.comment = comment;
+        this.created_at = created_at;
+        this.username = username;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+    
     public Feedback(int rating, String comment, Timestamp created_at, String status) {
         this.rating = rating;
         this.comment = comment;
@@ -42,6 +58,15 @@ public class Feedback {
         this.status = status;
     }
 
+    public Feedback(String user_id, int booking_id, int rating, String comment, Timestamp created_at, String status) {
+        this.user_id = user_id;
+        this.booking_id = booking_id;
+        this.rating = rating;
+        this.comment = comment;
+        this.created_at = created_at;
+        this.status = status;
+    }
+    
     public int getFeedbackID() {
         return feedbackID;
     }
