@@ -61,17 +61,12 @@
                             <div class="logo_panel"><img src="img/logo_sticky.png" width="135" height="45" alt=""></div>
                             <nav id="mainNav">
                                 <ul class="navBarList_Hompage">
-<!--                                    <li class="submenu">
+                                   <li class="submenu">
                                         <a href="#0" class="show-submenu">Home</a>
                                         <ul>
-                                            <li><a href="index222.html">Home Video Bg</a></li>
-                                            <li><a href="index-2.html">Home Carousel</a></li>
-                                            <li><a href="index-3.html">Home FlexSlider</a></li>
-                                            <li><a href="index-4.html">Home Youtube/Vimeo</a></li>
-                                            <li><a href="index-5.html">Home Parallax</a></li>
-                                            <li><a href="index-6.html">Home Parallax 2</a></li>
+                                            <li><a href="branchReport.jsp">branch report</a></li>
                                         </ul>
-                                    </li>-->
+                                    </li>
                                     <li class="submenu">
                                         <a href="#0" class="show-submenu">Rooms & Suites</a>
                                         <ul>
