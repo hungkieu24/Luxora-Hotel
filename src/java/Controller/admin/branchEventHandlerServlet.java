@@ -21,6 +21,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.File;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -80,14 +82,18 @@ public class branchEventHandlerServlet extends HttpServlet {
         HotelBranchDAO branchDAO = new HotelBranchDAO();
         HotelBranch branch = branchDAO.getHotelBranchById(branchID);
 
-        String folderPath = getServletContext().getRealPath(branch.getImage_url());
-        File folder = new File(folderPath);
-        File[] files = folder.listFiles((dir, name) -> name.toLowerCase().matches(".*\\.(jpg|jpeg|png|gif)$"));
+        List<String> imagePaths = null;
 
-        List<String> imagePaths = new ArrayList<>();
-        if (files != null) {
-            for (File file : files) {
-                imagePaths.add("../" + branch.getImage_url() + "/" + file.getName());
+        String folderPath = getServletContext().getRealPath(branch.getImage_url());
+        if (folderPath != null) {
+            File folder = new File(folderPath);
+            File[] files = folder.listFiles((dir, name) -> name.toLowerCase().matches(".*\\.(jpg|jpeg|png|gif)$"));
+
+            if (files != null) {
+                imagePaths = new ArrayList<>();
+                for (File file : files) {
+                    imagePaths.add("../" + branch.getImage_url() + "/" + file.getName());
+                }
             }
         }
 
@@ -144,13 +150,15 @@ public class branchEventHandlerServlet extends HttpServlet {
             String ownerId = request.getParameter("ownerId");
             String specificAddress = request.getParameter("specificAddress");
             String address = branchAddress;
-            if(specificAddress != null || !specificAddress.isEmpty()) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
+            String timestamp = LocalDateTime.now().format(formatter);
+            if (specificAddress != null || !specificAddress.isEmpty()) {
                 address = specificAddress + ", " + branchAddress;
             }
             if (staffID == null || staffID.isEmpty()) {
-                addBranchInfo(request, session, branchDAO, branchName, address, branchPhone, branchEmail, ownerId, null);
+                addBranchInfo(request, session, branchDAO, branchName, address, branchPhone, branchEmail, ownerId, null, timestamp);
             } else {
-                assignManagerAndAddBranch(request, session, branchDAO, staffID, address, branchAddress, branchPhone,ownerId, staffID);
+                assignManagerAndAddBranch(request, session, branchDAO, staffID, address, branchAddress, branchPhone, ownerId, staffID, timestamp);
             }
         }
 
@@ -162,8 +170,8 @@ public class branchEventHandlerServlet extends HttpServlet {
                 return;
             }
             int branchIDDelete = Integer.parseInt(branchIDDeleteString);
-            boolean deleted = branchDAO.deleteHotelBranchById(branchIDDelete);
-            setSessionMessage(session, deleted ? "Delete successful!" : "Failure to delete!",
+            boolean deleted = branchDAO.deleteHotelBranch(branchIDDelete);
+            setSessionMessage(session, deleted ? "Delete successful!" : "Cannot delete, room may be booked!",
                     deleted ? "success" : "error");
         }
 
@@ -211,7 +219,7 @@ public class branchEventHandlerServlet extends HttpServlet {
 
         UploadMultyImage uploader = new UploadMultyImage();
 
-        String UPLOAD_DIR = "/img/HotelBranchID_" + oldBranch.getId();
+        String UPLOAD_DIR = oldBranch.getImage_url();
         String pathHost = getServletContext().getRealPath("");
         String uploadPath = pathHost.replace("build\\", "") + UPLOAD_DIR;
         String uploadPath2 = pathHost + UPLOAD_DIR;
@@ -220,7 +228,7 @@ public class branchEventHandlerServlet extends HttpServlet {
         List<String> uploadedFiles2 = uploader.uploadImages(request, "branchImgs", uploadPath2);
 
         HotelBranch updated = new HotelBranch(oldBranch.getId(), name, address, phone, email,
-                oldBranch.getImage_url(), oldBranch.getOwner_id(), newManagerID);
+                UPLOAD_DIR, oldBranch.getOwner_id(), newManagerID);
 
         boolean success = dao.updateHotelBranch(updated);
         setSessionMessage(session, success ? "Update successful!" : "Failure to update!",
@@ -229,11 +237,11 @@ public class branchEventHandlerServlet extends HttpServlet {
 
     private void addBranchInfo(HttpServletRequest request, HttpSession session, HotelBranchDAO dao,
             String name, String address, String phone, String email,
-            String ownerID, String managerID) throws ServletException, IOException {
+            String ownerID, String managerID, String timestamp) throws ServletException, IOException {
         UploadMultyImage uploader = new UploadMultyImage();
 
         // Tạm thời tạo một folder tên theo thời gian để upload ảnh
-        String folderName = "HotelBranch_" + System.currentTimeMillis();
+        String folderName = "HotelBranch_" + timestamp;
         String UPLOAD_DIR = "/img/" + folderName;
 
         String pathHost = getServletContext().getRealPath("");
@@ -253,7 +261,7 @@ public class branchEventHandlerServlet extends HttpServlet {
 
     private void assignManagerAndAddBranch(HttpServletRequest request, HttpSession session, HotelBranchDAO dao,
             String name, String address, String phone, String email,
-            String ownerID, String newManagerID) throws ServletException, IOException {
+            String ownerID, String newManagerID, String timestamp) throws ServletException, IOException {
         UserAccountDAO accountDAO = new UserAccountDAO();
 
         if (!accountDAO.updateUserRoleToManager(newManagerID)) {
@@ -263,7 +271,7 @@ public class branchEventHandlerServlet extends HttpServlet {
 
         UploadMultyImage uploader = new UploadMultyImage();
 
-        String folderName = "HotelBranch_" + System.currentTimeMillis();
+        String folderName = "HotelBranch_" + timestamp;
         String UPLOAD_DIR = "/img/" + folderName;
 
         String pathHost = getServletContext().getRealPath("");

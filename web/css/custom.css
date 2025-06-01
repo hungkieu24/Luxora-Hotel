@@ -30,7 +30,7 @@
     grid-column: span 3; /* phần địa chỉ cụ thể chiếm cả hàng */
 }
 
-.wrapper {
+.wrapper-images {
     position: relative;
     width: 400px; /* đủ để chứa ảnh + độ lệch */
     height: 220px;
@@ -55,6 +55,7 @@
 
 .images:hover .images_img {
     transform: scale(1.05);
+    z-index: 9999;
 }
 
 .gallery {

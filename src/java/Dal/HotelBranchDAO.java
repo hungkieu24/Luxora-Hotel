@@ -222,23 +222,6 @@ public class HotelBranchDAO extends DBcontext.DBContext {
         return false;
     }
 
-    public boolean deleteHotelBranchById(int branchId) {
-        String sql = "DELETE FROM [dbo].[HotelBranch] WHERE id = ?";
-
-        try {
-            PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setInt(1, branchId);
-
-            int rowsAffected = ps.executeUpdate();
-            return rowsAffected > 0;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return false;
-    }
-
     public boolean addHotelBranch(HotelBranch branch) {
         String sql = "INSERT INTO HotelBranch (name, address, phone, email, image_url, owner_id, manager_id) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -261,6 +244,153 @@ public class HotelBranchDAO extends DBcontext.DBContext {
         }
 
         return false;
+    }
+
+    public boolean deleteHotelBranch(int branchID) {
+        String checkBookingSql = "SELECT COUNT(*) AS total "
+                + "FROM Room r "
+                + "JOIN BookingRoom br ON r.id = br.room_id "
+                + "JOIN Booking b ON br.booking_id = b.id "
+                + "WHERE r.branch_id = ? AND b.status IN ('Pending', 'Confirmed', 'CheckedIn', 'Locked')";
+
+        String deleteBookingRoomSql = "DELETE br "
+                + "FROM BookingRoom br "
+                + "JOIN Room r ON br.room_id = r.id "
+                + "WHERE r.branch_id = ?";
+
+        String deleteRoomsSql = "DELETE FROM Room WHERE branch_id = ?";
+        String deleteBranchSql = "DELETE FROM HotelBranch WHERE id = ?";
+
+        try {
+            connection.setAutoCommit(false); // Bắt đầu transaction
+
+            // 1. Kiểm tra trạng thái Booking
+            try (PreparedStatement ps = connection.prepareStatement(checkBookingSql)) {
+                ps.setInt(1, branchID);
+                ResultSet rs = ps.executeQuery();
+                if (rs.next() && rs.getInt("total") > 0) {
+                    connection.rollback();
+                    System.out.println("Khong the xoa chi nhanh: Co phong dang duoc dat.");
+                    return false;
+                }
+            }
+
+            // 2. Xóa BookingRoom liên quan
+            try (PreparedStatement ps = connection.prepareStatement(deleteBookingRoomSql)) {
+                ps.setInt(1, branchID);
+                ps.executeUpdate();
+            }
+
+            // 3. Xóa các phòng trong Room
+            try (PreparedStatement ps = connection.prepareStatement(deleteRoomsSql)) {
+                ps.setInt(1, branchID);
+                ps.executeUpdate();
+            }
+
+            // 4. Xóa HotelBranch
+            try (PreparedStatement ps = connection.prepareStatement(deleteBranchSql)) {
+                ps.setInt(1, branchID);
+                ps.executeUpdate();
+            }
+
+            connection.commit(); // Hoàn tất giao dịch
+            return true;
+
+        } catch (SQLException e) {
+            try {
+                connection.rollback(); // Trả lại nếu lỗi
+            } catch (SQLException rollbackEx) {
+                rollbackEx.printStackTrace();
+            }
+            e.printStackTrace();
+        } finally {
+            try {
+                connection.setAutoCommit(true); // Bật lại auto-commit
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return false;
+    }
+
+    public List<HotelBranch> getListHotelBranchByPage(int page, int pageSize) {
+        List<HotelBranch> branchList = new ArrayList<>();
+        String sql = "SELECT * FROM HotelBranch ORDER BY id OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, (page - 1) * pageSize);
+            stmt.setInt(2, pageSize);
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                HotelBranch branch = new HotelBranch(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("address"),
+                        rs.getString("phone"),
+                        rs.getString("email"),
+                        rs.getString("image_url"),
+                        rs.getString("owner_id"),
+                        rs.getString("manager_id")
+                );
+                branchList.add(branch);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return branchList;
+    }
+
+    public int getTotalHotelBranchAfterSearching(String keyword) {
+        String sql = "SELECT COUNT(*) FROM HotelBranch WHERE name LIKE ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, "%" + keyword + "%");
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return 0;
+    }
+
+    public List<HotelBranch> searchHotelBranchByName(String keyword, int page, int pageSize) {
+        List<HotelBranch> branchList = new ArrayList<>();
+        String sql = "SELECT * FROM HotelBranch WHERE name LIKE ? ORDER BY id OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, "%" + keyword + "%");
+            stmt.setInt(2, (page - 1) * pageSize);
+            stmt.setInt(3, pageSize);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    HotelBranch branch = new HotelBranch(
+                            rs.getInt("id"),
+                            rs.getString("name"),
+                            rs.getString("address"),
+                            rs.getString("phone"),
+                            rs.getString("email"),
+                            rs.getString("image_url"),
+                            rs.getString("owner_id"),
+                            rs.getString("manager_id")
+                    );
+                    branchList.add(branch);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return branchList;
     }
 
 }

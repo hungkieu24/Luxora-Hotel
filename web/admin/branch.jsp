@@ -120,6 +120,17 @@
                                 </div>
 
                                 <div class="pagination">
+                                    <c:if test="${currentPage > 1}">
+                                        <a href="?page=${currentPage - 1}&action=${action}&searchKeyword=${keyword}"  class="prev"> Previous</a>
+                                    </c:if>
+
+                                    <c:forEach var="i" begin="1" end="${totalPages}">
+                                        <a href="?page=${i}&action=${action}&searchKeyword=${keyword}" class="${i == currentPage ? 'active' : ''}">${i}</a>
+                                    </c:forEach>
+
+                                    <c:if test="${currentPage < totalPages}">
+                                        <a href="?page=${currentPage + 1}&action=${action}&searchKeyword=${keyword}" class="next">Next</a>
+                                    </c:if>
                                 </div>
                             </div>
                         </div>
@@ -142,22 +153,13 @@
                         <div class="form__group">
                             <label for="" class="form__label form-card__label">Avatar</label>
                             <div class="form__avatar-preview">
-                                <img 
-                                    src="" 
-                                    alt="Image" 
-                                    name="image-manager"
-                                    class="avatar-preview"
-                                    id="avatar-previewView"
-                                    />
+                                <img src="" alt="Image" name="image-manager" class="avatar-preview" id="avatar-previewView"/>
                             </div>
                         </div>
                         <div class="form__group">
                             <label for="managerId" class="form__label form-card__label">Choose another staff to become manager</label>
                             <div class="form__text-input">
-                                <select class="form__select " 
-                                        style="width: 100%"
-                                        id="chooseAnotherManager" 
-                                        name="staffID">
+                                <select class="form__select " style="width: 100%" id="chooseAnotherManager" name="staffID">
                                     <option value="" selected>Choose Staff</option>
                                     <c:forEach items="${staffList}" var="s">
                                         <option 
@@ -300,7 +302,7 @@
                     <div class="form__row">
                         <div class="form__group">
                             <label for="branchName" class="form__label form-card__label">Image</label>
-                            <div class="wrapper" id="imagePreviewWrapper">
+                            <div class="wrapper-images" id="imagePreviewWrapper">
                                 <div class="images">
                                     <img class="images_img" src="" alt="">
                                 </div>
@@ -474,13 +476,13 @@
                             <p class="form__error"></p>
                         </div>
                     </div>
-                    
+
 
                     <!-- Images -->
                     <div class="form__row">
                         <div class="form__group">
                             <label class="form__label form-card__label">Image Preview</label>
-                            <div class="wrapper" id="imagePreviewWrapper-add">
+                            <div class="wrapper-images" id="imagePreviewWrapper-add">
                                 <div class="images">
                                     <img class="images_img" src="" alt="">
                                 </div>
@@ -516,7 +518,7 @@
                         >
                         Cancel
                     </button>
-                    <form action="branchEventHandler" method="post">
+                    <form action="branchEventHandler" method="post" enctype="multipart/form-data">
                         <input type="hidden" name="IdDelete" id="IdDelete" value="">
                         <input type="hidden" name="action" value="delete">
                         <button
@@ -625,7 +627,10 @@
                 console.log("branchID: ", branchID);
                 fetch("/ParadiseHotel/admin/branchEventHandler?branchID=" + branchID)
                         .then(res => res.json())
-                        .then(actor => {
+                        .then(data => {
+                            const actor = data.branch;
+                            const images = data.images;
+
                             if (!actor)
                                 return;
 
