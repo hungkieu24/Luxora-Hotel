@@ -16,11 +16,11 @@
         <link rel="stylesheet" href="./css/forgotPasswordStyles.css"/>
     </head>
     <body>
-        <form action="" method="post">
+        <form action="forgotPassword" method="post">
 
             <h3>Forgot Password</h3>
             <label for="email">Enter your email</label>
-            <input type="email" placeholder="Email" id="emial" name="email"required>
+            <input type="email" placeholder="Email" id="email" name="email"required>
             <c:if test="${not empty error}">
                 <p stype="color:red; font-size: 10px">${error}</p>
             </c:if>

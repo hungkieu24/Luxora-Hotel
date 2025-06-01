@@ -220,4 +220,18 @@ public class UserAccountDAO extends DBContext {
             return false;
         }
     }
+    public boolean updatePassword(String email, String password){
+        String sql="update UserAccount set password = ? where email = ?";
+        try{
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, password);
+            ps.setString(2, email);
+            int affectedRows = ps.executeUpdate();
+            return affectedRows > 0;
+            
+        }catch(SQLException e){
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
