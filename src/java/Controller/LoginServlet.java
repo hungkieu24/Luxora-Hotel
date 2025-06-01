@@ -6,7 +6,6 @@
 package Controller;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -99,6 +98,7 @@ public class LoginServlet extends HttpServlet {
        if(user != null && user.getStatus().equals("Active")){
            HttpSession session = request.getSession();
            session.setAttribute("user", user);
+           session.setAttribute("userId", user.getId());
            if(user.getRole().equals("admin")){
                response.sendRedirect("admindashboard.jsp");// phản hồi lại trang page mặc định khi đăng nhập vào của admin
            }
