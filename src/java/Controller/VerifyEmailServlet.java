@@ -80,9 +80,9 @@ public class VerifyEmailServlet extends HttpServlet {
             String username = (String) session.getAttribute("username");
             String email = (String) session.getAttribute("email");
             String password = (String) session.getAttribute("password");
-
+            String phone = (String) session.getAttribute("phone");
             UserAccountDAO uadao = new UserAccountDAO();
-            boolean registered = uadao.register(username, password, email, null);
+            boolean registered = uadao.register(username, password, email, "img/avatar/avatar.jpg", phone);
             if(registered) {
                 session.invalidate();
                 response.sendRedirect("login.jsp");

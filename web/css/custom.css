@@ -130,3 +130,94 @@
     display: none;
 }
 
+.nice-select .list {
+    max-height: 200px; /* Chiều cao tối đa, bạn có thể điều chỉnh */
+    overflow-y: auto;  /* Kích hoạt thanh cuộn dọc nếu nội dung vượt quá */
+    overflow-x: hidden; /* Ẩn thanh cuộn ngang */
+}
+
+/* Toast Message Styles */
+.toast-message {
+  position: fixed;
+  top: -100px; /* Start above viewport */
+  left: 50%;
+  color: white;
+  transform: translateX(-50%);
+  padding: 16px 32px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 9999;
+  transition: top 0.5s ease-in-out;
+}
+.toast-message.success {
+  background-color: #4CAF50;
+}
+.toast-message.error {
+  background-color: #ff2c2c;
+}
+.toast-message.show {
+  top: 20px; /* Slide down to this position */
+}
+.toast-message i {
+  font-size: 24px;
+}
+
+.top-act__user:hover .act-dropdown {
+  display: block;
+}
+
+.top-act__dropdown {
+  right: -13px !important;
+  width: min(300px, 100vw) !important;
+}
+
+.act-dropdown {
+  position: absolute;
+  top: 45px;
+  right: -60px;
+  width: min(500px, 100vw);
+  padding-top: 30px;
+  display: none;
+}
+.act-dropdown__inner {
+  position: relative;
+  padding: 30px;
+  border-radius: 20px;
+  background: var(--header-act-dropdown-bg);
+  box-shadow: 0px 40px 90px 20px var(--header-act-dropdown-shadow);
+}
+.act-dropdown__arrow {
+  position: absolute;
+  top: -16px;
+  right: 90px;
+  height: 20.5px;
+  filter: var(--dropdown-arrow-color);
+}
+.act-dropdown__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.act-dropdown__title {
+  font-size: 2.2rem;
+  font-weight: 500;
+  line-height: 145.455%;
+}
+.act-dropdown__view-all {
+  color: #0071dc;
+  font-size: 1.8rem;
+  line-height: 145.455%;
+}
+.act-dropdown__bottom {
+  margin: 20px 0;
+  padding: 20px 0;
+  border-width: 1px 0;
+  border-color: var(--header-act-dropdown-border-color);
+  border-style: solid;
+}

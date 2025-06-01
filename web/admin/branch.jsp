@@ -649,7 +649,6 @@
                 errorSelector: '.form__error',
                 rules: [
                     Validator.isRequired('#branchName-add', 'Please enter the full name of the branch'),
-                    Validator.maxLength('#branchPhone-add', 10),
                     Validator.isPhoneNumber('#branchPhone-add', 'Please enter branch phone number'),
                     Validator.isRequired('#branchEmail-add', 'Please enter branch email'),
                     Validator.isEmail('#branchEmail-add', 'This field must be an email'),
@@ -666,7 +665,6 @@
                 errorSelector: '.form__error',
                 rules: [
                     Validator.isRequired('#branchName', 'Please enter the full name of the branch'),
-                    Validator.maxLength('#branchPhone', 10),
                     Validator.isPhoneNumber('#branchPhone', 'Please enter branch phone number'),
                     Validator.isRequired('#branchEmail', 'Please enter branch email'),
                     Validator.isEmail('#branchEmail', 'This field must be an email'),

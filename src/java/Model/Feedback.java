@@ -19,6 +19,7 @@ public class Feedback {
     private Timestamp created_at;
     private String status;
     private String admin_action;
+    private UserAccount userAccount;
 
     public Feedback() {
     }
@@ -33,6 +34,18 @@ public class Feedback {
         this.created_at = created_at;
         this.status = status;
         this.admin_action = admin_action;
+    }
+
+    public Feedback(int feedbackID, int booking_id, int rating, String comment, String image_url, Timestamp created_at, String status, String admin_action, UserAccount userAccount) {
+        this.feedbackID = feedbackID;
+        this.booking_id = booking_id;
+        this.rating = rating;
+        this.comment = comment;
+        this.image_url = image_url;
+        this.created_at = created_at;
+        this.status = status;
+        this.admin_action = admin_action;
+        this.userAccount = userAccount;
     }
 
     public Feedback(int rating, String comment, Timestamp created_at, String status) {
@@ -114,6 +127,14 @@ public class Feedback {
         this.admin_action = admin_action;
     }
 
+    public UserAccount getUserAccount() {
+        return userAccount;
+    }
+
+    public void setUserAccount(UserAccount userAccount) {
+        this.userAccount = userAccount;
+    }
+    
     @Override
     public String toString() {
         return "Feedback{" + "rating=" + rating + ", comment=" + comment + ", created_at=" + created_at + ", status=" + status + '}';

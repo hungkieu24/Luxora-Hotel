@@ -37,7 +37,7 @@ public class RegisterServlet extends HttpServlet {
 
     private static final String GOOGLE_CLIENT_SECRET = "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";
 
-    private static final String GOOGLE_REDIRECT_URI = "http://localhost:8080/LuxoraHotel/register";
+    private static final String GOOGLE_REDIRECT_URI = "http://localhost:8080/ParadiseHotel/register";
 
     private static final String GOOGLE_LINK_GET_TOKEN = "https://accounts.google.com/o/oauth2/token";
 
@@ -71,6 +71,11 @@ public class RegisterServlet extends HttpServlet {
         }
     }
 
+    private void setSessionMessage(HttpSession session, String message, String type) {
+        session.setAttribute("message", message);
+        session.setAttribute("messageType", type);
+    }
+
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -93,7 +98,7 @@ public class RegisterServlet extends HttpServlet {
         String avatar_url = userInfo.get("picture") != null ? userInfo.get("picture").getAsString() : null;
 
         UserAccountDAO userDAO = new UserAccountDAO();
-        boolean registered = userDAO.register(nameGG, "1234", emailGG, avatar_url);
+        boolean registered = userDAO.register(nameGG, "1234", emailGG, avatar_url, null);
         if (registered) {
             HttpSession session = request.getSession();
             UserAccount user = userDAO.getUserByEmail(emailGG);
@@ -137,9 +142,17 @@ public class RegisterServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession();
         String email = request.getParameter("email");
         String username = request.getParameter("username");
         String password = request.getParameter("password");
+        String phone = request.getParameter("phone");
+
+        if (email == null || username == null || password == null || phone == null) {
+            setSessionMessage(session, "Please fill in all information to register!", "error");
+            response.sendRedirect("./register.jsp");
+            return;
+        }
 
         // Sinh mã xác nhận
         String verificationCode = String.valueOf((int) (Math.random() * 900000 + 100000));
@@ -155,12 +168,11 @@ public class RegisterServlet extends HttpServlet {
         }
 
         // Lưu thông tin tạm vào session
-        HttpSession session = request.getSession();
         session.setAttribute("authCode", verificationCode);
         session.setAttribute("username", username);
         session.setAttribute("email", email);
         session.setAttribute("password", password);
-
+        session.setAttribute("phone", phone);
         response.sendRedirect("verify.jsp");
     }
 

@@ -46,7 +46,7 @@ public class UserAccountDAO extends DBContext {
         return null;
     }
 
-    public boolean register(String username, String password, String email, String avatar_url) {
+    public boolean register(String username, String password, String email, String avatar_url, String phonenumber) {
         try {
             // 1. Tìm ID lớn nhất hiện có
             String getMaxIdSql = "SELECT MAX(CAST(SUBSTRING(id, 2, LEN(id)) AS INT)) AS maxId FROM UserAccount";
@@ -60,17 +60,18 @@ public class UserAccountDAO extends DBContext {
             }
 
             // 2. Thêm người dùng mới
-            String insertSql = "INSERT INTO UserAccount (id, username, password, email, avatar_url, role, status) "
-                    + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+            String insertSql = "INSERT INTO UserAccount (id, username, password, email, avatar_url, role, status, phonenumber) "
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
             PreparedStatement ps2 = connection.prepareStatement(insertSql);
             ps2.setString(1, newId);
             ps2.setString(2, username);
             ps2.setString(3, password);
             ps2.setString(4, email);
-            ps2.setString(5, avatar_url);     // avatar_url = NULL
-            ps2.setString(6, "Customer");               // default role
-            ps2.setString(7, "Active");                 // default status
+            ps2.setString(5, avatar_url);     // Cho phép null
+            ps2.setString(6, "Customer");     // Default role
+            ps2.setString(7, "Active");       // Default status
+            ps2.setString(8, phonenumber);    // New field
 
             int rows = ps2.executeUpdate();
             return rows > 0;
