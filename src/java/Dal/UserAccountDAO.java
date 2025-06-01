@@ -115,7 +115,7 @@ public class UserAccountDAO extends DBContext {
         }
         return null;
     }
-    
+
     public UserAccount saveUserToDatabase(String email, String name, String avatar_url) {
         try {
             String checkSql = "SELECT * FROM UserAccount WHERE email= ?";
@@ -148,8 +148,15 @@ public class UserAccountDAO extends DBContext {
                 );
             } else {
                 // Thêm người dùng mới
+                String getMaxIdSql = "SELECT MAX(CAST(SUBSTRING(id, 2, LEN(id)) AS INT)) AS maxId FROM UserAccount";
+                PreparedStatement ps1 = connection.prepareStatement(getMaxIdSql);
+                rs = ps1.executeQuery();
 
-                String newId = "U" + System.currentTimeMillis() % 10000;
+                String newId = "U001";
+                if (rs.next()) {
+                    int maxId = rs.getInt("maxId");
+                    newId = String.format("U%03d", maxId + 1);
+                }
                 String insertSql = "Insert into UserAccount (id, username, password, email, avatar_url, role, status, created_at)"
                         + "values(?, ?, ?, ?, ?,?,?,?)";
                 ps = connection.prepareStatement(insertSql);
