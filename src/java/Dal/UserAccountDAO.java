@@ -37,7 +37,8 @@ public class    UserAccountDAO extends DBContext {
                         rs.getString("avatar_url"),
                         rs.getString("role"),
                         rs.getString("status"),
-                        createdAt
+                        createdAt,
+                        rs.getString("phonenumber")
                 );
             }
         } catch (SQLException e) {
