@@ -124,26 +124,24 @@ public class RoomDetailServlet extends HttpServlet {
         }
     }
 
-    private void updateRoomStatus(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+   private void updateRoomStatus(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
 
-        try {
-            int roomId = Integer.parseInt(request.getParameter("id"));
-            String status = request.getParameter("status");
+    try {
+        int roomId = Integer.parseInt(request.getParameter("id"));
+        String status = request.getParameter("status");
 
-            boolean success = roomDAO.updateRoomStatus(roomId, status);
+        // You can remove the boolean return if updateRoomStatus throws an exception on failure
+        roomDAO.updateRoomStatus(roomId, status);
 
-            if (success) {
-                response.sendRedirect("room-detail?id=" + roomId + "&message=statusUpdated");
-            } else {
-                request.setAttribute("error", "Failed to update room status");
-                doGet(request, response);
-            }
-        } catch (Exception e) {
-            request.setAttribute("error", "Error updating room status: " + e.getMessage());
-            doGet(request, response);
-        }
+        // Redirect on success
+        response.sendRedirect("room-detail?id=" + roomId + "&message=statusUpdated");
+    } catch (Exception e) {
+        request.setAttribute("error", "Error updating room status: " + e.getMessage());
+        // Forward to detail page with error message
+        request.getRequestDispatcher("room-detail.jsp").forward(request, response);
     }
+}
 
     private void deleteRoom(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
