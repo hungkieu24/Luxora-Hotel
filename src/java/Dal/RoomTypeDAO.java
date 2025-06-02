@@ -44,6 +44,7 @@ public class RoomTypeDAO extends DBcontext.DBContext {
         return roomTypeList;
     }
 
+
     public List<RoomType> searchAvailableRoomTypes(LocalDate checkIn, LocalDate checkOut, int guests, int branchId) {
         List<RoomType> availableRoomTypes = new ArrayList<>();
 

@@ -3,14 +3,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package Model;
+
 import java.sql.Timestamp;
 
-/**
- *
- * @author hungk
- */
 public class Feedback {
-    private int feedbackID;
+    private int id;
     private String user_id;
     private int booking_id;
     private int rating;
@@ -20,12 +17,20 @@ public class Feedback {
     private String status;
     private String admin_action;
     private UserAccount userAccount;
+    
+    // Additional fields for display
+    private String username;
+    private String userAvatarUrl;
 
-    public Feedback() {
+    // Default constructor
+    public Feedback(int aInt, String string, Timestamp timestamp, String string1) {
     }
 
-    public Feedback(int feedbackID, String user_id, int booking_id, int rating, String comment, String image_url, Timestamp created_at, String status, String admin_action) {
-        this.feedbackID = feedbackID;
+    // Constructor with all fields
+    public Feedback(int id, String user_id, int booking_id, int rating, 
+                   String comment, String image_url, Timestamp created_at, 
+                   String status, String admin_action) {
+        this.id = id;
         this.user_id = user_id;
         this.booking_id = booking_id;
         this.rating = rating;
@@ -54,13 +59,13 @@ public class Feedback {
         this.created_at = created_at;
         this.status = status;
     }
-
-    public int getFeedbackID() {
-        return feedbackID;
+    // Getters and Setters
+    public int getId() {
+        return id;
     }
 
-    public void setFeedbackID(int feedbackID) {
-        this.feedbackID = feedbackID;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getUser_id() {
@@ -135,8 +140,60 @@ public class Feedback {
         this.userAccount = userAccount;
     }
     
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getUserAvatarUrl() {
+        return userAvatarUrl;
+    }
+
+    public void setUserAvatarUrl(String userAvatarUrl) {
+        this.userAvatarUrl = userAvatarUrl;
+    }
+
+    // Utility methods
+    public String getRatingStars() {
+        StringBuilder stars = new StringBuilder();
+        for (int i = 1; i <= 5; i++) {
+            if (i <= rating) {
+                stars.append("★");
+            } else {
+                stars.append("☆");
+            }
+        }
+        return stars.toString();
+    }
+
+    public String getShortComment(int maxLength) {
+        if (comment == null) return "";
+        if (comment.length() <= maxLength) return comment;
+        return comment.substring(0, maxLength) + "...";
+    }
+
+    public String getFormattedCreatedAt() {
+        if (created_at == null) return "";
+        return created_at.toString();
+    }
+
     @Override
     public String toString() {
-        return "Feedback{" + "rating=" + rating + ", comment=" + comment + ", created_at=" + created_at + ", status=" + status + '}';
+        return "Feedback{" +
+                "id=" + id +
+                ", user_id='" + user_id + '\'' +
+                ", booking_id=" + booking_id +
+                ", rating=" + rating +
+                ", comment='" + comment + '\'' +
+                ", image_url='" + image_url + '\'' +
+                ", created_at=" + created_at +
+                ", status='" + status + '\'' +
+                ", admin_action='" + admin_action + '\'' +
+                ", username='" + username + '\'' +
+                ", userAvatarUrl='" + userAvatarUrl + '\'' +
+                '}';
     }
 }
