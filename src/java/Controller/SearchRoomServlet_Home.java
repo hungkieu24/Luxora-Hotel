@@ -87,6 +87,11 @@ public class SearchRoomServlet_Home extends HttpServlet {
 
         // Tách chuỗi theo dấu ">"
         String[] parts = dates.split(">");
+        if (parts.length < 2) {
+            setSessionMessage(session, "Please select check-in and check-out dates correctly.", "error");
+            response.sendRedirect("./homepage");
+            return;
+        }
         String checkInStr = parts[0].trim();   // "05-26-25"
         String checkOutStr = parts[1].trim();  // "05-29-25"
 
