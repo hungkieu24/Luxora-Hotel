@@ -13,7 +13,7 @@ import java.text.SimpleDateFormat;
  *
  * @author thien
  */
-public class UserAccountDAO extends DBContext {
+public class    UserAccountDAO extends DBContext {
 
     public UserAccount login(String username, String password) {
         String sql = "SELECT * FROM UserAccount WHERE username = ? AND password = ?";
@@ -115,7 +115,7 @@ public class UserAccountDAO extends DBContext {
         }
         return null;
     }
-    
+
     public UserAccount saveUserToDatabase(String email, String name, String avatar_url) {
         try {
             String checkSql = "SELECT * FROM UserAccount WHERE email= ?";
@@ -148,8 +148,15 @@ public class UserAccountDAO extends DBContext {
                 );
             } else {
                 // Thêm người dùng mới
+                String getMaxIdSql = "SELECT MAX(CAST(SUBSTRING(id, 2, LEN(id)) AS INT)) AS maxId FROM UserAccount";
+                PreparedStatement ps1 = connection.prepareStatement(getMaxIdSql);
+                rs = ps1.executeQuery();
 
-                String newId = "U" + System.currentTimeMillis() % 10000;
+                String newId = "U001";
+                if (rs.next()) {
+                    int maxId = rs.getInt("maxId");
+                    newId = String.format("U%03d", maxId + 1);
+                }
                 String insertSql = "Insert into UserAccount (id, username, password, email, avatar_url, role, status, created_at)"
                         + "values(?, ?, ?, ?, ?,?,?,?)";
                 ps = connection.prepareStatement(insertSql);
@@ -209,6 +216,20 @@ public class UserAccountDAO extends DBContext {
             int rowsAffected = ps.executeUpdate();
             return rowsAffected > 0; // Return true if update was successful
         } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    public boolean updatePassword(String email, String password){
+        String sql="update UserAccount set password = ? where email = ?";
+        try{
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, password);
+            ps.setString(2, email);
+            int affectedRows = ps.executeUpdate();
+            return affectedRows > 0;
+            
+        }catch(SQLException e){
             e.printStackTrace();
             return false;
         }

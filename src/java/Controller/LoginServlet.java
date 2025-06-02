@@ -29,7 +29,7 @@ import org.apache.http.client.fluent.Form;
 public class LoginServlet extends HttpServlet {
    public static final String CLIENT_ID = "202740089898-biog485gnu7f0i8v8q0sma4bjtl6effc.apps.googleusercontent.com";
    public static final String CLIENT_SECRET= "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";
-   public static final String REDIRECT_URI = "http://localhost:8080/LuxoraHotel/login";
+   public static final String REDIRECT_URI = "http://localhost:8080/ParadiseHotel/login";
    public static final String LINK_GET_TOKEN= "https://accounts.google.com/o/oauth2/token";
    public static final String LINK_GET_USER_INFO= "https://www.googleapis.com/oauth2/v1/userinfo?access_token=";
    public static final String GRANT_TYPE= "authorization_code";
@@ -51,13 +51,14 @@ public class LoginServlet extends HttpServlet {
             // save or update user in database
             UserAccountDAO userDAO = new UserAccountDAO();
             UserAccount user = userDAO.saveUserToDatabase(email, name, avatar_url);
-            if(user != null  && user.getStatus().equals("Active")){
+            // get user to login
+            UserAccount user1 = userDAO.getUserByEmail(email);
+            if(user1 != null && user1.getStatus().equals("Active")){
                 HttpSession session = request.getSession();
-                session.setAttribute("user", user);
+                session.setAttribute("user", user1);
                 response.sendRedirect("homepage");
             }
-        }catch(Exception e){
-            e.printStackTrace();
+        }catch(IOException e){
             request.setAttribute("error", "Google login failed. Please try again.");
             request.getRequestDispatcher("login.jsp").forward(request, response);
         }

@@ -1,30 +1,19 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
-
 package Model;
 
 public class Room {
+
     private int id;
     private String roomNumber;
     private int branchId;
     private int roomTypeId;
     private String status;
     private String imageUrl;
-    
-    // Constructors
-    public Room() {}
-    
-    public Room(int id, String roomNumber, int branchId, int roomTypeId, String status, String imageUrl) {
-        this.id = id;
-        this.roomNumber = roomNumber;
-        this.branchId = branchId;
-        this.roomTypeId = roomTypeId;
-        this.status = status;
-        this.imageUrl = imageUrl;
+    private String roomTypeName;
+    private String hotelName;
+
+    public Room() {
     }
-    
+
     public Room(String roomNumber, int branchId, int roomTypeId, String status, String imageUrl) {
         this.roomNumber = roomNumber;
         this.branchId = branchId;
@@ -32,67 +21,74 @@ public class Room {
         this.status = status;
         this.imageUrl = imageUrl;
     }
-    
+
     // Getters and Setters
-    public int getId() { 
-        return id; 
+    public int getId() {
+        return id;
     }
-    
-    public void setId(int id) { 
-        this.id = id; 
+
+    public void setId(int id) {
+        this.id = id;
     }
-    
-    public String getRoomNumber() { 
-        return roomNumber; 
+
+    public String getRoomNumber() {
+        return roomNumber;
     }
-    
-    public void setRoomNumber(String roomNumber) { 
-        this.roomNumber = roomNumber; 
+
+    public void setRoomNumber(String roomNumber) {
+        this.roomNumber = roomNumber;
     }
-    
-    public int getBranchId() { 
-        return branchId; 
+
+    public int getBranchId() {
+        return branchId;
     }
-    
-    public void setBranchId(int branchId) { 
-        this.branchId = branchId; 
+
+    public void setBranchId(int branchId) {
+        this.branchId = branchId;
     }
-    
-    public int getRoomTypeId() { 
-        return roomTypeId; 
+
+    public int getRoomTypeId() {
+        return roomTypeId;
     }
-    
-    public void setRoomTypeId(int roomTypeId) { 
-        this.roomTypeId = roomTypeId; 
+
+    public void setRoomTypeId(int roomTypeId) {
+        this.roomTypeId = roomTypeId;
     }
-    
-    public String getStatus() { 
-        return status; 
+
+    public String getStatus() {
+        return status;
     }
-    
-    public void setStatus(String status) { 
-        this.status = status; 
+
+    public void setStatus(String status) {
+        this.status = status;
     }
-    
-    public String getImageUrl() { 
-        return imageUrl; 
+
+    public String getImageUrl() {
+        return imageUrl;
     }
-    
-    public void setImageUrl(String imageUrl) { 
-        this.imageUrl = imageUrl; 
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
-    
+    private RoomType roomType;
+
+    public RoomType getRoomType() {
+        return roomType;
+    }
+
+    public void setRoomType(RoomType roomType) {
+        this.roomType = roomType;
+    }
+
     @Override
     public String toString() {
-        return "Room{" +
-                "id=" + id +
-                ", roomNumber='" + roomNumber + '\'' +
-                ", branchId=" + branchId +
-                ", roomTypeId=" + roomTypeId +
-                ", status='" + status + '\'' +
-                ", imageUrl='" + imageUrl + '\'' +
-                '}';
+        return "Room{"
+                + "id=" + id
+                + ", roomNumber='" + roomNumber + '\''
+                + ", branchId=" + branchId
+                + ", roomTypeId=" + roomTypeId
+                + ", status='" + status + '\''
+                + ", imageUrl='" + imageUrl + '\''
+                + '}';
     }
 }
-
-
