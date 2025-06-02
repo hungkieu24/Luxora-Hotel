@@ -6,8 +6,10 @@
 package Controller;
 
 import Dal.FeedbackDAO;
+import Dal.HotelBranchDAO;
 import Dal.RoomTypeDAO;
 import Model.Feedback;
+import Model.HotelBranch;
 import Model.RoomType;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -16,6 +18,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -28,12 +31,28 @@ public class HomeServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
+        String action = request.getParameter("action");
+        if(action != null ) {
+            if(action.equals("logout")) {
+                HttpSession session = request.getSession(false);
+                if (session != null) {
+                    session.invalidate();
+                }
+                response.sendRedirect("./homepage");
+                return;
+            }
+        }
+        
+        
         RoomTypeDAO roomTypeDao = new RoomTypeDAO();
         FeedbackDAO feedbackDAO = new FeedbackDAO();
+        HotelBranchDAO branchDAO = new HotelBranchDAO();
         
+        List<HotelBranch> branchList = branchDAO.getAllHotelBranchesSimple();
         List<RoomType> roomTypeList = roomTypeDao.getAllRoomType();
-        List<Feedback> feedbackList = feedbackDAO.getAllFeedBackComment();
+        List<Feedback> feedbackList = feedbackDAO.getUniqueFiveStarFeedbacksFromCustomers();
         
+        request.setAttribute("branchList", branchList);
         request.setAttribute("feedbackList", feedbackList);
         request.setAttribute("roomTypeList", roomTypeList);
         request.getRequestDispatcher("./homepage.jsp").forward(request, response);

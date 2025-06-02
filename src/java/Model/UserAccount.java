@@ -45,7 +45,6 @@ public class UserAccount {
         this.create_at = create_at;
         this.phonenumber = phonenumber;
     }
-    
 
     public String getId() {
         return id;
@@ -122,7 +121,7 @@ public class UserAccount {
 
     @Override
     public String toString() {
-        return "UserAccount{" + "id=" + id + ", username=" + username + ", password=" + password + ", email=" + email + ", avatar_url=" + avatar_url + ", role=" + role + ", status=" + status + ", create_at=" + create_at + '}';
+        return "UserAccount{" + "id=" + id + ", username=" + username + ", password=" + password + ", email=" + email + ", avatar_url=" + avatar_url + ", role=" + role + ", status=" + status + ", create_at=" + create_at + ", phonenumber=" + phonenumber + '}';
     }
     
 }

@@ -44,38 +44,38 @@ public class RoomTypeDAO extends DBcontext.DBContext {
         return roomTypeList;
     }
 
-    
 
-    public List<RoomType> searchAvailableRoomTypes(LocalDate checkIn, LocalDate checkOut, int guests) {
+    public List<RoomType> searchAvailableRoomTypes(LocalDate checkIn, LocalDate checkOut, int guests, int branchId) {
         List<RoomType> availableRoomTypes = new ArrayList<>();
 
         String sql = """
-        SELECT rt.id, rt.name, rt.description, rt.base_price, rt.capacity, rt.image_url
-        FROM RoomType rt
-        WHERE rt.capacity >= ?
-          AND EXISTS (
-              SELECT 1
-              FROM Room r
-              WHERE r.room_type_id = rt.id
-                AND r.status NOT IN ('Maintenance')
-                AND r.id NOT IN (
-                    SELECT br.room_id
-                    FROM BookingRoom br
-                    JOIN Booking b ON br.booking_id = b.id
-                    WHERE b.status NOT IN ('Cancelled', 'Locked')
-                      AND b.check_in < ?
-                      AND b.check_out > ?
-                )
-          )
-        """;
+            SELECT DISTINCT rt.id, rt.name, rt.description, rt.base_price, rt.capacity, rt.image_url
+            FROM RoomType rt
+            WHERE rt.capacity >= ?
+              AND EXISTS (
+                  SELECT 1
+                  FROM Room r
+                  WHERE r.room_type_id = rt.id
+                    AND r.branch_id = ?
+                    AND r.status NOT IN ('Maintenance', 'Locked')
+                    AND r.id NOT IN (
+                        SELECT br.room_id
+                        FROM BookingRoom br
+                        JOIN Booking b ON br.booking_id = b.id
+                        WHERE b.status NOT IN ('Cancelled', 'Locked')
+                          AND b.check_in < ?
+                          AND b.check_out > ?
+                    )
+              )
+            """;
 
         try (PreparedStatement st = connection.prepareStatement(sql)) {
             st.setInt(1, guests);
-            st.setDate(2, Date.valueOf(checkOut));
-            st.setDate(3, Date.valueOf(checkIn));
+            st.setInt(2, branchId);
+            st.setDate(3, Date.valueOf(checkOut));
+            st.setDate(4, Date.valueOf(checkIn));
 
             ResultSet rs = st.executeQuery();
-
             while (rs.next()) {
                 RoomType roomType = new RoomType(
                         rs.getInt("id"),

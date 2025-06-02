@@ -16,6 +16,7 @@ public class Feedback {
     private Timestamp created_at;
     private String status;
     private String admin_action;
+    private UserAccount userAccount;
     
     // Additional fields for display
     private String username;
@@ -40,6 +41,24 @@ public class Feedback {
         this.admin_action = admin_action;
     }
 
+    public Feedback(int feedbackID, int booking_id, int rating, String comment, String image_url, Timestamp created_at, String status, String admin_action, UserAccount userAccount) {
+        this.feedbackID = feedbackID;
+        this.booking_id = booking_id;
+        this.rating = rating;
+        this.comment = comment;
+        this.image_url = image_url;
+        this.created_at = created_at;
+        this.status = status;
+        this.admin_action = admin_action;
+        this.userAccount = userAccount;
+    }
+
+    public Feedback(int rating, String comment, Timestamp created_at, String status) {
+        this.rating = rating;
+        this.comment = comment;
+        this.created_at = created_at;
+        this.status = status;
+    }
     // Getters and Setters
     public int getId() {
         return id;
@@ -113,6 +132,14 @@ public class Feedback {
         this.admin_action = admin_action;
     }
 
+    public UserAccount getUserAccount() {
+        return userAccount;
+    }
+
+    public void setUserAccount(UserAccount userAccount) {
+        this.userAccount = userAccount;
+    }
+    
     public String getUsername() {
         return username;
     }
