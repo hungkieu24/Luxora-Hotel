@@ -18,6 +18,7 @@ public class UserAccount {
     private String role;
     private String status;
     private String create_at;
+   private String phonenumber;
 
     public UserAccount() {
     }
@@ -32,6 +33,19 @@ public class UserAccount {
         this.status = status;
         this.create_at = create_at;
     }
+
+    public UserAccount(String id, String username, String password, String email, String avatar_url, String role, String status, String create_at, String phonenumber) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.avatar_url = avatar_url;
+        this.role = role;
+        this.status = status;
+        this.create_at = create_at;
+        this.phonenumber = phonenumber;
+    }
+    
 
     public String getId() {
         return id;
@@ -96,6 +110,14 @@ public class UserAccount {
 
     public void setCreate_at(String create_at) {
         this.create_at = create_at;
+    }
+
+    public String getPhonenumber() {
+        return phonenumber;
+    }
+
+    public void setPhonenumber(String phonenumber) {
+        this.phonenumber = phonenumber;
     }
 
     @Override
