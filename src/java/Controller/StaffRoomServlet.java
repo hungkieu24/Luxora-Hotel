@@ -1,8 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
-
 package Controller;
 
 import Dal.RoomDAO;
@@ -17,10 +12,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-/**
- *
- * @author Admin
- */
 @WebServlet(name = "StaffRoomServlet", urlPatterns = {"/staff-rooms"})
 public class StaffRoomServlet extends HttpServlet {
 
@@ -37,7 +28,7 @@ public class StaffRoomServlet extends HttpServlet {
         request.setAttribute("roomTypeMap", roomTypeMap);
 
         if (keyword != null && !keyword.trim().isEmpty()) {
-            rooms = roomDAO.searchRoomsByRoomTypeName(keyword.trim()); // <-- Tìm theo tên RoomType
+            rooms = roomDAO.searchRoomsByRoomTypeName(keyword.trim());
         } else {
             rooms = roomDAO.getAllRooms();
         }
@@ -50,13 +41,17 @@ public class StaffRoomServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        int roomId = Integer.parseInt(request.getParameter("roomId"));
-        String status = request.getParameter("status");
+        try {
+            int roomId = Integer.parseInt(request.getParameter("roomId"));
+            String status = request.getParameter("status");
 
-        RoomDAO roomDAO = new RoomDAO();
-        roomDAO.updateRoomStatus(roomId, status);
+            RoomDAO roomDAO = new RoomDAO();
+            roomDAO.updateRoomStatus(roomId, status);
 
-        response.sendRedirect("staff-rooms");
+            response.sendRedirect("staff-rooms?message=statusUpdated");
+        } catch (Exception e) {
+            request.setAttribute("error", "Error updating room status: " + e.getMessage());
+            doGet(request, response);
+        }
     }
 }
-

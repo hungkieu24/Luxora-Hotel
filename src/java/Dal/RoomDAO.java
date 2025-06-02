@@ -183,31 +183,24 @@ public class RoomDAO extends DBContext {
         }
     }
 
-    public boolean updateRoomStatus(int id, String status) {
+  public void updateRoomStatus(int roomId, String status) throws SQLException {
         String sql = "UPDATE Room SET status = ? WHERE id = ?";
-
-        try {
-            PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setString(1, status);
-            stmt.setInt(2, id);
-
-            return stmt.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, status);
+            ps.setInt(2, roomId);
+            ps.executeUpdate();
         }
     }
 
-      // Lấy danh sách room_id theo booking_id 
-    public List<Integer> getRoomIdsByBooking(int bookingId) {
+      public List<Integer> getRoomIdsByBooking(int bookingId) {
         List<Integer> ids = new ArrayList<>();
         String sql = "SELECT room_id FROM BookingRoom WHERE booking_id = ?";
-        try {
-            PreparedStatement ps = connection.prepareStatement(sql);
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, bookingId);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                ids.add(rs.getInt("room_id"));
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    ids.add(rs.getInt("room_id"));
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
