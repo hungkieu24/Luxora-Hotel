@@ -1,3 +1,8 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
+ */
+
 package Controller;
 import Dal.BranchReportDAO;
 import Model.BranchReport;
@@ -27,11 +32,11 @@ public class BranchReportServlet extends HttpServlet {
         HttpSession session = request.getSession(false);
         String userId = (String) session.getAttribute("userId");
         
-        // Tạm thời bỏ kiểm tra userId để test
-        // if (userId == null || userId.trim().isEmpty()) {
-        //     response.sendRedirect("login.jsp");
-        //     return;
-        // }
+        
+         if (userId == null || userId.trim().isEmpty()) {
+           response.sendRedirect("login.jsp");
+            return;
+         }
         
         try {
             String startDate = request.getParameter("startDate");
