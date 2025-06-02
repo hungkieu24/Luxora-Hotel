@@ -22,10 +22,6 @@ public class Feedback {
     private String username;
     private String userAvatarUrl;
 
-    // Default constructor
-    public Feedback(int aInt, String string, Timestamp timestamp, String string1) {
-    }
-
     // Constructor with all fields
     public Feedback(int id, String user_id, int booking_id, int rating, 
                    String comment, String image_url, Timestamp created_at, 
@@ -41,8 +37,8 @@ public class Feedback {
         this.admin_action = admin_action;
     }
 
-    public Feedback(int feedbackID, int booking_id, int rating, String comment, String image_url, Timestamp created_at, String status, String admin_action, UserAccount userAccount) {
-        this.feedbackID = feedbackID;
+    public Feedback(int id, int booking_id, int rating, String comment, String image_url, Timestamp created_at, String status, String admin_action, UserAccount userAccount) {
+        this.id = id;
         this.booking_id = booking_id;
         this.rating = rating;
         this.comment = comment;

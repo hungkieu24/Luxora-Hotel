@@ -4,11 +4,6 @@
  */
 package Controller;
 
-import static Controller.LoginServlet.CLIENT_ID;
-import static Controller.LoginServlet.CLIENT_SECRET;
-import static Controller.LoginServlet.GRANT_TYPE;
-import static Controller.LoginServlet.LINK_GET_TOKEN;
-import static Controller.LoginServlet.REDIRECT_URI;
 import Dal.UserAccountDAO;
 import Model.UserAccount;
 import Utility.EmailUtility;
