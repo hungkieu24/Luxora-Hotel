@@ -357,8 +357,8 @@ GO
 INSERT INTO [UserAccount] ([id], [username], [password], [email], [avatar_url], [role], [status], [phonenumber]) VALUES
 ('U001', 'john_doe', 'hashed_pass1', 'john.doe@example.com', 'http://example.com/avatar1.jpg', 'Customer', 'Active', '0901234567'),
 ('U002', 'jane_smith', 'hashed_pass2', 'jane.smith@example.com', 'http://example.com/avatar2.jpg', 'Customer', 'Active', '0901234568'),
-('U003', 'hotel_owner1', 'hashed_pass3', 'owner1@example.com', NULL, 'HotelOwner', 'Active', '0901234569'),
-('U004', 'manager1', 'hashed_pass4', 'manager1@example.com', NULL, 'Manager', 'Active', '0901234570'),
+('U003', 'hotel_owner1', 'hashed_pass3', 'owner1@example.com', 'http://example.com/avatar3.jpg', 'HotelOwner', 'Active', '0901234569'),
+('U004', 'manager1', 'hashed_pass4', 'manager1@example.com', 'http://example.com/avatar4.jpg', 'Manager', 'Active', '0901234570'),
 ('U005', 'staff1', 'hashed_pass5', 'staff1@example.com', NULL, 'Staff', 'Active', '0901234571'),
 ('U006', 'admin1', 'hashed_pass6', 'admin1@example.com', NULL, 'Admin', 'Active', '0901234572'),
 ('U007', 'customer3', 'hashed_pass7', 'customer3@example.com', NULL, 'Customer', 'Inactive', '0901234573'),

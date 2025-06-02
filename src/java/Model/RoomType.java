@@ -4,6 +4,9 @@
  */
 package Model;
 
+import Dal.RoomTypeDAO;
+import java.util.List;
+
 /**
  *
  * @author hungk
@@ -88,4 +91,5 @@ public class RoomType {
     public String toString() {
         return "RoomType{" + "roomTypeID=" + roomTypeID + ", name=" + name + ", description=" + description + ", base_price=" + base_price + ", capacity=" + capacity + ", image_url=" + image_url + '}';
     }
+   
 }

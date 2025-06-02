@@ -30,6 +30,7 @@
                         <li><a href="#">Loyalty Status</a> </li>
                         <li><a href="#">Security</a></li>
                         <li><a href="#">Change Password</a></li>
+                        <li><a href="./homepage?action=logout">Log out</a></li>
                         <li><a href="homepage" class="home-link">Home</a></li>
                     </ul>
 
