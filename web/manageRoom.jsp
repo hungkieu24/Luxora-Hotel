@@ -45,7 +45,7 @@
 
         <div class="container">
             <h2>Manage Rooms</h2>
-            <button class="btn btn-primary create-btn" onclick="window.location.href = 'createRoom.jsp'">+ Create room</button>
+            <button class="btn btn-primary create-btn" onclick="window.location.href = 'createRoom'">+ Create room</button>
             <form method="get">
                 <div class="row mb-3">
                     <div class="col">

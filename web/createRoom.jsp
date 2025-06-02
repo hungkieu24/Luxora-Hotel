@@ -16,7 +16,7 @@
     <body>
         <div class="container" style="margin-top: 20px;">
             <h2>Create Room</h2>
-            <form action="createRoom" method="post">
+            <form action="createRoom" method="post" enctype="multipart/form-data">
                 <div class="mb-3">
                     <label class="form-label">Room Number</label>
                     <input type="text" class="form-control" name="roomNumber" required>

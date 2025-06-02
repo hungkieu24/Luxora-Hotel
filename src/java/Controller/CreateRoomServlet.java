@@ -24,16 +24,21 @@ import java.util.List;
  * @author thien
  */
 @WebServlet(name = "CreateRoomServlet", urlPatterns = {"/createRoom"})
-@MultipartConfig(maxFileSize = 1024 * 1024 * 5)
+@MultipartConfig(
+        fileSizeThreshold = 1024 * 1024 * 2, // 2MB
+        maxFileSize = 1024 * 1024 * 10, // 10MB
+        maxRequestSize = 1024 * 1024 * 50 // 50MB
+)
 public class CreateRoomServlet extends HttpServlet {
 
     RoomTypeDAO rtDao = new RoomTypeDAO();
     RoomDAO rDao = new RoomDAO();
-    UploadImage uploadImage;
-    final static String UPLOAD_DIR = "C:/upload/images/";// Define your upload directory
+    UploadImage uploadImage = new UploadImage();
+    final static String UPLOAD_DIR = "/img/avatar";// Define your upload directory
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+     
         try {
             List<RoomType> roomTypes = rtDao.getAllRoomType();
            
