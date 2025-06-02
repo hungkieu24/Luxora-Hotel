@@ -278,4 +278,30 @@ public class RoomDAO extends DBContext {
         return rooms;
     }
 
+ 
+public List<Room> searchRoomsByRoomTypeName(String roomTypeNameKeyword) {
+    List<Room> list = new ArrayList<>();
+    String sql = "SELECT r.* FROM Room r " +
+                 "JOIN RoomType rt ON r.roomTypeId = rt.id " +
+                 "WHERE rt.name LIKE ?";
+    try {
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setString(1, "%" + roomTypeNameKeyword + "%");
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            Room r = new Room();
+            r.setId(rs.getInt("id"));
+            r.setRoomNumber(rs.getString("roomNumber"));
+            r.setBranchId(rs.getInt("branchId"));
+            r.setRoomTypeId(rs.getInt("roomTypeId"));
+            r.setStatus(rs.getString("status"));
+            r.setImageUrl(rs.getString("imageUrl"));
+            list.add(r);
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return list;
+}
+
 }

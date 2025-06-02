@@ -1,8 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
-<%@ page import="java.util.List" %>
+<%@ page import="java.util.List, java.util.Map" %>
 <%@ page import="Model.Room" %>
 <%
     List<Room> rooms = (List<Room>) request.getAttribute("rooms");
+    Map<Integer, String> roomTypeMap = (Map<Integer, String>) request.getAttribute("roomTypeMap");
+    String keyword = request.getParameter("keyword");
 %>
 <!DOCTYPE html>
 <html>
@@ -11,16 +13,24 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <style>
-        .room-img { width: 80px; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,.09);}
+        .room-img { width: 80px; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,.09); }
     </style>
 </head>
 <body class="bg-light">
 <div class="container py-5">
-    <div class="d-flex mb-3">
+    <div class="d-flex mb-3 justify-content-between align-items-center">
         <a href="staff-dashboard" class="btn btn-outline-secondary">
             <i class="bi bi-arrow-left"></i> Back to Dashboard
         </a>
+        <form class="d-flex" method="get" action="staff-rooms">
+            <input type="text" name="keyword" class="form-control me-2" placeholder="Search by Room Type Name..."
+                   value="<%= keyword != null ? keyword : "" %>">
+            <button class="btn btn-outline-success" type="submit">
+                <i class="bi bi-search"></i> Search
+            </button>
+        </form>
     </div>
+
     <div class="card shadow-sm">
         <div class="card-header bg-warning">
             <h2 class="mb-0"><i class="bi bi-door-open"></i> Room Management</h2>
@@ -42,12 +52,13 @@
                 <%
                 if (rooms != null && !rooms.isEmpty()) {
                     for (Room r : rooms) {
+                        String typeName = roomTypeMap != null ? roomTypeMap.get(r.getRoomTypeId()) : "Unknown";
                 %>
                 <tr>
                     <td><%= r.getId() %></td>
                     <td><i class="bi bi-door-closed"></i> <%= r.getRoomNumber() %></td>
                     <td><%= r.getBranchId() %></td>
-                    <td><%= r.getRoomTypeId() %></td>
+                    <td><%= typeName != null ? typeName : "Unknown" %></td>
                     <td>
                         <% String status = r.getStatus(); %>
                         <span class="badge 
@@ -56,7 +67,7 @@
                             <% } else if("Occupied".equalsIgnoreCase(status)) { %>bg-warning text-dark
                             <% } else if("Maintenance".equalsIgnoreCase(status)) { %>bg-secondary
                             <% } else { %>bg-light text-dark<% } %>">
-                            <%= r.getStatus() %>
+                            <%= status %>
                         </span>
                     </td>
                     <td>
@@ -68,10 +79,10 @@
                         <form method="post" action="staff-rooms" class="d-flex align-items-center">
                             <input type="hidden" name="roomId" value="<%= r.getId() %>"/>
                             <select name="status" class="form-select form-select-sm me-2">
-                                <option value="Available" <%= "Available".equals(r.getStatus()) ? "selected" : "" %>>Available</option>
-                                <option value="Booked" <%= "Booked".equals(r.getStatus()) ? "selected" : "" %>>Booked</option>
-                                <option value="Occupied" <%= "Occupied".equals(r.getStatus()) ? "selected" : "" %>>Occupied</option>
-                                <option value="Maintenance" <%= "Maintenance".equals(r.getStatus()) ? "selected" : "" %>>Maintenance</option>
+                                <option value="Available" <%= "Available".equals(status) ? "selected" : "" %>>Available</option>
+                                <option value="Booked" <%= "Booked".equals(status) ? "selected" : "" %>>Booked</option>
+                                <option value="Occupied" <%= "Occupied".equals(status) ? "selected" : "" %>>Occupied</option>
+                                <option value="Maintenance" <%= "Maintenance".equals(status) ? "selected" : "" %>>Maintenance</option>
                             </select>
                             <button type="submit" class="btn btn-outline-primary btn-sm">
                                 <i class="bi bi-arrow-repeat"></i> Update

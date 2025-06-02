@@ -11,7 +11,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -43,6 +45,7 @@ public class RoomTypeDAO extends DBcontext.DBContext {
         }
         return roomTypeList;
     }
+
 
 
     public List<RoomType> searchAvailableRoomTypes(LocalDate checkIn, LocalDate checkOut, int guests, int branchId) {
@@ -94,4 +97,21 @@ public class RoomTypeDAO extends DBcontext.DBContext {
         return availableRoomTypes;
     }
 
+    public Map<Integer, String> getRoomTypeMap() {
+        Map<Integer, String> map = new HashMap<>();
+        String sql = "SELECT id, name FROM RoomType";
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                map.put(rs.getInt("id"), rs.getString("name"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return map;
+    }
 }

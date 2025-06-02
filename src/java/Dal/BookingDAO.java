@@ -191,4 +191,48 @@ public class BookingDAO extends DBcontext.DBContext {
         }
         return ids;
     }
+    public List<Booking> searchBookingsTodayByCustomer(String keyword) {
+    List<Booking> list = new ArrayList<>();
+    String sql = "SELECT b.*, u.username, "
+            + "STRING_AGG(r.room_number, ', ') AS roomNumbers "
+            + "FROM Booking b "
+            + "LEFT JOIN UserAccount u ON b.user_id = u.id "
+            + "LEFT JOIN BookingRoom br ON b.id = br.booking_id "
+            + "LEFT JOIN Room r ON br.room_id = r.id "
+            + "WHERE (CAST(b.check_in AS date) = CAST(GETDATE() AS date) "
+            + "   OR CAST(b.check_out AS date) = CAST(GETDATE() AS date)) "
+            + "  AND u.username LIKE ? "
+            + "GROUP BY b.id, b.user_id, b.booking_time, b.check_in, b.check_out, b.status, "
+            + "b.total_price, b.deposit, b.payment_status, b.cancel_reason, b.cancel_time, "
+            + "b.promotion_id, u.username";
+
+    try {
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setString(1, "%" + keyword + "%");
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            Booking b = new Booking();
+            b.setId(rs.getInt("id"));
+            b.setUserId(rs.getString("user_id"));
+            b.setBookingTime(rs.getTimestamp("booking_time"));
+            b.setCheckIn(rs.getTimestamp("check_in"));
+            b.setCheckOut(rs.getTimestamp("check_out"));
+            b.setStatus(rs.getString("status"));
+            b.setTotalPrice(rs.getDouble("total_price"));
+            b.setDeposit(rs.getDouble("deposit"));
+            b.setPaymentStatus(rs.getString("payment_status"));
+            b.setCancelReason(rs.getString("cancel_reason"));
+            b.setCancelTime(rs.getTimestamp("cancel_time"));
+            b.setPromotionId(rs.getInt("promotion_id"));
+            b.setUserName(rs.getString("username"));
+            b.setRoomNumbers(rs.getString("roomNumbers"));
+            b.setRooms(getRoomsByBookingId(b.getId()));
+            list.add(b);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return list;
+}
+
 }

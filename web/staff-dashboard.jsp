@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
+<%@ include file="/header.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 </head>
 <body class="bg-light">
+
 <div class="container py-5">
     <div class="card shadow-sm">
         <div class="card-body text-center">
@@ -31,5 +33,6 @@
         </div>
     </div>
 </div>
+
 </body>
 </html>

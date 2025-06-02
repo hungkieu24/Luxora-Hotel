@@ -3,6 +3,7 @@
 <%@ page import="Model.Booking" %>
 <%
     List<Booking> bookings = (List<Booking>) request.getAttribute("bookings");
+    String keyword = request.getParameter("keyword") != null ? request.getParameter("keyword") : "";
 %>
 <!DOCTYPE html>
 <html>
@@ -13,11 +14,17 @@
 </head>
 <body class="bg-light">
 <div class="container py-5">
-    <div class="d-flex mb-3">
+    <div class="d-flex justify-content-between align-items-center mb-3">
         <a href="staff-dashboard" class="btn btn-outline-secondary">
             <i class="bi bi-arrow-left"></i> Back to Dashboard
         </a>
+        <!-- Search form -->
+        <form class="d-flex" action="staff-bookings" method="get">
+            <input class="form-control me-2" type="search" name="keyword" placeholder="Search by customer name" value="<%= keyword %>">
+            <button class="btn btn-primary" type="submit"><i class="bi bi-search"></i> Search</button>
+        </form>
     </div>
+
     <div class="card shadow-sm">
         <div class="card-header bg-primary text-white">
             <h2 class="mb-0"><i class="bi bi-list-ul"></i> Today's Bookings List</h2>
@@ -61,7 +68,7 @@
                 } else {
                 %>
                 <tr>
-                    <td colspan="6" class="text-center text-muted">No bookings today.</td>
+                    <td colspan="6" class="text-center text-muted">No bookings found.</td>
                 </tr>
                 <% } %>
                 </tbody>

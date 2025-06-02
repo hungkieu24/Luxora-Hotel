@@ -26,8 +26,18 @@ public class StaffBookingServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException {
+        
+        String keyword = request.getParameter("keyword");
         BookingDAO bookingDAO = new BookingDAO();
-        List<Booking> bookings = bookingDAO.getBookingsToday();
+        List<Booking> bookings;
+
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            bookings = bookingDAO.searchBookingsTodayByCustomer(keyword.trim());
+            request.setAttribute("keyword", keyword); // để hiển thị lại trên ô input
+        } else {
+            bookings = bookingDAO.getBookingsToday();
+        }
+
         request.setAttribute("bookings", bookings);
         request.getRequestDispatcher("staff-bookings.jsp").forward(request, response);
     }
