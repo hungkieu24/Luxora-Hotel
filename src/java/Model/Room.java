@@ -22,6 +22,15 @@ public class Room {
         this.imageUrl = imageUrl;
     }
 
+    public Room(int id, String roomNumber, int branchId, int roomTypeId, String status, String imageUrl) {
+        this.id = id;
+        this.roomNumber = roomNumber;
+        this.branchId = branchId;
+        this.roomTypeId = roomTypeId;
+        this.status = status;
+        this.imageUrl = imageUrl;
+    }
+
     // Getters and Setters
     public int getId() {
         return id;
@@ -78,6 +87,22 @@ public class Room {
 
     public void setRoomType(RoomType roomType) {
         this.roomType = roomType;
+    }
+
+    public String getRoomTypeName() {
+        return roomTypeName;
+    }
+
+    public void setRoomTypeName(String roomTypeName) {
+        this.roomTypeName = roomTypeName;
+    }
+
+    public String getHotelName() {
+        return hotelName;
+    }
+
+    public void setHotelName(String hotelName) {
+        this.hotelName = hotelName;
     }
 
     @Override
