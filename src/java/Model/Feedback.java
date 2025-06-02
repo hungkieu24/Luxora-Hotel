@@ -49,6 +49,23 @@ public class Feedback {
         this.userAccount = userAccount;
     }
 
+    public Feedback(String user_id, int booking_id, int rating, String comment, Timestamp created_at, String status) {
+        this.user_id = user_id;
+        this.booking_id = booking_id;
+        this.rating = rating;
+        this.comment = comment;
+        this.created_at = created_at;
+        this.status = status;
+    }
+
+    public Feedback(int booking_id, int rating, String comment, Timestamp created_at, String username) {
+        this.booking_id = booking_id;
+        this.rating = rating;
+        this.comment = comment;
+        this.created_at = created_at;
+        this.username = username;
+    }
+    
     public Feedback(int rating, String comment, Timestamp created_at, String status) {
         this.rating = rating;
         this.comment = comment;

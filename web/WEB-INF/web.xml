@@ -3,7 +3,7 @@
     <welcome-file-list>
         <welcome-file>homepage</welcome-file>
     </welcome-file-list>
-     <servlet>
+    <servlet>
         <servlet-name>editProfile</servlet-name>
         <servlet-class>Controller.EditProfileServlet</servlet-class>
     </servlet>

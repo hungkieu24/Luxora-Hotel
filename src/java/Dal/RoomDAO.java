@@ -135,9 +135,10 @@ public class RoomDAO extends DBContext {
             return false;
         }
     }
+
     public void createRoom(Room room) throws SQLException {
         String sql = "INSERT INTO Room (room_number, branch_id, room_type_id, status, image_url) VALUES (?, ?, ?, ?, ?)";
-        try  {
+        try {
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setString(1, room.getRoomNumber());
             stmt.setInt(2, room.getBranchId());
@@ -145,9 +146,9 @@ public class RoomDAO extends DBContext {
             stmt.setString(4, room.getStatus());
             stmt.setString(5, room.getImageUrl() != null ? room.getImageUrl() : "");
             stmt.executeUpdate();
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
-            
+
         }
     }
 
@@ -183,7 +184,7 @@ public class RoomDAO extends DBContext {
         }
     }
 
-  public void updateRoomStatus(int roomId, String status) throws SQLException {
+    public void updateRoomStatus(int roomId, String status) throws SQLException {
         String sql = "UPDATE Room SET status = ? WHERE id = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, status);
@@ -192,7 +193,7 @@ public class RoomDAO extends DBContext {
         }
     }
 
-      public List<Integer> getRoomIdsByBooking(int bookingId) {
+    public List<Integer> getRoomIdsByBooking(int bookingId) {
         List<Integer> ids = new ArrayList<>();
         String sql = "SELECT room_id FROM BookingRoom WHERE booking_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -270,54 +271,46 @@ public class RoomDAO extends DBContext {
         }
         return rooms;
     }
-      // Lấy danh sách room_id theo booking_id 
-    public List<Integer> getRoomIdsByBooking(int bookingId) {
-        List<Integer> ids = new ArrayList<>();
-        String sql = "SELECT room_id FROM BookingRoom WHERE booking_id = ?";
+    // Lấy danh sách room_id theo booking_id 
+
+//    public List<Integer> getRoomIdsByBooking(int bookingId) {
+//        List<Integer> ids = new ArrayList<>();
+//        String sql = "SELECT room_id FROM BookingRoom WHERE booking_id = ?";
+//        try {
+//            PreparedStatement ps = connection.prepareStatement(sql);
+//            ps.setInt(1, bookingId);
+//            ResultSet rs = ps.executeQuery();
+//            while (rs.next()) {
+//                ids.add(rs.getInt("room_id"));
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return ids;
+//    }
+    public List<Room> searchRoomsByRoomTypeName(String roomTypeNameKeyword) {
+        List<Room> list = new ArrayList<>();
+        String sql = "SELECT r.* FROM Room r "
+                + "JOIN RoomType rt ON r.roomTypeId = rt.id "
+                + "WHERE rt.name LIKE ?";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setInt(1, bookingId);
+            ps.setString(1, "%" + roomTypeNameKeyword + "%");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                ids.add(rs.getInt("room_id"));
+                Room r = new Room();
+                r.setId(rs.getInt("id"));
+                r.setRoomNumber(rs.getString("roomNumber"));
+                r.setBranchId(rs.getInt("branchId"));
+                r.setRoomTypeId(rs.getInt("roomTypeId"));
+                r.setStatus(rs.getString("status"));
+                r.setImageUrl(rs.getString("imageUrl"));
+                list.add(r);
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return ids;
+        return list;
     }
-    public static void main(String[] args) {
-        RoomDAO rdao = new RoomDAO();
-        boolean uds = rdao.updateRoomStatus(1, "occupied");
-        if(uds) {
-            System.out.println("success");
-        } else {
-            System.out.println("fail");
-
- 
-public List<Room> searchRoomsByRoomTypeName(String roomTypeNameKeyword) {
-    List<Room> list = new ArrayList<>();
-    String sql = "SELECT r.* FROM Room r " +
-                 "JOIN RoomType rt ON r.roomTypeId = rt.id " +
-                 "WHERE rt.name LIKE ?";
-    try {
-        PreparedStatement ps = connection.prepareStatement(sql);
-        ps.setString(1, "%" + roomTypeNameKeyword + "%");
-        ResultSet rs = ps.executeQuery();
-        while (rs.next()) {
-            Room r = new Room();
-            r.setId(rs.getInt("id"));
-            r.setRoomNumber(rs.getString("roomNumber"));
-            r.setBranchId(rs.getInt("branchId"));
-            r.setRoomTypeId(rs.getInt("roomTypeId"));
-            r.setStatus(rs.getString("status"));
-            r.setImageUrl(rs.getString("imageUrl"));
-            list.add(r);
-        }
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-    return list;
-}
 
 }
