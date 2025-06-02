@@ -4,6 +4,11 @@
  */
 package Controller;
 
+import static Controller.LoginServlet.CLIENT_ID;
+import static Controller.LoginServlet.CLIENT_SECRET;
+import static Controller.LoginServlet.GRANT_TYPE;
+import static Controller.LoginServlet.LINK_GET_TOKEN;
+import static Controller.LoginServlet.REDIRECT_URI;
 import Dal.UserAccountDAO;
 import Model.UserAccount;
 import Utility.EmailUtility;
@@ -32,7 +37,7 @@ public class RegisterServlet extends HttpServlet {
 
     private static final String GOOGLE_CLIENT_SECRET = "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";
 
-    private static final String GOOGLE_REDIRECT_URI = "http://localhost:8080//ParadiseHotel/register";
+    private static final String GOOGLE_REDIRECT_URI = "http://localhost:8080/ParadiseHotel/register";
 
     private static final String GOOGLE_LINK_GET_TOKEN = "https://accounts.google.com/o/oauth2/token";
 
@@ -107,7 +112,7 @@ public class RegisterServlet extends HttpServlet {
 
     public static String getToken(String code) throws ClientProtocolException, IOException {
         // Call API to get token
-        String response = Request.Post(GOOGLE_LINK_GET_TOKEN)
+            String response = Request.Post(GOOGLE_LINK_GET_TOKEN)
                 .bodyForm(Form.form()
                         .add("client_id", GOOGLE_CLIENT_ID)
                         .add("client_secret", GOOGLE_CLIENT_SECRET)
@@ -120,7 +125,7 @@ public class RegisterServlet extends HttpServlet {
         return accessToken;
     }
 
-    public static JsonObject getUserInfoJson(final String accessToken) throws ClientProtocolException, IOException {
+    public static JsonObject getUserInfoJson(String accessToken) throws ClientProtocolException, IOException {
         String link = GOOGLE_LINK_GET_USER_INFO + accessToken;
         String response = Request.Get(link).execute().returnContent().asString();
         return new Gson().fromJson(response, JsonObject.class);
