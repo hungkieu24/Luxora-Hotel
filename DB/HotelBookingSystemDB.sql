@@ -8,7 +8,6 @@ BEGIN
     DROP DATABASE HotelBookingSystemDB;
 END
 GO
-
 CREATE DATABASE HotelBookingSystemDB
 GO
 

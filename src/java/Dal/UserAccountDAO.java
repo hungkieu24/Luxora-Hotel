@@ -1,4 +1,4 @@
-/*
+    /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
@@ -196,6 +196,7 @@ public class    UserAccountDAO extends DBContext {
                         rs.getString("password"),
                         rs.getString("email"),
                         rs.getString("avatar_url"),
+                        rs.getString("phone_number"),
                         rs.getString("role"),
                         rs.getString("status"),
                         rs.getString("created_at")
@@ -207,17 +208,18 @@ public class    UserAccountDAO extends DBContext {
         return null;
     }
 
-    public boolean updateUserInfo(String userId, String username, String email, String avatarUrl) {
-        String sql = "UPDATE UserAccount SET username = ?, email = ?, avatar_url = ? WHERE id = ?";
+    public boolean updateUserInfo(String userId, String username, String email, String phoneNumber, String avatarUrl) {
+        String sql = "UPDATE UserAccount SET username = ?, email = ?, phone_number = ?, avatar_url = ? WHERE id = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, username);
             ps.setString(2, email);
-            ps.setString(3, avatarUrl);
-            ps.setString(4, userId);
+            ps.setString(3, phoneNumber);
+            ps.setString(4, avatarUrl);
+            ps.setString(5, userId);
 
             int rowsAffected = ps.executeUpdate();
-            return rowsAffected > 0; // Return true if update was successful
+            return rowsAffected > 0;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;

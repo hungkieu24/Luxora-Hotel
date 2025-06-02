@@ -270,6 +270,29 @@ public class RoomDAO extends DBContext {
         }
         return rooms;
     }
+      // Lấy danh sách room_id theo booking_id 
+    public List<Integer> getRoomIdsByBooking(int bookingId) {
+        List<Integer> ids = new ArrayList<>();
+        String sql = "SELECT room_id FROM BookingRoom WHERE booking_id = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, bookingId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                ids.add(rs.getInt("room_id"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return ids;
+    }
+    public static void main(String[] args) {
+        RoomDAO rdao = new RoomDAO();
+        boolean uds = rdao.updateRoomStatus(1, "occupied");
+        if(uds) {
+            System.out.println("success");
+        } else {
+            System.out.println("fail");
 
  
 public List<Room> searchRoomsByRoomTypeName(String roomTypeNameKeyword) {

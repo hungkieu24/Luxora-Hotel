@@ -79,7 +79,6 @@ public class Booking {
     public String getStatus() {
         return status;
     }
-
     public void setStatus(String status) {
         this.status = status;
     }
@@ -87,7 +86,6 @@ public class Booking {
     public double getTotalPrice() {
         return totalPrice;
     }
-
     public void setTotalPrice(double totalPrice) {
         this.totalPrice = totalPrice;
     }
@@ -95,7 +93,6 @@ public class Booking {
     public double getDeposit() {
         return deposit;
     }
-
     public void setDeposit(double deposit) {
         this.deposit = deposit;
     }
@@ -103,7 +100,6 @@ public class Booking {
     public String getPaymentStatus() {
         return paymentStatus;
     }
-
     public void setPaymentStatus(String paymentStatus) {
         this.paymentStatus = paymentStatus;
     }
@@ -111,7 +107,6 @@ public class Booking {
     public String getCancelReason() {
         return cancelReason;
     }
-
     public void setCancelReason(String cancelReason) {
         this.cancelReason = cancelReason;
     }
@@ -119,7 +114,6 @@ public class Booking {
     public Timestamp getCancelTime() {
         return cancelTime;
     }
-
     public void setCancelTime(Timestamp cancelTime) {
         this.cancelTime = cancelTime;
     }
@@ -127,7 +121,6 @@ public class Booking {
     public int getPromotionId() {
         return promotionId;
     }
-
     public void setPromotionId(int promotionId) {
         this.promotionId = promotionId;
     }
@@ -135,7 +128,6 @@ public class Booking {
     public String getUserName() {
         return userName;
     }
-
     public void setUserName(String userName) {
         this.userName = userName;
     }
@@ -143,7 +135,6 @@ public class Booking {
     public String getRoomNumbers() {
         return roomNumbers;
     }
-
     public void setRoomNumbers(String roomNumbers) {
         this.roomNumbers = roomNumbers;
     }
