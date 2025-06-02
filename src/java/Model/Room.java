@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package Model;
 
 public class Room {
@@ -12,19 +8,10 @@ public class Room {
     private int roomTypeId;
     private String status;
     private String imageUrl;
-    
+    private String roomTypeName;
+    private String hotelName;
 
-    // Constructors
     public Room() {
-    }
-
-    public Room(int id, String roomNumber, int branchId, int roomTypeId, String status, String imageUrl) {
-        this.id = id;
-        this.roomNumber = roomNumber;
-        this.branchId = branchId;
-        this.roomTypeId = roomTypeId;
-        this.status = status;
-        this.imageUrl = imageUrl;
     }
 
     public Room(String roomNumber, int branchId, int roomTypeId, String status, String imageUrl) {

@@ -13,7 +13,7 @@ import java.text.SimpleDateFormat;
  *
  * @author thien
  */
-public class UserAccountDAO extends DBContext {
+public class    UserAccountDAO extends DBContext {
 
     public UserAccount login(String username, String password) {
         String sql = "SELECT * FROM UserAccount WHERE username = ? AND password = ?";
