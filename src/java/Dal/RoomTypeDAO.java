@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package Dal;
+
 import Model.RoomType;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -10,14 +11,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
  * @author hungk
  */
-public class RoomTypeDAO extends DBcontext.DBContext{
-    
+public class RoomTypeDAO extends DBcontext.DBContext {
+
     public List<RoomType> getAllRoomType() {
         List<RoomType> roomTypeList = new ArrayList<>();
         String sql = "SELECT * FROM RoomType";
@@ -29,12 +32,12 @@ public class RoomTypeDAO extends DBcontext.DBContext{
             while (rs.next()) {
                 RoomType roomtype = new RoomType(
                         rs.getInt("id"),
-                        rs.getString("name"), 
+                        rs.getString("name"),
                         rs.getString("description"),
-                        rs.getDouble("base_price"), 
+                        rs.getDouble("base_price"),
                         rs.getInt("capacity"),
                         rs.getString("image_url"));
-                
+
                 roomTypeList.add(roomtype);
             }
         } catch (SQLException e) {
@@ -42,7 +45,7 @@ public class RoomTypeDAO extends DBcontext.DBContext{
         }
         return roomTypeList;
     }
-    
+
     public List<RoomType> searchAvailableRoomTypes(LocalDate checkIn, LocalDate checkOut, int guests) {
         List<RoomType> availableRoomTypes = new ArrayList<>();
 
@@ -91,4 +94,21 @@ public class RoomTypeDAO extends DBcontext.DBContext{
         return availableRoomTypes;
     }
 
+    public Map<Integer, String> getRoomTypeMap() {
+        Map<Integer, String> map = new HashMap<>();
+        String sql = "SELECT id, name FROM RoomType";
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                map.put(rs.getInt("id"), rs.getString("name"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return map;
+    }
 }
