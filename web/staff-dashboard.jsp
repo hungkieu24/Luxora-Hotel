@@ -12,7 +12,7 @@
     <div class="row mb-4">
         <div class="col-12">
             <h1 class="text-primary mb-3">
-                <i class="bi bi-person-badge"></i> Staff Dashboard
+                <i class="bi bi-person-badge"></i> Staff Panel
             </h1>
             <hr>
         </div>

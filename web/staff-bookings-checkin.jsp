@@ -56,6 +56,7 @@
                         <th>Check-out</th>
                         <th>Status</th>
                         <th>Action</th>
+                        <th>View</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -96,13 +97,18 @@
                                 <span class="text-muted">-</span>
                             <% } %>
                         </td>
+                        <td>
+                            <a href="view-user-info?userId=<%= b.getUserId() %>" class="btn btn-info btn-sm" title="View Customer Info">
+                                <i class="bi bi-eye"></i> View
+                            </a>
+                        </td>
                     </tr>
                 <%
                     }
                 } else {
                 %>
                 <tr>
-                    <td colspan="7" class="text-center text-muted">No bookings found for today.</td>
+                    <td colspan="8" class="text-center text-muted">No bookings found for today.</td>
                 </tr>
                 <% } %>
                 </tbody>
