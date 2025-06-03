@@ -1,4 +1,4 @@
-package Controller;
+package Controller.Staff;
 
 import Dal.BookingDAO;
 import Dal.RoomDAO;
@@ -13,9 +13,13 @@ import java.util.List;
 @WebServlet(name = "StaffBookingsCheckinServlet", urlPatterns = {"/staff-bookings-checkin"})
 public class StaffBookingsCheckinServlet extends HttpServlet {
 
+    private static final String CHECKIN_MESSAGE = "checkinMessage";
+    private static final String CHECKOUT_MESSAGE = "checkoutMessage";
+    private static final String ERROR_MESSAGE = "errorMessage";
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
+            throws ServletException, IOException {
 
         String keyword = request.getParameter("keyword");
         BookingDAO bookingDAO = new BookingDAO();
@@ -30,12 +34,12 @@ public class StaffBookingsCheckinServlet extends HttpServlet {
             }
             request.setAttribute("bookings", bookings);
 
-            // Move messages from session to request if any
             HttpSession session = request.getSession(false);
+
             if (session != null) {
-                String checkinMessage = (String) session.getAttribute("checkinMessage");
-                String checkoutMessage = (String) session.getAttribute("checkoutMessage");
-                String errorMessage = (String) session.getAttribute("errorMessage");
+                String checkinMessage = (String) session.getAttribute(CHECKIN_MESSAGE);
+                String checkoutMessage = (String) session.getAttribute(CHECKOUT_MESSAGE);
+                String errorMessage = (String) session.getAttribute(ERROR_MESSAGE);
                 if (checkinMessage != null) {
                     request.setAttribute("checkinMessage", checkinMessage);
                     session.removeAttribute("checkinMessage");
@@ -54,12 +58,13 @@ public class StaffBookingsCheckinServlet extends HttpServlet {
             e.printStackTrace();
         }
 
-        request.getRequestDispatcher("staff-bookings-checkin.jsp").forward(request, response);
+        request.getRequestDispatcher(
+                "staff-bookings-checkin.jsp").forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
+            throws ServletException, IOException {
         String action = request.getParameter("action");
         String idParam = request.getParameter("bookingId");
         BookingDAO bookingDAO = new BookingDAO();

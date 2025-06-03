@@ -1,4 +1,4 @@
-package Controller;
+package Controller.Staff;
 
 import Dal.RoomDAO;
 import Dal.RoomTypeDAO;
