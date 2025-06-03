@@ -61,35 +61,69 @@ public class    UserAccountDAO extends DBContext {
             }
 
             // 2. Thêm người dùng mới
-            String insertSql = "INSERT INTO UserAccount (id, username, password, email, avatar_url, role, status, phonenumber) "
+            String insertUserSql = "INSERT INTO UserAccount (id, username, password, email, avatar_url, role, status, phonenumber) "
                     + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-
-            PreparedStatement ps2 = connection.prepareStatement(insertSql);
+            PreparedStatement ps2 = connection.prepareStatement(insertUserSql);
             ps2.setString(1, newId);
             ps2.setString(2, username);
             ps2.setString(3, password);
             ps2.setString(4, email);
-            ps2.setString(5, avatar_url);     // Cho phép null
-            ps2.setString(6, "Customer");     // Default role
-            ps2.setString(7, "Active");       // Default status
-            ps2.setString(8, phonenumber);    // New field
+            ps2.setString(5, avatar_url);
+            ps2.setString(6, "Customer");
+            ps2.setString(7, "Active");
+            ps2.setString(8, phonenumber);
 
-            int rows = ps2.executeUpdate();
-            return rows > 0;
+            int rowsUser = ps2.executeUpdate();
+
+            // 3. Nếu thêm user thành công thì thêm LoyaltyPoint
+            if (rowsUser > 0) {
+                String insertLoyaltySql = "INSERT INTO LoyaltyPoint (user_id, points, level) VALUES (?, ?, ?)";
+                PreparedStatement ps3 = connection.prepareStatement(insertLoyaltySql);
+                ps3.setString(1, newId);
+                ps3.setInt(2, 0);  // default points
+                ps3.setString(3, "Member");  // default level
+                int rowsLoyalty = ps3.executeUpdate();
+
+                // 4. Ghi vào MemberTierHistory nếu thêm điểm thành công
+                if (rowsLoyalty > 0) {
+                    String insertHistorySql = "INSERT INTO MemberTierHistory (user_id, old_level, new_level, reason) VALUES (?, ?, ?, ?)";
+                    PreparedStatement ps4 = connection.prepareStatement(insertHistorySql);
+                    ps4.setString(1, newId);
+                    ps4.setString(2, "Member");  // không có cấp trước đó
+                    ps4.setString(3, "Member");  // cấp mới
+                    ps4.setString(4, "Registered new account");
+
+                    int rowsHistory = ps4.executeUpdate();
+                    return rowsHistory > 0;
+                }
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;
     }
-
+    
     public boolean isEmailExist(String email) {
-        String sql = "SELECT 1 FROM UserAccount WHERE email = ? AND status = 'Active'";
+        String sql = "SELECT 1 FROM UserAccount WHERE email = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, email);
             ResultSet rs = ps.executeQuery();
-            return rs.next(); // Trả về true nếu tồn tại và status là Active
+            return rs.next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
+    public boolean isUsernameExist(String username) {
+        String sql = "SELECT 1 FROM UserAccount WHERE username = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, username);
+            ResultSet rs = ps.executeQuery();
+            return rs.next();
         } catch (SQLException e) {
             e.printStackTrace();
         }

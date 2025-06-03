@@ -112,7 +112,7 @@ public class RegisterServlet extends HttpServlet {
 
     public static String getToken(String code) throws ClientProtocolException, IOException {
         // Call API to get token
-            String response = Request.Post(GOOGLE_LINK_GET_TOKEN)
+        String response = Request.Post(GOOGLE_LINK_GET_TOKEN)
                 .bodyForm(Form.form()
                         .add("client_id", GOOGLE_CLIENT_ID)
                         .add("client_secret", GOOGLE_CLIENT_SECRET)
@@ -148,12 +148,13 @@ public class RegisterServlet extends HttpServlet {
         String password = request.getParameter("password");
         String phone = request.getParameter("phone");
 
-        if (email == null || username == null || password == null || phone == null) {
-            setSessionMessage(session, "Please fill in all information to register!", "error");
+        boolean isValidRegistration = isValidRegistration(email, username, password, phone, request);
+
+        if(!isValidRegistration) {
             response.sendRedirect("./register.jsp");
             return;
         }
-
+        
         // Sinh mã xác nhận
         String verificationCode = String.valueOf((int) (Math.random() * 900000 + 100000));
 
@@ -163,7 +164,7 @@ public class RegisterServlet extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("error", "Unable to send email");
-            request.getRequestDispatcher("register.jsp").forward(request, response);
+            request.getRequestDispatcher("./register.jsp").forward(request, response);
             return;
         }
 
@@ -174,6 +175,58 @@ public class RegisterServlet extends HttpServlet {
         session.setAttribute("password", password);
         session.setAttribute("phone", phone);
         response.sendRedirect("verify.jsp");
+    }
+
+    public boolean isValidRegistration(String email, String username, String password, String phone, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+
+        // Regex pattern
+        String phoneRegex = "^(0|\\+84)[2-9][0-9]{8}$";
+        String emailRegex = "^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$";
+        String letterRegex = ".*[a-zA-Z].*";
+        String specialCharRegex = ".*[!@#$%^&*(),.?\":{}|<>].*";
+        String digitRegex = ".*[0-9].*";
+
+        // Kiểm tra rỗng
+        if (email == null || username == null || password == null || phone == null
+                || email.isEmpty() || username.isEmpty() || password.isEmpty() || phone.isEmpty()) {
+            setSessionMessage(session, "Please fill in all information to register!", "error");
+            return false;
+        }
+
+        // Kiểm tra định dạng email
+        if (!email.matches(emailRegex)) {
+            setSessionMessage(session, "Invalid email format!", "error");
+            return false;
+        }
+
+        // Kiểm tra định dạng số điện thoại (10 chữ số)
+        if (!phone.matches(phoneRegex)) {
+            setSessionMessage(session, "Phone number must be exactly 10 digits!", "error");
+            return false;
+        }
+
+        if (!password.matches(letterRegex)
+                || !password.matches(specialCharRegex)
+                || !password.matches(digitRegex)) {
+            setSessionMessage(session, "Password must include at least one letter, one digit, and one special character!", "error");
+            return false;
+        }
+
+        // Kiểm tra email và username đã tồn tại chưa
+        UserAccountDAO accountDAO = new UserAccountDAO();
+        if (accountDAO.isEmailExist(email)) {
+            setSessionMessage(session, "Email already exists!", "error");
+            return false;
+        }
+
+        if (accountDAO.isUsernameExist(username)) {
+            setSessionMessage(session, "Username already exists!", "error");
+            return false;
+        }
+
+        // Nếu qua hết thì hợp lệ
+        return true;
     }
 
     /**

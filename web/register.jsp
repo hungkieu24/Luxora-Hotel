@@ -15,6 +15,7 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap"/>
         <link rel="stylesheet" href="./css/registerStyles.css"/>
+        <link rel="stylesheet" href="./css/custom.css"/>
     </head>
     <body>
         <c:if test="${not empty sessionScope.message}">
@@ -87,6 +88,7 @@
             </div>
             <h4>You already have an account ?  <a href="./login.jsp" style="color: #7a7aff">Login</a></h4>
         </form>
+        <script src="./js/toastMessage.js"></script>    
         <script src="./js/validationForm.js"></script>
         <script>
             Validator({
@@ -95,10 +97,11 @@
                 errorSelector: '.form__error',
                 rules: [
                     Validator.isRequired('#username', 'Please enter your username'),
+                    Validator.minLength('#username', 3),
                     Validator.isPhoneNumber('#phone', 'Please enter your phone number'),
                     Validator.isRequired('#email', 'Please enter your email'),
                     Validator.isEmail('#email'),
-                    Validator.minLength(' #password', 8),
+                    Validator.minLength(' #password', 10),
                     Validator.isRequired('#repassword'),
                     Validator.isConfirmed(' #repassword', function () {
                         return document.querySelector('#form-register #password').value;

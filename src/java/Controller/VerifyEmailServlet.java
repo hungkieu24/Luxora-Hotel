@@ -91,9 +91,7 @@ public class VerifyEmailServlet extends HttpServlet {
             if (registered) {
                 session.invalidate();
                 response.sendRedirect("login.jsp");
-            } else {
-                response.sendRedirect("500.html");
-            }
+            } 
 
         } else {
             request.setAttribute("error", "The verification code is incorrect!");
