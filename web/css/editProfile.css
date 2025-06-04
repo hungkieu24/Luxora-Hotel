@@ -12,9 +12,9 @@ body {
     background-repeat: no-repeat;
     margin: 0;
     padding: 0;
-    display: flex;
+/*    display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: center;*/
     min-height: 100vh;
     padding: 40px;
     box-sizing: border-box;
@@ -29,6 +29,7 @@ body {
     width: 1000px;
     max-width: 100%;
     min-height: 650px;
+    margin: 0 auto;
 }
 
 .sidebar {

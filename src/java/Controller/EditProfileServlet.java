@@ -70,7 +70,6 @@ public class EditProfileServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-        UserAccountDAO uad = new UserAccountDAO();
         
         UserAccount user = (UserAccount) session.getAttribute("user");
         if (user == null) {
@@ -78,10 +77,10 @@ public class EditProfileServlet extends HttpServlet {
             return;
         }
 
-        LoyaltyPointDAO lpd = new LoyaltyPointDAO(); 
-        LoyaltyPoint lp = lpd.getLoyaltyPointByUserId(user.getId());
+        LoyaltyPointDAO loyaltypointdao = new LoyaltyPointDAO(); 
+        LoyaltyPoint loyaltypointlp = loyaltypointdao.getLoyaltyPointByUserId(user.getId());
         
-        session.setAttribute("lp", lp); 
+        session.setAttribute("loyaltypointlp", loyaltypointlp); 
         request.getRequestDispatcher("editProfile.jsp").forward(request, response);
     }
 
@@ -99,7 +98,7 @@ public class EditProfileServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         HttpSession session = request.getSession();
-        UserAccountDAO uad = new UserAccountDAO();
+        UserAccountDAO useraccountdao = new UserAccountDAO();
         UserAccount user = (UserAccount) session.getAttribute("user");
 
         UploadImage up = new UploadImage();
@@ -132,20 +131,17 @@ public class EditProfileServlet extends HttpServlet {
         if (phonenumber != null && !phonenumber.trim().isEmpty()) {
             session.setAttribute("phonenumber", phonenumber);
         }
-
-        boolean updated = uad.updateUserInfo(user.getId(), username, email, phonenumber, fileName);
+        String avatarUrl = UPLOAD_DIR+"/"+fileName;
+        boolean updated = useraccountdao.updateUserInfo(user.getId(), username, email, phonenumber, avatarUrl);
         
         if (updated) {
-            UserAccount ua = uad.getUserById(user.getId());
-            session.setAttribute("user", ua);
+            UserAccount useraccount = useraccountdao.getUserById(user.getId());
+            session.setAttribute("user", useraccount);
             session.setAttribute("message", "Information updated successfully!");
         } else {
             session.setAttribute("message", "Update information failed!");
         }
-        
-        
-        
-        
+      
         request.getRequestDispatcher("editProfile.jsp").forward(request, response);
         
     }

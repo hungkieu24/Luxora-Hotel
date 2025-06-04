@@ -20,13 +20,13 @@
 
             <div class="container">
                 <div class="sidebar">
-                    <img class="avatar" src="./img/avatar/${sessionScope.user.getAvatar_url()}" alt="Profile Avatar"/>
-                    <p>Rank: <span>${lp.getLevel()}</span> </p>
-                    <p>Accumulated Points: <a href="#">${lp.getPoints()}</a></p>
+                    <img class="avatar" src=".${sessionScope.user.getAvatar_url()}" alt="Profile Avatar"/>
+                    <p>Rank: <span>${loyaltypointlp.getLevel()}</span> </p>
+                    <p>Accumulated Points: <a href="#">${loyaltypointlp.getPoints()}</a></p>
                     <ul>
                         <li><a href="editProfile">Personal Info</a></li>
                         <li><a href="bookingHistory.jsp">Booking History</a></li>
-                        <li><a href="#">Your Booking</a></li>
+                        <li><a href="myBooking">Your Booking</a></li>
                         <li><a href="#">Loyalty Status</a> </li>
                         <li><a href="#">Security</a></li>
                         <li><a href="#">Change Password</a></li>
@@ -40,7 +40,7 @@
                     <p>View and update your personal details.</p>
                     <form action="editProfile" method="post" enctype="multipart/form-data">
                         <div class="avatar-section">
-                            <img class="avatar" src="./img/avatar/${sessionScope.user.getAvatar_url()}" alt="Avatar"/>
+                            <img class="avatar" src=".${sessionScope.user.getAvatar_url()}" alt="Avatar"/>
                             <p >Choose file to change avatar</p>
 
                             <input type="file" id="avatar-upload" name="avatar">
