@@ -105,6 +105,7 @@
                                             <div class="col-lg-3 col-sm-12 pe-lg-0 pe-sm-1">
                                                 <div class="custom_select">
                                                     <select class="wide" name="branchID" style="position: absolute; left: -9999px; display: block">
+                                                        <option value=""></option>
                                                         <c:forEach items="${branchList}" var="b">
                                                             <option value="${b.getId()}">${b.getAddress()}</option>
                                                         </c:forEach>

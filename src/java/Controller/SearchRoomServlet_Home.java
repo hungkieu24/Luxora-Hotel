@@ -76,7 +76,7 @@ public class SearchRoomServlet_Home extends HttpServlet {
         String dates = request.getParameter("dates");
         String branchIDString = request.getParameter("branchID");
 
-        if (adults == null || childs == null || dates == null || branchIDString == null) {
+        if (adults == null || childs == null || dates == null || dates.isEmpty() || branchIDString == null || branchIDString.isEmpty() ) {
             setSessionMessage(session, "Please fill in all information to search!", "error");
             response.sendRedirect("./homepage");
             return;
@@ -88,7 +88,7 @@ public class SearchRoomServlet_Home extends HttpServlet {
         // Tách chuỗi theo dấu ">"
         String[] parts = dates.split(">");
         if (parts.length < 2) {
-            setSessionMessage(session, "Please select check-in and check-out dates correctly.", "error");
+            setSessionMessage(session, "Please select check-in and check-out dates.", "error");
             response.sendRedirect("./homepage");
             return;
         }

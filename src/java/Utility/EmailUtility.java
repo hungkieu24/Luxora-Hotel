@@ -16,8 +16,8 @@ import java.util.Properties;
 public class EmailUtility {
 
     public static void sendEmail(String toEmail, String subject, String messageText) throws Exception {
-        final String fromEmail = "hungkdhe182234@fpt.edu.vn"; // Thay bằng email của bạn
-        final String password = "fpdd kxon kpji bqhr"; // App Password của Gmail
+        final String fromEmail = "hung70919@gmail.com"; // Thay bằng email của bạn
+        final String password = "swav xtfi qiqe oeqz"; // App Password của Gmail
 
         // Cấu hình thông số SMTP
         Properties props = new Properties();

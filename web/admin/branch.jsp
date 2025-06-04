@@ -8,7 +8,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -462,7 +462,7 @@
                         <div class="form__group">
                             <label class="form__label form-card__label">Address</label>
                             <div class="form__text-input">
-                                <input type="text" name="branchAddress" id="branchAddress-add" class="form__input address" placeholder="Address"/>
+                                <input type="text" name="branchAddress" id="branchAddress-add" class="form__input address" placeholder="Address" readonly/>
                             </div>
                             <p class="form__error"></p>
                         </div>
@@ -484,7 +484,6 @@
                             <label class="form__label form-card__label">Image Preview</label>
                             <div class="wrapper-images" id="imagePreviewWrapper-add">
                                 <div class="images">
-                                    <img class="images_img" src="" alt="">
                                 </div>
                             </div>
                         </div>
@@ -652,7 +651,7 @@
                     Validator.isPhoneNumber('#branchPhone-add', 'Please enter branch phone number'),
                     Validator.isRequired('#branchEmail-add', 'Please enter branch email'),
                     Validator.isEmail('#branchEmail-add', 'This field must be an email'),
-                    Validator.isRequired('#branchAddress-add', 'Please enter the branch address'),
+                    Validator.isRequired('#specificAddress-add', 'Please enter specific branch address'),
                 ],
                 onsubmit: function (formValue) {
                     document.querySelector('#add-form').submit();
