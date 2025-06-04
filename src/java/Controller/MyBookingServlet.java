@@ -70,8 +70,8 @@ public class MyBookingServlet extends HttpServlet {
 //        String userId = String.valueOf(user.getId());
 
         // Lấy danh sách booking của người dùng
-        BookingDAO bd = new BookingDAO();
-        List<Booking> bookings = bd.getBookingsByUserId(user.getId());
+        BookingDAO bookingdao = new BookingDAO();
+        List<Booking> bookings = bookingdao.getBookingsByUserId(user.getId());
 
         // Đặt danh sách booking vào request để JSP hiển thị
         request.setAttribute("bookings", bookings);
