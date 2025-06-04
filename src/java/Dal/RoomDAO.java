@@ -193,22 +193,6 @@ public class RoomDAO extends DBContext {
         }
     }
 
-    public List<Integer> getRoomIdsByBooking(int bookingId) {
-        List<Integer> ids = new ArrayList<>();
-        String sql = "SELECT room_id FROM BookingRoom WHERE booking_id = ?";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, bookingId);
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    ids.add(rs.getInt("room_id"));
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return ids;
-    }
-
     public List<Room> getRooms(String status, String roomTypeId, String search) {
         List<Room> rooms = new ArrayList<>();
         String sql = "SELECT r.id, r.room_number, r.branch_id, r.room_type_id, r.status, r.image_url, "
@@ -273,21 +257,22 @@ public class RoomDAO extends DBContext {
     }
     // Lấy danh sách room_id theo booking_id 
 
-//    public List<Integer> getRoomIdsByBooking(int bookingId) {
-//        List<Integer> ids = new ArrayList<>();
-//        String sql = "SELECT room_id FROM BookingRoom WHERE booking_id = ?";
-//        try {
-//            PreparedStatement ps = connection.prepareStatement(sql);
-//            ps.setInt(1, bookingId);
-//            ResultSet rs = ps.executeQuery();
-//            while (rs.next()) {
-//                ids.add(rs.getInt("room_id"));
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        return ids;
-//    }
+    public List<Integer> getRoomIdsByBooking(int bookingId) {
+        List<Integer> ids = new ArrayList<>();
+        String sql = "SELECT room_id FROM BookingRoom WHERE booking_id = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, bookingId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                ids.add(rs.getInt("room_id"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return ids;
+    }
+
     public List<Room> searchRoomsByRoomTypeName(String roomTypeNameKeyword) {
         List<Room> list = new ArrayList<>();
         String sql = "SELECT r.* FROM Room r "
