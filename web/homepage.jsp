@@ -65,6 +65,8 @@
                                         <a href="#0" class="show-submenu">Home</a>
                                         <ul>
                                             <li><a href="branchReport.jsp">branch report</a></li>
+                                            <li><a href="branch-details">branch detail</a></li>
+                                            <li><a href="feedback">feedback</a></li>
                                         </ul>
                                     </li>
                                     <li class="submenu">
