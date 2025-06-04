@@ -298,4 +298,150 @@ public class RoomDAO extends DBContext {
         return list;
     }
 
+    public String getBranchNameById(String managerId) {
+        String name = null;
+        String sql = "select name from HotelBranch where manager_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, managerId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                name = rs.getString("name");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return name;
+    }
+
+    public int getBranchId(String managerId) {
+        int branchId = 0;
+        String sql = "select id from HotelBranch where manager_id= ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, managerId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                branchId = rs.getInt("id");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return branchId;
+    }
+
+    public List<Room> getAllRoomByBranchId(int branchId) {
+        List<Room> rooms = new ArrayList<>();
+        String sql = "SELECT r.id AS room_id, r.room_number, r.status, r.branch_id, r.room_type_id, r.image_url AS room_image_url, "
+                + "rt.id AS roomtype_id, rt.name, rt.description, rt.base_price, rt.capacity, rt.image_url AS roomtype_image_url "
+                + "FROM Room r "
+                + "JOIN RoomType rt ON r.room_type_id = rt.id "
+                + "WHERE r.branch_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, branchId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                RoomType rt = new RoomType(
+                        rs.getInt("roomtype_id"),
+                        rs.getString("name"),
+                        rs.getString("description"),
+                        rs.getDouble("base_price"),
+                        rs.getInt("capacity"),
+                        rs.getString("roomtype_image_url")
+                );
+                Room room = new Room(
+                        rs.getInt("room_id"),
+                        rs.getString("room_number"),
+                        rs.getInt("branch_id"),
+                        rs.getInt("room_type_id"),
+                        rs.getString("status"),
+                        rs.getString("room_image_url") // Sửa từ "image" thành "room_image_url"
+                );
+                room.setRoomType(rt); // Đảm bảo quan hệ được thiết lập
+                rooms.add(room);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error in getAllRoomByBranchId: " + e.getMessage());
+        }
+        return rooms;
+    }
+
+    public boolean isRoomNumberExist(String roomNumber, int branchId) {
+        String sql = "select count(*) from Room where room_number = ? and branch_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, roomNumber);
+            ps.setInt(2, branchId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public List<Room> getRoomsByBranch(int branchId, String status, String roomTypeId, String search) {
+        List<Room> rooms = new ArrayList<>();
+        String sql = "SELECT r.id, r.room_number, r.branch_id, r.room_type_id, r.status, r.image_url, "
+                + "rt.id AS rt_id, rt.name AS rt_name, rt.description AS rt_description, "
+                + "rt.base_price, rt.capacity, rt.image_url AS rt_image_url "
+                + "FROM Room r JOIN RoomType rt ON r.room_type_id = rt.id WHERE r.branch_id = ?";
+
+        if (status != null && !status.isEmpty()) {
+            sql += " AND r.status = ?";
+        }
+        if (roomTypeId != null && !roomTypeId.isEmpty()) {
+            sql += " AND r.room_type_id = ?";
+        }
+        if (search != null && !search.isEmpty()) {
+            sql += " AND (r.room_number LIKE ? OR lower(rt.name) LIKE lower(?) OR lower(r.status) LIKE lower(?))";
+        }
+
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            int index = 1;
+            stmt.setInt(index++, branchId);
+
+            if (status != null && !status.isEmpty()) {
+                stmt.setString(index++, status);
+            }
+            if (roomTypeId != null && !roomTypeId.isEmpty()) {
+                stmt.setInt(index++, Integer.parseInt(roomTypeId));
+            }
+            if (search != null && !search.isEmpty()) {
+                String like = "%" + search + "%";
+                stmt.setString(index++, like);
+                stmt.setString(index++, like);
+                stmt.setString(index++, like);
+            }
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                RoomType rt = new RoomType(
+                        rs.getInt("rt_id"),
+                        rs.getString("rt_name"),
+                        rs.getString("rt_description"),
+                        rs.getDouble("base_price"),
+                        rs.getInt("capacity"),
+                        rs.getString("rt_image_url")
+                );
+
+                Room room = new Room(
+                        rs.getInt("id"),
+                        rs.getString("room_number"),
+                        rs.getInt("branch_id"),
+                        rs.getInt("room_type_id"),
+                        rs.getString("status"),
+                        rs.getString("image_url")
+                );
+                room.setRoomType(rt);
+
+                rooms.add(room);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return rooms;
+    }
+
 }

@@ -255,76 +255,76 @@ public class BookingDAO extends DBcontext.DBContext {
         }
     }
 
-    public Booking getBookingById(int bookingId) {
-        Booking booking = null;
-        String sql = "SELECT b.*, u.username, u.email, "
-                + "STRING_AGG(rt.name, ', ') AS roomTypes "
-                + "FROM Booking b "
-                + "LEFT JOIN UserAccount u ON b.user_id = u.id "
-                + "LEFT JOIN BookingRoom br ON b.id = br.booking_id "
-                + "LEFT JOIN Room r ON br.room_id = r.id "
-                + "LEFT JOIN RoomType rt ON r.room_type_id = rt.roomTypeID "
-                + "WHERE b.id = ? "
-                + "GROUP BY b.id, b.user_id, b.booking_time, b.check_in, b.check_out, b.status, "
-                + "b.total_price, b.deposit, b.payment_status, b.cancel_reason, b.cancel_time, "
-                + "b.promotion_id, u.username, u.email";
-        try {
-            PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setInt(1, bookingId);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                booking = new Booking();
-                booking.setId(rs.getInt("id"));
-                booking.setUserId(rs.getString("user_id"));
-                booking.setBookingTime(rs.getTimestamp("booking_time"));
-                booking.setCheckIn(rs.getTimestamp("check_in"));
-                booking.setCheckOut(rs.getTimestamp("check_out"));
-                booking.setStatus(rs.getString("status"));
-                booking.setTotalPrice(rs.getDouble("total_price"));
-                booking.setDeposit(rs.getDouble("deposit"));
-                booking.setPaymentStatus(rs.getString("payment_status"));
-                booking.setCancelReason(rs.getString("cancel_reason"));
-                booking.setCancelTime(rs.getTimestamp("cancel_time"));
-                booking.setPromotionId(rs.getInt("promotion_id"));
-                booking.setUserName(rs.getString("username"));
-                booking.setRoomTypes(rs.getString("roomTypes"));
-                booking.setRooms(getRoomsByBookingId(bookingId));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return booking;
-    }
-
-    public List<Room> getRoomsByBookingId(int bookingId) {
-        List<Room> rooms = new ArrayList<>();
-        String sql = "SELECT r.*, rt.name AS roomTypeName, hb.name AS hotelName "
-                + "FROM BookingRoom br "
-                + "JOIN Room r ON br.room_id = r.id "
-                + "LEFT JOIN RoomType rt ON r.room_type_id = rt.roomTypeID "
-                + "LEFT JOIN HotelBranch hb ON r.branch_id = hb.id "
-                + "WHERE br.booking_id = ?";
-        try {
-            PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setInt(1, bookingId);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                Room room = new Room();
-                room.setId(rs.getInt("id"));
-                room.setRoomNumber(rs.getString("room_number"));
-                room.setBranchId(rs.getInt("branch_id"));
-                room.setRoomTypeId(rs.getInt("room_type_id"));
-                room.setStatus(rs.getString("status"));
-                room.setImageUrl(rs.getString("image_url"));
-                room.setRoomTypeName(rs.getString("roomTypeName"));
-                room.setHotelName(rs.getString("hotelName"));
-                rooms.add(room);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return rooms;
-    }
+//    public Booking getBookingById(int bookingId) {
+//        Booking booking = null;
+//        String sql = "SELECT b.*, u.username, u.email, "
+//                + "STRING_AGG(rt.name, ', ') AS roomTypes "
+//                + "FROM Booking b "
+//                + "LEFT JOIN UserAccount u ON b.user_id = u.id "
+//                + "LEFT JOIN BookingRoom br ON b.id = br.booking_id "
+//                + "LEFT JOIN Room r ON br.room_id = r.id "
+//                + "LEFT JOIN RoomType rt ON r.room_type_id = rt.roomTypeID "
+//                + "WHERE b.id = ? "
+//                + "GROUP BY b.id, b.user_id, b.booking_time, b.check_in, b.check_out, b.status, "
+//                + "b.total_price, b.deposit, b.payment_status, b.cancel_reason, b.cancel_time, "
+//                + "b.promotion_id, u.username, u.email";
+//        try {
+//            PreparedStatement ps = connection.prepareStatement(sql);
+//            ps.setInt(1, bookingId);
+//            ResultSet rs = ps.executeQuery();
+//            if (rs.next()) {
+//                booking = new Booking();
+//                booking.setId(rs.getInt("id"));
+//                booking.setUserId(rs.getString("user_id"));
+//                booking.setBookingTime(rs.getTimestamp("booking_time"));
+//                booking.setCheckIn(rs.getTimestamp("check_in"));
+//                booking.setCheckOut(rs.getTimestamp("check_out"));
+//                booking.setStatus(rs.getString("status"));
+//                booking.setTotalPrice(rs.getDouble("total_price"));
+//                booking.setDeposit(rs.getDouble("deposit"));
+//                booking.setPaymentStatus(rs.getString("payment_status"));
+//                booking.setCancelReason(rs.getString("cancel_reason"));
+//                booking.setCancelTime(rs.getTimestamp("cancel_time"));
+//                booking.setPromotionId(rs.getInt("promotion_id"));
+//                booking.setUserName(rs.getString("username"));
+//                booking.setRoomTypes(rs.getString("roomTypes"));
+//                booking.setRooms(getRoomsByBookingId(bookingId));
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return booking;
+//    }
+//
+//    public List<Room> getRoomsByBookingId(int bookingId) {
+//        List<Room> rooms = new ArrayList<>();
+//        String sql = "SELECT r.*, rt.name AS roomTypeName, hb.name AS hotelName "
+//                + "FROM BookingRoom br "
+//                + "JOIN Room r ON br.room_id = r.id "
+//                + "LEFT JOIN RoomType rt ON r.room_type_id = rt.roomTypeID "
+//                + "LEFT JOIN HotelBranch hb ON r.branch_id = hb.id "
+//                + "WHERE br.booking_id = ?";
+//        try {
+//            PreparedStatement ps = connection.prepareStatement(sql);
+//            ps.setInt(1, bookingId);
+//            ResultSet rs = ps.executeQuery();
+//            while (rs.next()) {
+//                Room room = new Room();
+//                room.setId(rs.getInt("id"));
+//                room.setRoomNumber(rs.getString("room_number"));
+//                room.setBranchId(rs.getInt("branch_id"));
+//                room.setRoomTypeId(rs.getInt("room_type_id"));
+//                room.setStatus(rs.getString("status"));
+//                room.setImageUrl(rs.getString("image_url"));
+//                room.setRoomTypeName(rs.getString("roomTypeName"));
+//                room.setHotelName(rs.getString("hotelName"));
+//                rooms.add(room);
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return rooms;
+//    }
 
     public List<Booking> searchBookingsTodayByCustomer(String keyword) {
         List<Booking> list = new ArrayList<>();
