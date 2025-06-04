@@ -4,11 +4,6 @@
  */
 package Controller;
 
-import static Controller.LoginServlet.CLIENT_ID;
-import static Controller.LoginServlet.CLIENT_SECRET;
-import static Controller.LoginServlet.GRANT_TYPE;
-import static Controller.LoginServlet.LINK_GET_TOKEN;
-import static Controller.LoginServlet.REDIRECT_URI;
 import Dal.UserAccountDAO;
 import Model.UserAccount;
 import Utility.EmailUtility;
@@ -45,46 +40,11 @@ public class RegisterServlet extends HttpServlet {
 
     private static final String GOOGLE_GRANT_TYPE = "authorization_code";
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet RegisterServlet</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet RegisterServlet at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
-    }
-
     private void setSessionMessage(HttpSession session, String message, String type) {
         session.setAttribute("message", message);
         session.setAttribute("messageType", type);
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -131,14 +91,6 @@ public class RegisterServlet extends HttpServlet {
         return new Gson().fromJson(response, JsonObject.class);
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -148,13 +100,13 @@ public class RegisterServlet extends HttpServlet {
         String password = request.getParameter("password");
         String phone = request.getParameter("phone");
 
-        boolean isValidRegistration = isValidRegistration(email, username, password, phone, request);
+        boolean isValidRegistration = isValidRegistration(email, username, password, request);
 
-        if(!isValidRegistration) {
+        if (!isValidRegistration) {
             response.sendRedirect("./register.jsp");
             return;
         }
-        
+
         // Sinh mã xác nhận
         String verificationCode = String.valueOf((int) (Math.random() * 900000 + 100000));
 
@@ -177,35 +129,15 @@ public class RegisterServlet extends HttpServlet {
         response.sendRedirect("verify.jsp");
     }
 
-    public boolean isValidRegistration(String email, String username, String password, String phone, HttpServletRequest request) {
+    public boolean isValidRegistration(String email, String username, String password, HttpServletRequest request) {
         HttpSession session = request.getSession();
 
         // Regex pattern
-        String phoneRegex = "^(0|\\+84)[2-9][0-9]{8}$";
-        String emailRegex = "^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$";
         String letterRegex = ".*[a-zA-Z].*";
         String specialCharRegex = ".*[!@#$%^&*(),.?\":{}|<>].*";
         String digitRegex = ".*[0-9].*";
 
-        // Kiểm tra rỗng
-        if (email == null || username == null || password == null || phone == null
-                || email.isEmpty() || username.isEmpty() || password.isEmpty() || phone.isEmpty()) {
-            setSessionMessage(session, "Please fill in all information to register!", "error");
-            return false;
-        }
-
-        // Kiểm tra định dạng email
-        if (!email.matches(emailRegex)) {
-            setSessionMessage(session, "Invalid email format!", "error");
-            return false;
-        }
-
-        // Kiểm tra định dạng số điện thoại (10 chữ số)
-        if (!phone.matches(phoneRegex)) {
-            setSessionMessage(session, "Phone number must be exactly 10 digits!", "error");
-            return false;
-        }
-
+      
         if (!password.matches(letterRegex)
                 || !password.matches(specialCharRegex)
                 || !password.matches(digitRegex)) {
@@ -228,15 +160,4 @@ public class RegisterServlet extends HttpServlet {
         // Nếu qua hết thì hợp lệ
         return true;
     }
-
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
 }
