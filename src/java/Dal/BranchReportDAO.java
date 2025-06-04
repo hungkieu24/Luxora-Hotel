@@ -1,3 +1,6 @@
+/*
+ * Updated BranchReportDAO.java with method to fetch all branches
+ */
 package Dal;
 
 import java.sql.*;
@@ -8,7 +11,7 @@ import java.util.logging.Logger;
 import Model.BranchReport;
 import DBcontext.DBContext;
 
-public class BranchReportDAO extends DBContext {
+public class BranchReportDAO extends DBcontext.DBContext {
     
     private static final Logger LOGGER = Logger.getLogger(BranchReportDAO.class.getName());
     
@@ -68,7 +71,7 @@ public class BranchReportDAO extends DBContext {
                 report.setAverageRating(rs.getDouble("average_rating"));
                 report.setTotalFeedbacks(rs.getInt("total_feedbacks"));
                 
-                double occupancyRate = calculateOccupancyRate(conn, rs.getInt("branch_id"), startDate, endDate, rs.getInt("total_rooms"));
+                double occupancyRate = calculateOccupancyRate(connection, rs.getInt("branch_id"), startDate, endDate, rs.getInt("total_rooms"));
                 report.setOccupancyRate(occupancyRate);
                 
                 reports.add(report);

@@ -13,6 +13,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -51,6 +52,11 @@ public class SearchRoomServlet_Home extends HttpServlet {
         }
     }
 
+    private void setSessionMessage(HttpSession session, String message, String type) {
+        session.setAttribute("message", message);
+        session.setAttribute("messageType", type);
+    }
+
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -63,48 +69,46 @@ public class SearchRoomServlet_Home extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        PrintWriter out = response.getWriter();
+        HttpSession session = request.getSession();
 
         String adults = request.getParameter("adults");
         String childs = request.getParameter("childs");
         String dates = request.getParameter("dates");
+        String branchIDString = request.getParameter("branchID");
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yy");
-
-        try {
-            // Tách chuỗi theo dấu ">"
-            String[] parts = dates.split(">");
-            String checkInStr = parts[0].trim();   // "05-26-25"
-            String checkOutStr = parts[1].trim();  // "05-29-25"
-
-            // Chuyển sang LocalDate
-            LocalDate checkIn = LocalDate.parse(checkInStr, formatter);
-            LocalDate checkOut = LocalDate.parse(checkOutStr, formatter);
-
-            // Parst adults, childs -> int 
-            int childsNum = Integer.parseInt(childs);
-            int adultsNum = Integer.parseInt(adults);
-            int totalPeople = childsNum + adultsNum;
-
-            out.println("Check-in date: " + checkIn);   // 2025-05-26
-            out.println("Check-out date: " + checkOut); // 2025-05-29
-            out.println("<h1> adults: " + adults + "</h1>");
-            out.println("<h1> childs: " + childs + "</h1>");
-            
-            RoomTypeDAO roomTypeDAO = new RoomTypeDAO();
-            List<RoomType> availableRoomTypes = roomTypeDAO.searchAvailableRoomTypes(checkIn, checkOut, totalPeople);
-
-            for (RoomType availableRoomType : availableRoomTypes) {
-                out.println("<div>" +availableRoomType + "</div>");
-            }
-
-        } catch (DateTimeParseException e) {
-            out.println("<h1>" + "Ngày nhập không hợp lệ!" + "</h1>");
-        } catch (NumberFormatException e) {
-            out.println("<h1>" + "Số người nhập không hợp lệ!" + "</h1>");
+        if (adults == null || childs == null || dates == null || branchIDString == null) {
+            setSessionMessage(session, "Please fill in all information to search!", "error");
+            response.sendRedirect("./homepage");
+            return;
         }
 
+        int branchID = Integer.parseInt(branchIDString);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yy");
+
+        // Tách chuỗi theo dấu ">"
+        String[] parts = dates.split(">");
+        if (parts.length < 2) {
+            setSessionMessage(session, "Please select check-in and check-out dates correctly.", "error");
+            response.sendRedirect("./homepage");
+            return;
+        }
+        String checkInStr = parts[0].trim();   // "05-26-25"
+        String checkOutStr = parts[1].trim();  // "05-29-25"
+
+        // Chuyển sang LocalDate
+        LocalDate checkIn = LocalDate.parse(checkInStr, formatter);
+        LocalDate checkOut = LocalDate.parse(checkOutStr, formatter);
+
+        // Parst adults, childs -> int 
+        int childsNum = Integer.parseInt(childs);
+        int adultsNum = Integer.parseInt(adults);
+        int totalPeople = childsNum + adultsNum;
+
+        RoomTypeDAO roomTypeDAO = new RoomTypeDAO();
+        List<RoomType> availableRoomTypes = roomTypeDAO.searchAvailableRoomTypes(checkIn, checkOut, totalPeople, branchID);
+
+        request.setAttribute("availableRoomTypes", availableRoomTypes);
+        request.getRequestDispatcher("./searchRoomResult.jsp").forward(request, response);
     }
 
     /**

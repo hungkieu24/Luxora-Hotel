@@ -30,6 +30,7 @@
                         <li><a href="#">Loyalty Status</a> </li>
                         <li><a href="#">Security</a></li>
                         <li><a href="#">Change Password</a></li>
+                        <li><a href="./homepage?action=logout">Log out</a></li>
                         <li><a href="homepage" class="home-link">Home</a></li>
                     </ul>
 
@@ -57,6 +58,11 @@
                         <div class="form-group">
                             <label>Email</label>
                             <input type="email" value="${sessionScope.user.getEmail()}" name="email">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Phone number</label>
+                            <input type="tel" value="${sessionScope.user.getPhonenumber()}" name="phonenumber">
                         </div>
 
                         <button type="button" class="cancel-btn" onclick="window.location.reload();">Cancel</button>

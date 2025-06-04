@@ -42,7 +42,23 @@
     </head>
 
     <body class="datepicker_mobile_full"> 
+        <c:if test="${not empty sessionScope.message}">
+            <div id="toastMessage" class="toast-message ${sessionScope.messageType}">
+                <c:choose>
+                    <c:when test="${sessionScope.messageType == 'success'}">
+                        <i class="fa fa-check-circle"></i>
+                    </c:when>
+                    <c:when test="${sessionScope.messageType == 'error'}">
+                        <i class="fa fa-times-circle"></i>
+                    </c:when>
+                </c:choose>
+                ${sessionScope.message}
+            </div>
 
+            <!-- Xóa message sau khi hiển thị -->
+            <c:remove var="message" scope="session" />
+            <c:remove var="messageType" scope="session" />
+        </c:if>
         <div id="preloader">
             <div data-loader="circle-side"></div>
         </div><!-- /Page Preload -->
@@ -61,6 +77,17 @@
                             <div class="logo_panel"><img src="img/logo_sticky.png" width="135" height="45" alt=""></div>
                             <nav id="mainNav">
                                 <ul class="navBarList_Hompage">
+                                    <!--                                    <li class="submenu">
+                                                                            <a href="#0" class="show-submenu">Home</a>
+                                                                            <ul>
+                                                                                <li><a href="index222.html">Home Video Bg</a></li>
+                                                                                <li><a href="index-2.html">Home Carousel</a></li>
+                                                                                <li><a href="index-3.html">Home FlexSlider</a></li>
+                                                                                <li><a href="index-4.html">Home Youtube/Vimeo</a></li>
+                                                                                <li><a href="index-5.html">Home Parallax</a></li>
+                                                                                <li><a href="index-6.html">Home Parallax 2</a></li>
+                                                                            </ul>
+                                                                        </li>-->
                                    <li class="submenu">
                                         <a href="#0" class="show-submenu">Home</a>
                                         <ul>
@@ -72,41 +99,43 @@
                                     <li class="submenu">
                                         <a href="#0" class="show-submenu">Rooms & Suites</a>
                                         <ul>
-                                            <li><a href="room-list-1.html">Room list 1</a></li>
+                                            <li><a href="searchRoomResult22.html">Room list 1</a></li>
                                             <li><a href="room-list-2.html">Room list 2</a></li>
                                             <li><a href="room-list-3.html">Room list 3</a></li>
                                             <li><a href="room-details.html">Room details</a></li>
                                             <li><a href="room-details-booking.html">Working Booking Request</a></li>
                                         </ul>
                                     </li>
-<!--                                    <li class="submenu">
-                                        <a href="#0" class="show-submenu">Other Pages</a>
-                                        <ul>
-                                            <li><a href="gallery.html">Masonry Gallery</a></li>
-                                            <li><a href="restaurant.html">Restaurant</a></li>
-                                            <li><a href="menu-of-the-day.html">Menu of the day</a></li>
-                                            <li><a href="news-1.html">Blog</a></li>
-                                            <li><a href="404.html">Error Page</a></li>
-                                            <li><a href="modal-advertise-1.html">Modal Advertise</a></li>
-                                            <li><a href="cookie-bar.html">GDPR Cookie Bar</a></li>
-                                            <li><a href="coming-soon.html">Coming Soon</a></li>
-                                            <li><a href="menu-2.html">Menu Version 2 <span class="custom_badge">Hot</span></a></li>
-                                            <li><a href="menu-3.html">Menu Version 3</a></li>
-                                            <li><a href="menu-4.html">Menu Version 4</a></li>
-                                        </ul>
-                                    </li>-->
+                                    <!--                                    <li class="submenu">
+                                                                            <a href="#0" class="show-submenu">Other Pages</a>
+                                                                            <ul>
+                                                                                <li><a href="gallery.html">Masonry Gallery</a></li>
+                                                                                <li><a href="restaurant.html">Restaurant</a></li>
+                                                                                <li><a href="menu-of-the-day.html">Menu of the day</a></li>
+                                                                                <li><a href="news-1.html">Blog</a></li>
+                                                                                <li><a href="404.html">Error Page</a></li>
+                                                                                <li><a href="modal-advertise-1.html">Modal Advertise</a></li>
+                                                                                <li><a href="cookie-bar.html">GDPR Cookie Bar</a></li>
+                                                                                <li><a href="coming-soon.html">Coming Soon</a></li>
+                                                                                <li><a href="menu-2.html">Menu Version 2 <span class="custom_badge">Hot</span></a></li>
+                                                                                <li><a href="menu-3.html">Menu Version 3</a></li>
+                                                                                <li><a href="menu-4.html">Menu Version 4</a></li>
+                                                                            </ul>
+                                                                        </li>-->
                                     <li><a href="about.html">About</a></li>
                                     <li><a href="contacts.html">Contacts</a></li>
-                                    <c:if test="${sessionScope.user == null}">
+                                        <c:if test="${sessionScope.user == null}">
                                         <li><a href="login.jsp">Login</a></li>
                                         <li><a href="register.jsp" class="btn_1">Register</a></li>
-                                    </c:if>
-                                    <c:if test="${sessionScope.user != null}">
+                                        </c:if>
+                                        <c:if test="${sessionScope.user != null}">
                                         <li><a href="editProfile">${sessionScope.user.getUsername()}</a></li>
-                                        <li><a href="#">
-                                               <img src="./img/avatar.jpg" alt="" class="top-act__avatar" />  
-                                        </a></li>
-                                    </c:if>
+                                        <li>
+                                            <a href="./editProfile">
+                                                <img src="${sessionScope.user.getAvatar_url()}" alt="" class="top-act__avatar" />  
+                                            </a>
+                                        </li>
+                                        </c:if>
                                 </ul>
                             </nav>
                         </div>
@@ -132,29 +161,46 @@
                                 <div class="col-xl-10">
                                     <form action="searchroom">
                                         <div class="row g-0 booking_form">
-                                            <div class="col-lg-4 ">
+                                            <div class="col-lg-3 ">
                                                 <div class="form-group">
-                                                    <input class="form-control" type="text" name="dates" placeholder="Check in / Check out" readonly="readonly">
+                                                    <input class="form-control" type="text" name="dates" placeholder="Check in / Check out" readonly="readonly" required>
                                                     <i class="bi bi-calendar2"></i>
                                                 </div>
                                             </div>
                                             <div class="col-lg-3 col-sm-6 pe-lg-0 pe-sm-1">
                                                 <div class="qty-buttons">
                                                     <label>Adults</label>
-                                                    <input type="button" value="+" class="qtyplus" name="adults">
-                                                    <input type="text" name="adults" id="adults" value="" class="qty form-control">
+                                                    <input type="button" value="+" class="qtyplus" name="adults" >
+                                                    <input type="text" name="adults" id="adults" value="" required class="qty form-control">
                                                     <input type="button" value="-" class="qtyminus" name="adults">
                                                 </div>
                                             </div>
                                             <div class="col-lg-3 col-sm-6 ps-lg-0 ps-sm-1">
                                                 <div class="qty-buttons">
                                                     <label>Childs</label>
-                                                    <input type="button" value="+" class="qtyplus" name="childs">
-                                                    <input type="text" name="childs" id="childs" value="" class="qty form-control">
+                                                    <input type="button" value="+" class="qtyplus" name="childs" >
+                                                    <input type="text" name="childs" id="childs" value="" required class="qty form-control">
                                                     <input type="button" value="-" class="qtyminus" name="childs">
                                                 </div>
                                             </div>
-                                            <div class="col-lg-2">
+                                            <div class="col-lg-3 col-sm-12 pe-lg-0 pe-sm-1">
+                                                <div class="custom_select">
+                                                    <select class="wide" name="branchID" style="position: absolute; left: -9999px; display: block">
+                                                        <c:forEach items="${branchList}" var="b">
+                                                            <option value="${b.getId()}">${b.getAddress()}</option>
+                                                        </c:forEach>
+                                                    </select>
+                                                    <div class="nice-select wide" tabindex="0">
+                                                        <span class="current">Select Room</span>
+                                                        <ul class="list">
+                                                            <c:forEach items="${branchList}" var="b">
+                                                                <li data-value="${b.getId()}" class="option">${b.getAddress()}</li>
+                                                                </c:forEach>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12">
                                                 <input type="submit" class="btn_search" value="Search">
                                             </div>
                                         </div>
@@ -177,8 +223,8 @@
                         <div class="row justify-content-between flex-lg-row-reverse align-items-center">
                             <div class="col-lg-5">
                                 <div class="parallax_wrapper">
-                                    <img src="img/home_2.jpg" alt="" class="img-fluid rounded-img">
-                                    <div data-cue="slideInUp" class="img_over"><span data-jarallax-element="-30"><img src="img/home_1.jpg" alt="" class="rounded-img"></span></div>
+                                    <img src="img/registerbg.jpg" alt="" class="img-fluid rounded-img">
+                                    <div data-cue="slideInUp" class="img_over"><span data-jarallax-element="-30"><img src="img/loginBackground.jpg" alt="" class="rounded-img"></span></div>
                                 </div>
                             </div>
                             <div class="col-lg-5">
@@ -189,7 +235,7 @@
                                     </div>
                                     <p class="lead">Vivamus volutpat eros pulvinar velit laoreet, sit amet egestas erat dignissim.</p>
                                     <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
-                                    <p><em>Maria...the Owner</em></p>
+                                    <p><em>Hung...the Owner</em></p>
                                 </div>
                             </div>
                         </div>
@@ -198,9 +244,9 @@
                     <div class="pinned-image pinned-image--medium">
                         <div class="pinned-image__container" id="section_video">
                             <video loop="loop" muted="muted" id="video_home">
-                                <source src="video/swimming_pool_2.mp4" type="video/mp4">
-                                <source src="video/swimming_pool_2.webm" type="video/webm">
-                                <source src="video/swimming_pool_2.ogv" type="video/ogg">
+                                <source src="video/swimming_pool.mp4" type="video/mp4">
+                                <source src="video/swimming_pool.webm" type="video/webm">
+                                <source src="video/swimming_pool.ogv" type="video/ogg">
                             </video>
                             <div class="pinned-image__container-overlay"></div>
                         </div>
@@ -221,25 +267,32 @@
                         <h2 data-cue="slideInUp" data-delay="200">Rooms & Suites</h2>
                     </div>
                     <div class="row justify-content-center add_bottom_90" data-cues="slideInUp" data-delay="300">
-                        <c:forEach items="${roomTypeList}" var="r" begin="0" end="2">
-                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12">
-                                <a href="room-details.html" class="box_cat_rooms">
-                                    <figure>
-                                        <div class="background-image" data-background="url(${r.getImage_url()})"></div>
-                                        <div class="info">
-                                            <small>
-                                                From 
-                                                <fmt:formatNumber value="${r.getBase_price()}" type="number" groupingUsed="true" maxFractionDigits="0" />VND
-                                                /night
-                                            </small>
-                                            <h3>${r.getName()}</h3>
-                                            <span>Read more</span>
-                                        </div>
-                                    </figure>
-                                </a>
-                            </div>
-                        </c:forEach>
-                        <p class="text-end"><a href="room-list-1.html" class="btn_1 outline mt-2">View all Rooms</a></p>
+                        <div data-cues="zoomIn" data-delay="200" data-disabled="true">
+                            <div class="owl-carousel owl-theme carousel_item_centered_rooms rounded-img owl-loaded owl-drag" data-cue="zoomIn" data-delay="200" data-show="true" style="animation-name: zoomIn; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 200ms; animation-direction: normal; animation-fill-mode: both;">
+                                <c:forEach items="${roomTypeList}" var="r">
+                                    <!-- /item-->
+                                    <div class="item">
+                                        <a href="" class="box_cat_rooms">
+                                            <figure>
+                                                <div class="background-image" 
+                                                     data-background="url(${r.getImage_url()})" 
+                                                     style="background-image: url('${r.getImage_url()}'); height: 300px; background-size: cover; background-position: center;">
+                                                </div>
+                                                <div class="info">
+                                                    <small>
+                                                        From 
+                                                        <fmt:formatNumber value="${r.getBase_price()}" type="number" groupingUsed="true" maxFractionDigits="0" />
+                                                        VND /night
+                                                    </small>
+                                                    <h3>${r.getName()}</h3>
+                                                    <span>Read more</span>
+                                                </div>
+                                            </figure>
+                                        </a>
+                                    </div>
+                                </c:forEach>
+                        </div>
+                        <p class="text-end"><a href="searchRoomResult22.html" class="btn_1 outline mt-2">View all Rooms</a></p>
                     </div>
                     <!-- /row-->
 
@@ -294,7 +347,7 @@
                             <div class="col-lg-6">
                                 <div class="pinned-image rounded_container pinned-image--small mb-4">
                                     <div class="pinned-image__container">
-                                        <img src="img/local_amenities_1.jpg" alt="">
+                                        <img src="img/restaurant/food.jpg" alt="">
                                     </div>
                                 </div>
                             </div>
@@ -312,7 +365,7 @@
                             <div class="col-lg-6 order-lg-2">
                                 <div class="pinned-image rounded_container pinned-image--small mb-4">
                                     <div class="pinned-image__container">
-                                        <img src="img/local_amenities_3.jpg" alt="">
+                                        <img src="img/art_culture.jpg" alt="">
                                     </div>
                                 </div>
                             </div>
@@ -342,15 +395,15 @@
                                         <h2>What Clients Says</h2>
                                     </div>
                                     <div class="carousel_testimonials owl-carousel owl-theme nav-dots-orizontal">
-                                        <c:forEach items="${feedbackList}" var="f" begin="0" end="3">
+                                        <c:forEach items="${feedbackList}" var="f">
                                             <div>
                                                 <div class="box_overlay">
                                                     <div class="pic">
                                                         <figure><img src="img/testimonial_1.jpg" alt="" class="img-circle">
                                                         </figure>
-                                                        <h4>Roberta
+                                                        <h4>${f.getUserAccount().getUsername()}
                                                             <small>
-                                                                <fmt:formatDate value="${f.getCreated_at()}" pattern="MMM dd" />
+                                                                <fmt:formatDate value="${f.getCreated_at()}" pattern="MMM dd yyyy" />
                                                             </small>
                                                         </h4>
                                                     </div>
@@ -369,52 +422,6 @@
                     </div>
                 </div>
                 <!-- /parallax_section_1-->
-
-
-                <div class="bg_white">
-                    <div class="container margin_120_95">
-                        <div class="title mb-3">
-                            <small data-cue="slideInUp">Luxury experience</small>
-                            <h2 data-cue="slideInUp" data-delay="200">News & Events</h2>
-                        </div>
-                        <div class="row justify-content-center home">
-                            <div class="item col-xl-4 col-lg-6">
-                                <a href="news-post.html" class="box_contents" data-cue="slideInUp" data-delay="300">
-                                    <figure><img src="img/blog-1.jpg" alt="" class="img-fluid"><em>11 Dec</em></figure>
-                                    <div class="wrapper">
-                                        <small>Travel<span></span></small>
-                                        <h2>The vacation and travel Guide for experts in 2022</h2>
-                                        <em>Read more</em>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="item col-xl-4 col-lg-6">
-                                <a href="news-post.html" class="box_contents" data-cue="slideInUp" data-delay="400">
-                                    <figure><img src="img/blog-3.jpg" alt="" class="img-fluid"><em>24 Dec</em></figure>
-                                    <div class="wrapper">
-                                        <small>Event<span></span></small>
-                                        <h2>Yayoi Kusama: Infinity Mirror Rooms at Tate Modern</h2>
-                                        <em>Read more</em>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="item col-xl-4 col-lg-6">
-                                <a href="news-post.html" class="box_contents" data-cue="slideInUp" data-delay="500">
-                                    <figure><img src="img/blog-2.jpg" alt="" class="img-fluid"><em>21 Dec</em></figure>
-                                    <div class="wrapper">
-                                        <small>Restaurant<span></span></small>
-                                        <h2>Best Local Restaurant in 2022</h2>
-                                        <em>Read more</em>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                        <!--/row -->
-                        <p class="text-end"><a href="news-1.html" class="btn_1 outline mt-2" data-cue="slideInUp" data-delay="600">View all News</a></p>
-                    </div>
-                    <!--/container -->
-                </div>
-                <!--/bg_white -->
 
 
                 <div class="container margin_120_95" id="booking_section">
@@ -508,7 +515,7 @@
                                 <ul>
                                     <li><a href="index222.html">Home</a></li>
                                     <li><a href="about.html">About Us</a></li>
-                                    <li><a href="room-list-1.html">Rooms &amp; Suites</a></li>
+                                    <li><a href="searchRoomResult22.html">Rooms &amp; Suites</a></li>
                                     <li><a href="news-1.html">News &amp; Events</a></li>
                                     <li><a href="contacts.html">Contacts</a></li>
                                     <li><a href="about.html">Terms and Conditions</a></li>
@@ -552,6 +559,6 @@
             <script src="js/common_functions.js"></script>
             <script src="js/datepicker_inline.js"></script>
             <script src="phpmailer/validate.js"></script>
-
+            <script src="js/toastMessage.js"></script>
     </body>
 </html>

@@ -121,15 +121,19 @@ public class EditProfileServlet extends HttpServlet {
         
         String username = request.getParameter("username");
         String email = request.getParameter("email");
-
+        String phonenumber = request.getParameter("phonenumber");
+        
         if (username != null && !username.trim().isEmpty()) {
             session.setAttribute("username", username);
         }
         if (email != null && !email.trim().isEmpty()) {
             session.setAttribute("email", email);
         }
+        if (phonenumber != null && !phonenumber.trim().isEmpty()) {
+            session.setAttribute("phonenumber", phonenumber);
+        }
 
-        boolean updated = uad.updateUserInfo(user.getId(), username, email, fileName);
+        boolean updated = uad.updateUserInfo(user.getId(), username, email, phonenumber, fileName);
         
         if (updated) {
             UserAccount ua = uad.getUserById(user.getId());

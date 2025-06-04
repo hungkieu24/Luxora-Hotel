@@ -17,13 +17,37 @@
         <link rel="stylesheet" href="./css/registerStyles.css"/>
     </head>
     <body>
+        <c:if test="${not empty sessionScope.message}">
+            <div id="toastMessage" class="toast-message ${sessionScope.messageType}">
+                <c:choose>
+                    <c:when test="${sessionScope.messageType == 'success'}">
+                        <i class="fa fa-check-circle"></i>
+                    </c:when>
+                    <c:when test="${sessionScope.messageType == 'error'}">
+                        <i class="fa fa-times-circle"></i>
+                    </c:when>
+                </c:choose>
+                ${sessionScope.message}
+            </div>
+
+            <!-- Xóa message sau khi hiển thị -->
+            <c:remove var="message" scope="session" />
+            <c:remove var="messageType" scope="session" />
+        </c:if>
         <form action="register" method="post" id="form-register" style="height: 550px">
 
-            <h3>Register</h3>
+            <div style="text-align: center; font-size: 28px; font-weight: 600; margin: 0;">Register</div>
             <div class="form__group">
                 <div class="form__flex">
                     <label for="username">User name</label>
                     <input type="text" placeholder="Username" id="username" name="username" required>
+                </div>
+                <p class="form__error username__error"></p>
+            </div>
+            <div class="form__group">
+                <div class="form__flex">
+                    <label for="phone">Phone</label>
+                    <input type="text" placeholder="Phone number" id="phone" name="phone" required>
                 </div>
                 <p class="form__error username__error"></p>
             </div>
@@ -57,11 +81,11 @@
             </c:if>
             <button >Register</button>
             <div class="social">
-                <a href="https://accounts.google.com/o/oauth2/auth?scope=email%20profile%20openid&redirect_uri=http://localhost:8080/LuxoraHotel/register&response_type=code&client_id=370841450880-23fiie6auhj74f5f5lel16b2gujnt2ui.apps.googleusercontent.com&approval_prompt=force">
+                <a href="https://accounts.google.com/o/oauth2/auth?scope=email%20profile%20openid&redirect_uri=http://localhost:8080/ParadiseHotel/register&response_type=code&client_id=370841450880-23fiie6auhj74f5f5lel16b2gujnt2ui.apps.googleusercontent.com&approval_prompt=force">
                     <div class="go" style="width: 100%"><i class="fab fa-google"></i> Google</div>
                 </a>
             </div>
-            <h4>You already have an account ?  <a href="login.jsp" style="color: #7a7aff">Login</a></h4>
+            <h4>You already have an account ?  <a href="./login.jsp" style="color: #7a7aff">Login</a></h4>
         </form>
         <script src="./js/validationForm.js"></script>
         <script>
@@ -71,6 +95,7 @@
                 errorSelector: '.form__error',
                 rules: [
                     Validator.isRequired('#username', 'Please enter your username'),
+                    Validator.isPhoneNumber('#phone', 'Please enter your phone number'),
                     Validator.isRequired('#email', 'Please enter your email'),
                     Validator.isEmail('#email'),
                     Validator.minLength(' #password', 8),

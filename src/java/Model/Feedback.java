@@ -16,14 +16,11 @@ public class Feedback {
     private Timestamp created_at;
     private String status;
     private String admin_action;
+    private UserAccount userAccount;
     
     // Additional fields for display
     private String username;
     private String userAvatarUrl;
-
-    // Default constructor
-    public Feedback(int aInt, String string, Timestamp timestamp, String string1) {
-    }
 
     // Constructor with all fields
     public Feedback(int id, String user_id, int booking_id, int rating, 
@@ -40,6 +37,42 @@ public class Feedback {
         this.admin_action = admin_action;
     }
 
+    public Feedback(int id, int booking_id, int rating, String comment, String image_url, Timestamp created_at, String status, String admin_action, UserAccount userAccount) {
+        this.id = id;
+        this.booking_id = booking_id;
+        this.rating = rating;
+        this.comment = comment;
+        this.image_url = image_url;
+        this.created_at = created_at;
+        this.status = status;
+        this.admin_action = admin_action;
+        this.userAccount = userAccount;
+    }
+
+    public Feedback(int rating, String comment, Timestamp created_at, String status) {
+        this.rating = rating;
+        this.comment = comment;
+        this.created_at = created_at;
+        this.status = status;
+    }
+
+    public Feedback(int booking_id, int rating, String comment, Timestamp created_at, String username) {
+        this.booking_id = booking_id;
+        this.rating = rating;
+        this.comment = comment;
+        this.created_at = created_at;
+        this.username = username;
+    }
+    public Feedback(String user_id, int booking_id, int rating, String comment, Timestamp created_at, String status) {
+        this.user_id = user_id;
+        this.booking_id = booking_id;
+        this.rating = rating;
+        this.comment = comment;
+        this.created_at = created_at;
+        this.status = status;
+    }
+    
+    
     // Getters and Setters
     public int getId() {
         return id;
@@ -113,6 +146,14 @@ public class Feedback {
         this.admin_action = admin_action;
     }
 
+    public UserAccount getUserAccount() {
+        return userAccount;
+    }
+
+    public void setUserAccount(UserAccount userAccount) {
+        this.userAccount = userAccount;
+    }
+    
     public String getUsername() {
         return username;
     }
