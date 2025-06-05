@@ -5,7 +5,7 @@
     </welcome-file-list>
     <servlet>
         <servlet-name>editProfile</servlet-name>
-        <servlet-class>Controller.EditProfileServlet</servlet-class>
+        <servlet-class>Controller.Customer.EditProfileServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>editProfile</servlet-name>
