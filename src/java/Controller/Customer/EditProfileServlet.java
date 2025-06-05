@@ -112,10 +112,13 @@ public class EditProfileServlet extends HttpServlet {
         String finalPath = pathHost.replace("build\\", ""); 
         String uploadPath = finalPath + UPLOAD_DIR;
         
+        
         // Upload ảnh
         String fileName = up.uploadImage(request, "avatar", uploadPath);
+        String avatarUrl ="."+ UPLOAD_DIR+"/"+fileName;
         if (fileName == null) {
-            fileName = image;
+            avatarUrl = image;
+            
         }
         
         String username = request.getParameter("username");
@@ -131,19 +134,23 @@ public class EditProfileServlet extends HttpServlet {
         if (phonenumber != null && !phonenumber.trim().isEmpty()) {
             session.setAttribute("phonenumber", phonenumber);
         }
-        String avatarUrl = UPLOAD_DIR+"/"+fileName;
+        
         boolean updated = useraccountdao.updateUserInfo(user.getId(), username, email, phonenumber, avatarUrl);
         
         if (updated) {
             UserAccount useraccount = useraccountdao.getUserById(user.getId());
             session.setAttribute("user", useraccount);
-            session.setAttribute("message", "Information updated successfully!");
+            setSessionMessage(session, "Information updated successfully!","success");
         } else {
-            session.setAttribute("message", "Update information failed!");
+            setSessionMessage(session, "Update information failed!!","error");
         }
-      
+        
         request.getRequestDispatcher("editProfile.jsp").forward(request, response);
         
+    }
+    private void setSessionMessage(HttpSession session, String message, String type) {
+        session.setAttribute("message", message);
+        session.setAttribute("messageType", type);
     }
 
     /**

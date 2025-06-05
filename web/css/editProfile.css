@@ -311,3 +311,7 @@ button {
       font-style: italic;
       color: white;
     }
+    
+    .form_error{
+        color: red;
+    }

@@ -234,6 +234,18 @@ Validator.maxLength = function (selector, max, message) {
     }
 }
 
+Validator.lengthRange = function (selector, min, max, message) {
+    return {
+        selector: selector,
+        test: function (value) {
+            if (value.length < min || value.length > max) {
+                return message || `Please enter between ${min} and ${max} characters.`;
+            }
+            return undefined; // Hợp lệ
+        }
+    }
+}
+
 Validator.maxValue = function (selector, max, message) {
     return {
         selector: selector,

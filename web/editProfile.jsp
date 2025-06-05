@@ -17,10 +17,28 @@
             <link rel="stylesheet" href="css/editProfile.css">
         </head>
         <body >
+            
+            <c:if test="${not empty sessionScope.message}">
+            <div id="toastMessage" class="toast-message ${sessionScope.messageType}">
+                <c:choose>
+                    <c:when test="${sessionScope.messageType == 'success'}">
+                        <i class="fa fa-check-circle"></i>
+                    </c:when>
+                    <c:when test="${sessionScope.messageType == 'error'}">
+                        <i class="fa fa-times-circle"></i>
+                    </c:when>
+                </c:choose>
+                ${sessionScope.message}
+            </div>
 
+            <!-- Xóa message sau khi hiển thị -->
+            <c:remove var="message" scope="session" />
+            <c:remove var="messageType" scope="session" />
+        </c:if>
+            
             <div class="container">
                 <div class="sidebar">
-                    <img class="avatar" src=".${sessionScope.user.getAvatar_url()}" alt="Profile Avatar"/>
+                    <img class="avatar" src="${sessionScope.user.getAvatar_url()}" alt="Profile Avatar"/>
                     <p>Rank: <span>${loyaltypointlp.getLevel()}</span> </p>
                     <p>Accumulated Points: <a href="#">${loyaltypointlp.getPoints()}</a></p>
                     <ul>
@@ -28,7 +46,6 @@
                         <li><a href="bookingHistory.jsp">Booking History</a></li>
                         <li><a href="myBooking">Your Booking</a></li>
                         <li><a href="#">Loyalty Status</a> </li>
-                        <li><a href="#">Security</a></li>
                         <li><a href="#">Change Password</a></li>
                         <li><a href="./homepage?action=logout">Log out</a></li>
                         <li><a href="homepage" class="home-link">Home</a></li>
@@ -38,9 +55,9 @@
                 <div class="main-content">
                     <h2>Personal Information</h2>
                     <p>View and update your personal details.</p>
-                    <form action="editProfile" method="post" enctype="multipart/form-data">
+                    <form id="editProfile" action="editProfile" method="post" enctype="multipart/form-data">
                         <div class="avatar-section">
-                            <img class="avatar" src=".${sessionScope.user.getAvatar_url()}" alt="Avatar"/>
+                            <img class="avatar" src="${sessionScope.user.getAvatar_url()}" alt="Avatar"/>
                             <p >Choose file to change avatar</p>
 
                             <input type="file" id="avatar-upload" name="avatar">
@@ -52,41 +69,61 @@
 
                         <div class="form-group">
                             <label>Username</label>
-                            <input type="text" value="${sessionScope.user.getUsername()}" name="username">
+                            <input id="username" type="text" value="${sessionScope.user.getUsername()}" name="username">
+                            <p class="form_error"></p>
                         </div>
 
                         <div class="form-group">
                             <label>Email</label>
-                            <input type="email" value="${sessionScope.user.getEmail()}" name="email">
+                            <input id="email" type="email" value="${sessionScope.user.getEmail()}" name="email">
+                            <p class="form_error"></p>
                         </div>
-                        
+
                         <div class="form-group">
                             <label>Phone number</label>
-                            <input type="tel" value="${sessionScope.user.getPhonenumber()}" name="phonenumber">
+                            <input id="phonenumber" type="tel" value="${sessionScope.user.getPhonenumber()}" name="phonenumber">
+                            <p class="form_error"></p>
                         </div>
 
                         <button type="button" class="cancel-btn" onclick="window.location.reload();">Cancel</button>
 
-                        <button type="submit" class="save-btn">Save Change</button>
-                        <c:if test="${not empty message}">
-                            <p style="color: red; font-size: 20px">${message}</p>
-                        </c:if>
+                        <button  class="save-btn">Save Change</button>  
 
                     </form>
                 </div>
             </div>
-
+                            
+            <script src="./js/toastMessage.js"></script>                
+            <script src="./js/validationForm.js"></script>
             <script>
-                const input = document.getElementById('avatar-upload');
-                const fileNameDisplay = document.getElementById('file-name');
-
-                input.addEventListener('change', function () {
-                    if (input.files.length > 0) {
-                        fileNameDisplay.textContent = input.files[0].name;
-                    } else {
-                        fileNameDisplay.textContent = "No file chosen";
-                    }
-                });
+                Validator({
+                form: '#editProfile',
+                formGroupSelector: '.form-group',
+                errorSelector: '.form_error',
+                rules: [
+                    Validator.isRequired('#username', 'Please enter the your username'),
+                    Validator.lengthRange('#username',6,30),
+                    Validator.isPhoneNumber('#phonenumber', 'Please enter your phone number'),
+                    Validator.isRequired('#email', 'Please enter your email'),
+                    Validator.isEmail('#email', 'This field must be an email'),
+                    Validator.lengthRange('#email',16,40),
+                ],
+                onsubmit: function (formValue) {
+                    document.querySelector('#editProfile').submit();
+                }
+            })
+            </script>
+            <script>
+                            const input = document.getElementById('avatar-upload');
+                            const fileNameDisplay = document.getElementById('file-name');
+                            
+                            input.addEventListener('change', function () {
+                                if (input.files.length > 0) {
+                                    fileNameDisplay.textContent = input.files[0].name;
+                                } else {
+                                    fileNameDisplay.textContent = "No file chosen";
+                                }
+                            });
             </script>
         </body >
     </html>
