@@ -13,53 +13,50 @@ import java.util.List;
 @WebServlet(name = "StaffBookingsCheckinServlet", urlPatterns = {"/staff-bookings-checkin"})
 public class StaffBookingsCheckinServlet extends HttpServlet {
 
-    private static final String CHECKIN_MESSAGE = "checkinMessage";
-    private static final String CHECKOUT_MESSAGE = "checkoutMessage";
-    private static final String ERROR_MESSAGE = "errorMessage";
-
-    @Override
+   @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        String keyword = request.getParameter("keyword");
-        BookingDAO bookingDAO = new BookingDAO();
-        List<Booking> bookings;
-
-        try {
-            if (keyword != null && !keyword.trim().isEmpty()) {
-                bookings = bookingDAO.searchBookingsTodayByCustomer(keyword.trim());
-                request.setAttribute("keyword", keyword);
-            } else {
-                bookings = bookingDAO.getBookingsToday();
-            }
-            request.setAttribute("bookings", bookings);
-
-            HttpSession session = request.getSession(false);
-
-            if (session != null) {
-                String checkinMessage = (String) session.getAttribute(CHECKIN_MESSAGE);
-                String checkoutMessage = (String) session.getAttribute(CHECKOUT_MESSAGE);
-                String errorMessage = (String) session.getAttribute(ERROR_MESSAGE);
-                if (checkinMessage != null) {
-                    request.setAttribute("checkinMessage", checkinMessage);
-                    session.removeAttribute("checkinMessage");
-                }
-                if (checkoutMessage != null) {
-                    request.setAttribute("checkoutMessage", checkoutMessage);
-                    session.removeAttribute("checkoutMessage");
-                }
-                if (errorMessage != null) {
-                    request.setAttribute("errorMessage", errorMessage);
-                    session.removeAttribute("errorMessage");
-                }
-            }
-        } catch (Exception e) {
-            request.setAttribute("error", "An error occurred while fetching the booking list.");
-            e.printStackTrace();
+        
+          // --- VALIDATION: Check staff session/role ---
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("userRole") == null
+                || !"staff".equals(session.getAttribute("userRole"))) {
+            response.sendRedirect("login.jsp");
+            return;
         }
 
-        request.getRequestDispatcher(
-                "staff-bookings-checkin.jsp").forward(request, response);
+        String keyword = request.getParameter("keyword");
+        int page = 1;
+        int pageSize = 8; // Số booking/trang, bạn có thể tùy chỉnh
+
+        try {
+            if (request.getParameter("page") != null) {
+                page = Integer.parseInt(request.getParameter("page"));
+            }
+        } catch (NumberFormatException e) {
+            page = 1;
+        }
+
+        BookingDAO bookingDAO = new BookingDAO();
+        List<Booking> bookings;
+        int totalBooking = 0;
+
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            bookings = bookingDAO.searchBookingsTodayByCustomerPaging(keyword.trim(), page, pageSize);
+            totalBooking = bookingDAO.countBookingsTodayByCustomer(keyword.trim());
+            request.setAttribute("keyword", keyword);
+        } else {
+            bookings = bookingDAO.getBookingsTodayPaging(page, pageSize);
+            totalBooking = bookingDAO.countBookingsToday();
+        }
+
+        int totalPage = (int) Math.ceil((double) totalBooking / pageSize);
+
+        request.setAttribute("bookings", bookings);
+        request.setAttribute("currentPage", page);
+        request.setAttribute("totalPage", totalPage);
+
+        request.getRequestDispatcher("staff-bookings-checkin.jsp").forward(request, response);
     }
 
     @Override
