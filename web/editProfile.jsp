@@ -41,12 +41,17 @@
                     <img class="avatar" src="${sessionScope.user.getAvatar_url()}" alt="Profile Avatar"/>
                     <p>Rank: <span>${loyaltypointlp.getLevel()}</span> </p>
                     <p>Accumulated Points: <a href="#">${loyaltypointlp.getPoints()}</a></p>
-                    <ul>
-                        <li><a href="editProfile">Personal Info</a></li>
-                        <li><a href="bookingHistory.jsp">Booking History</a></li>
+                    <ul class="level-1">
+                        <li><a href="#">Personal Info</a></li>
+                        <li><a href="editProfile">Change Personal Info</a></li>
+                        <li><a href="#">Booking History</a></li>
                         <li><a href="myBooking">Your Booking</a></li>
                         <li><a href="#">Loyalty Status</a> </li>
                         <li><a href="#">Change Password</a></li>
+                        
+                                <li><a href="viewFeedback">View Feedback</a></li>
+                                <li><a href="sendFeedback1.jsp">Send Feedback</a></li>
+                             
                         <li><a href="./homepage?action=logout">Log out</a></li>
                         <li><a href="homepage" class="home-link">Home</a></li>
                     </ul>
@@ -85,9 +90,9 @@
                             <p class="form_error"></p>
                         </div>
 
-                        <button type="button" class="cancel-btn" onclick="window.location.reload();">Cancel</button>
+                        <button type="button" class="cancel-btn" onclick="window.location.href = 'editProfile';">Cancel</button>
 
-                        <button  class="save-btn">Save Change</button>  
+                        <button  class="save-btn">Save Change</button>
 
                     </form>
                 </div>
