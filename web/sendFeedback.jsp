@@ -34,7 +34,7 @@
             <div class="main-content">
                 <h2>Welcome dear customers!</h2>
                 <p>Please leave your comments here so we can know your experience.</p>
-                <form action="sendFeedback" method="post">                      
+                <form id="sendFeedback" action="sendFeedback" method="post">                      
                     <div class="form-group">
                         <label>Overall Rating (1-5 Stars)</label>
                         <div class="star-rating">
@@ -68,7 +68,8 @@
 
                     <div class="form-group">
                         <label>Detailed Comments</label>
-                        <textarea name="comment" rows="5" cols="50" required></textarea>
+                        <textarea id="comment" name="comment" rows="5" cols="50" required></textarea>
+                         <p class="form_error"></p>
                     </div>
 
 
@@ -119,12 +120,25 @@
                         <a href="?page=${currentPage + 1}" class="next">Next</a>
                     </c:if>
                 </div>
-                
-                
-                
+
+
+
             </div>
         </div>
-
+        <script src="./js/validationForm.js"></script>
+        <script>
+                Validator({
+                    form: '#sendFeedback',
+                    formGroupSelector: '.form-group',
+                    errorSelector: '.form_error',
+                    rules: [
+                        Validator.lengthRange('#comment', 1, 35),
+                    ],
+                    onsubmit: function (formValue) {
+                        document.querySelector('#sendFeedback').submit();
+                    }
+                })
+        </script>
 
     </body>
 </html>

@@ -124,7 +124,7 @@ public class SendFeedbackServlet extends HttpServlet {
         }
         String comment = request.getParameter("comment");
         Timestamp createdAt = new Timestamp(System.currentTimeMillis());
-        Feedback feedback = new Feedback(user.getId(), bk.getId(), rating, comment, createdAt, "Visible");
+        Feedback feedback = new Feedback(user.getId(), bk.getId(), rating, comment, createdAt, "Visible", "None");
 
         try {
             feedbackDAO.addFeedback(feedback);

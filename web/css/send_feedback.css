@@ -356,3 +356,7 @@ button {
 .pagination a.next {
     font-weight: 600;
 }
+
+ .form_error{
+        color: red;
+    }
