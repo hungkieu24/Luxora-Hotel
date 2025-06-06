@@ -297,5 +297,90 @@ public class RoomDAO extends DBContext {
         }
         return list;
     }
+// Phân trang danh sách phòng (mỗi trang 5 phòng)
 
+   public List<Room> pagingRoom(int page, int pageSize) {
+    List<Room> list = new ArrayList<>();
+    String sql = "SELECT * FROM Room ORDER BY id OFFSET ? ROWS FETCH NEXT ? ROWS ONLY;";
+    try {
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setInt(1, (page - 1) * pageSize);
+        ps.setInt(2, pageSize);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            Room r = new Room(
+                    rs.getInt("id"),
+                    rs.getString("room_number"),
+                    rs.getInt("branch_id"),
+                    rs.getInt("room_type_id"),
+                    rs.getString("status"),
+                    rs.getString("image_url")
+            );
+            list.add(r);
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return list;
+}
+
+// Đếm tổng số phòng
+    public int countAllRooms() {
+        String sql = "SELECT COUNT(*) FROM Room";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+// Phân trang danh sách phòng theo loại phòng (tìm kiếm)
+    public List<Room> searchRoomsByRoomTypeNamePaging(String roomTypeNameKeyword, int page, int pageSize) {
+        List<Room> list = new ArrayList<>();
+        String sql = "SELECT r.* FROM Room r JOIN RoomType rt ON r.room_type_id = rt.id "
+                + "WHERE rt.name LIKE ? "
+                + "ORDER BY r.id OFFSET ? ROWS FETCH NEXT ? ROWS ONLY;";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, "%" + roomTypeNameKeyword + "%");
+            ps.setInt(2, (page - 1) * pageSize);
+            ps.setInt(3, pageSize);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Room r = new Room(
+                        rs.getInt("id"),
+                        rs.getString("room_number"),
+                        rs.getInt("branch_id"),
+                        rs.getInt("room_type_id"),
+                        rs.getString("status"),
+                        rs.getString("image_url")
+                );
+                list.add(r);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+// Đếm tổng số phòng theo loại phòng (tìm kiếm)
+    public int countRoomsByRoomTypeName(String roomTypeNameKeyword) {
+        String sql = "SELECT COUNT(*) FROM Room r JOIN RoomType rt ON r.room_type_id = rt.id WHERE rt.name LIKE ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, "%" + roomTypeNameKeyword + "%");
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
 }
