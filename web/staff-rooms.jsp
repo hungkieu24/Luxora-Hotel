@@ -5,6 +5,8 @@
     List<Room> rooms = (List<Room>) request.getAttribute("rooms");
     Map<Integer, String> roomTypeMap = (Map<Integer, String>) request.getAttribute("roomTypeMap");
     String keyword = request.getParameter("keyword");
+    int currentPage = (request.getAttribute("currentPage") != null) ? (Integer)request.getAttribute("currentPage") : 1;
+    int totalPage = (request.getAttribute("totalPage") != null) ? (Integer)request.getAttribute("totalPage") : 1;
 %>
 <!DOCTYPE html>
 <html>
@@ -14,6 +16,20 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <style>
         .room-img { width: 80px; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,.09); }
+        .pagination { margin: 20px 0 0 0; display: flex; justify-content: center; }
+        .pagination a, .pagination span {
+            margin: 0 4px;
+            padding: 6px 14px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            text-decoration: none;
+        }
+        .pagination .active, .pagination span[aria-current="page"] {
+            background: #ffc107;
+            color: #222;
+            font-weight: bold;
+            border-color: #ffc107;
+        }
     </style>
 </head>
 <body class="bg-light">
@@ -101,6 +117,44 @@
                 </tbody>
             </table>
         </div>
+    </div>
+
+    <%-- Pagination Bar --%>
+    <div class="pagination">
+        <%
+            String queryStr = "";
+            if (keyword != null && !keyword.isEmpty()) {
+                queryStr += "&keyword=" + java.net.URLEncoder.encode(keyword, "UTF-8");
+            }
+            if (totalPage > 1) {
+                // Previous
+                if(currentPage > 1){
+        %>
+            <a href="staff-rooms?page=<%=currentPage-1%><%=queryStr%>">&laquo;</a>
+        <%
+                }
+
+                // Page numbers
+                for (int i = 1; i <= totalPage; i++) {
+                    if (i == currentPage) {
+        %>
+            <span class="active" aria-current="page"><%=i%></span>
+        <%
+                    } else {
+        %>
+            <a href="staff-rooms?page=<%=i%><%=queryStr%>"><%=i%></a>
+        <%
+                    }
+                }
+
+                // Next
+                if(currentPage < totalPage){
+        %>
+            <a href="staff-rooms?page=<%=currentPage+1%><%=queryStr%>">&raquo;</a>
+        <%
+                }
+            }
+        %>
     </div>
 </div>
 </body>

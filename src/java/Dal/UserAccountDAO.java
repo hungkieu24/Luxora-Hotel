@@ -315,4 +315,32 @@ public class    UserAccountDAO extends DBContext {
             return false;
         }
     }
+    
+    public UserAccount getUserInfoById(String id) {
+        String sql = "SELECT * FROM UserAccount WHERE id = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                Timestamp ts = rs.getTimestamp("created_at");
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                String createdAt = (ts != null) ? sdf.format(ts) : null;
+                return new UserAccount(
+                        rs.getString("id"),
+                        rs.getString("username"),
+                        rs.getString("password"),
+                        rs.getString("email"),
+                        rs.getString("avatar_url"),
+                        rs.getString("role"),
+                        rs.getString("status"),
+                        createdAt,
+                        rs.getString("phonenumber") // đảm bảo tên cột đúng trong CSDL
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
