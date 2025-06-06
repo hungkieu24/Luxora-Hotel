@@ -37,6 +37,14 @@ public class Feedback {
         this.admin_action = admin_action;
     }
 
+    public Feedback(int rating, String comment, Timestamp created_at, String username, String userAvatarUrl) {
+        this.rating = rating;
+        this.comment = comment;
+        this.created_at = created_at;
+        this.username = username;
+        this.userAvatarUrl = userAvatarUrl;
+    }
+    
     public Feedback(int id, int booking_id, int rating, String comment, String image_url, Timestamp created_at, String status, String admin_action, UserAccount userAccount) {
         this.id = id;
         this.booking_id = booking_id;
@@ -71,6 +79,16 @@ public class Feedback {
         this.comment = comment;
         this.created_at = created_at;
         this.status = status;
+    }
+
+    public Feedback(String user_id, int booking_id, int rating, String comment, Timestamp created_at, String status, String admin_action) {
+        this.user_id = user_id;
+        this.booking_id = booking_id;
+        this.rating = rating;
+        this.comment = comment;
+        this.created_at = created_at;
+        this.status = status;
+        this.admin_action = admin_action;
     }
 
     
