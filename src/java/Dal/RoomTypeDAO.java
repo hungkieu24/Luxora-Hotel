@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,8 +47,75 @@ public class RoomTypeDAO extends DBcontext.DBContext {
         return roomTypeList;
     }
 
+    public RoomType getRoomTypeById(int id) {
+        RoomType roomType = null;
+        String sql = "SELECT * FROM RoomType WHERE id = ?";
 
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, id);
+            ResultSet rs = st.executeQuery();
 
+            if (rs.next()) {
+                roomType = new RoomType(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("description"),
+                        rs.getDouble("base_price"),
+                        rs.getInt("capacity"),
+                        rs.getString("image_url")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return roomType;
+    }
+
+    public List<RoomType> getSimilarRoomTypes(int targetId) {
+    List<RoomType> similarRoomTypes = new ArrayList<>();
+    RoomType targetRoom = getRoomTypeById(targetId); // bạn cần viết sẵn hàm này
+
+    if (targetRoom == null) {
+        return similarRoomTypes;
+    }
+
+    String sql = "SELECT * FROM RoomType WHERE id != ?";
+    try {
+        PreparedStatement st = connection.prepareStatement(sql);
+        st.setInt(1, targetId);
+        ResultSet rs = st.executeQuery();
+
+        List<RoomType> allOtherRooms = new ArrayList<>();
+        while (rs.next()) {
+            RoomType room = new RoomType(
+                rs.getInt("id"),
+                rs.getString("name"),
+                rs.getString("description"),
+                rs.getDouble("base_price"),
+                rs.getInt("capacity"),
+                rs.getString("image_url")
+            );
+            allOtherRooms.add(room);
+        }
+
+        // Sắp xếp theo độ chênh lệch giá so với phòng mục tiêu
+        allOtherRooms.sort(Comparator.comparingDouble(r -> Math.abs(r.getBase_price() - targetRoom.getBase_price())));
+
+        // Lấy 3 phòng gần giá nhất
+        for (int i = 0; i < Math.min(3, allOtherRooms.size()); i++) {
+            similarRoomTypes.add(allOtherRooms.get(i));
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return similarRoomTypes;
+}
+
+    
     public List<RoomType> searchAvailableRoomTypes(LocalDate checkIn, LocalDate checkOut, int guests, int branchId) {
         List<RoomType> availableRoomTypes = new ArrayList<>();
 
