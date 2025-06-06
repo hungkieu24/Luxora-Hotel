@@ -111,7 +111,7 @@
                                                         </c:forEach>
                                                     </select>
                                                     <div class="nice-select wide" tabindex="0">
-                                                        <span class="current">Select Room</span>
+                                                        <span class="current">Select Branch</span>
                                                         <ul class="list">
                                                             <c:forEach items="${branchList}" var="b">
                                                                 <li data-value="${b.getId()}" class="option">${b.getAddress()}</li>
@@ -276,7 +276,7 @@
                                         <small>Local Amenities</small>
                                         <h3>Restaurants</h3>
                                         <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
-                                        <p><a href="about.html" class="btn_1 mt-1 outline">Read more</a></p>
+                                        <!--<p><a href="about.html" class="btn_1 mt-1 outline">Read more</a></p>-->
                                     </div>
                                 </div>
                             </div>
@@ -294,7 +294,7 @@
                                         <small>Local Amenities</small>
                                         <h3>Art & Culture</h3>
                                         <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
-                                        <p><a href="about.html" class="btn_1 mt-1 outline">Read more</a></p>
+                                        <!--<p><a href="about.html" class="btn_1 mt-1 outline">Read more</a></p>-->
                                     </div>
                                 </div>
                             </div>
@@ -344,7 +344,7 @@
                     <!-- /parallax_section_1-->
 
 
-                    <div class="container margin_120_95" id="booking_section">
+<!--                    <div class="container margin_120_95" id="booking_section">
                         <div class="row justify-content-between">
                             <div class="col-xl-4">
                                 <div data-cue="slideInUp">
@@ -394,14 +394,14 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- / row -->
+                                     / row 
                                     <p class="text-end mt-4"><a href="#0" class="btn_1 outline">Book Now</a></p>
                                 </div>
                             </div>
-                            <!-- /col -->
+                             /col 
                         </div>
-                        <!-- /row -->
-                    </div>
+                         /row 
+                    </div>-->
                     <!-- /container -->
 
             </main>

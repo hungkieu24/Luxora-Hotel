@@ -82,7 +82,7 @@ public class BranchServlet extends HttpServlet {
                 keyword = keyword.replaceAll("\\s+", " ");
             }
 
-            brancheList = branchDAO.searchHotelBranchByName(keyword, page, pageSize);
+            brancheList = branchDAO.searchHotelBranches(keyword, page, pageSize);
             brancheListSize = branchDAO.getTotalHotelBranchAfterSearching(keyword);
 
             totalPages = (int) Math.ceil((double) brancheListSize / pageSize);

@@ -42,7 +42,10 @@ public class branchEventHandlerServlet extends HttpServlet {
     private final HotelBranchDAO branchDAO = new HotelBranchDAO();
 
     private final String BRANCH_PAGE = "./branch";
-    private final String HOTEL_BRANCH_IMAGE_FOLDER_PREFIX = "HotelBranch_";
+    private final String HOTEL_BRANCH_IMAGE_FOLDER_PREFIX = "/img/HotelBranch_";
+    private static final String COL_EMAIL = "email";
+    private static final String COL_PHONE = "phone";
+    private static final String COL_ADDRESS = "address";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -89,8 +92,6 @@ public class branchEventHandlerServlet extends HttpServlet {
         String branchAddress = request.getParameter("branchAddress");
         String uploadParamName = "branchImgs";
 
-        boolean isValidInformation = validateBranchInfo(branchEmail, branchAddress, branchPhone, request);
-
         if (branchIDString == null && action.equals("edit")) {
             setSessionMessage(session, "BranchID is null.", "error");
             response.sendRedirect(BRANCH_PAGE);
@@ -101,6 +102,12 @@ public class branchEventHandlerServlet extends HttpServlet {
             int branchID = Integer.parseInt(branchIDString);
             HotelBranch existingBranch = branchDAO.getHotelBranchByIdSimple(branchID);
 
+            boolean isValidInformation = validateForUpdate(branchID ,branchEmail, branchAddress, branchPhone, request);
+            if (!isValidInformation) {
+                response.sendRedirect(BRANCH_PAGE);
+                return;
+            }
+            
             updateBranch(request, session, branchDAO, existingBranch,
                     branchName, branchAddress, branchPhone,
                     branchEmail, staffID, uploadParamName);
@@ -113,6 +120,7 @@ public class branchEventHandlerServlet extends HttpServlet {
             String specificAddress = request.getParameter("specificAddress");
             String address = specificAddress + ", " + branchAddress;
 
+            boolean isValidInformation = validateForRegister(branchEmail, branchAddress, branchPhone, request);
             if (!isValidInformation) {
                 response.sendRedirect(BRANCH_PAGE);
                 return;
@@ -134,27 +142,48 @@ public class branchEventHandlerServlet extends HttpServlet {
             }
             int branchIDDelete = Integer.parseInt(branchIDDeleteString);
             boolean deleted = branchDAO.deleteHotelBranch(branchIDDelete);
-            setSessionMessage(session, deleted ? "Delete successful!" : "Cannot delete, room may be booked!",
+            setSessionMessage(session, deleted ? "Delete successful!" : "Cannot delete, there may be rooms booked here!",
                     deleted ? "success" : "error");
             response.sendRedirect(BRANCH_PAGE);
             return;
         }
     }
 
-    public boolean validateBranchInfo(String email, String address, String phone, HttpServletRequest request) {
+    public boolean validateForRegister(String email, String address, String phone, HttpServletRequest request) {
         HttpSession session = request.getSession();
 
-        if (branchDAO.isEmailExists(email)) {
+        if (branchDAO.isFieldExists(COL_EMAIL, email, null)) {
             setSessionMessage(session, "Email already exists!", "error");
             return false;
         }
 
-        if (branchDAO.isAddressExists(address)) {
+        if (branchDAO.isFieldExists(COL_ADDRESS, address, null)) {
             setSessionMessage(session, "Address already exists!", "error");
             return false;
         }
 
-        if (branchDAO.isPhoneExists(phone)) {
+        if (branchDAO.isFieldExists(COL_PHONE, phone, null)) {
+            setSessionMessage(session, "Phone already exists!", "error");
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean validateForUpdate(int id, String email, String address, String phone, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+
+        if (branchDAO.isFieldExists(COL_EMAIL, email, id)) {
+            setSessionMessage(session, "Email already exists!", "error");
+            return false;
+        }
+
+        if (branchDAO.isFieldExists(COL_ADDRESS, address, id)) {
+            setSessionMessage(session, "Address already exists!", "error");
+            return false;
+        }
+
+        if (branchDAO.isFieldExists(COL_PHONE, phone, id)) {
             setSessionMessage(session, "Phone already exists!", "error");
             return false;
         }
@@ -174,7 +203,7 @@ public class branchEventHandlerServlet extends HttpServlet {
         } else {
             newManagerID = oldBranch.getManager_id(); // giữ nguyên nếu không thay đổi
         }
-        
+
         String UPLOAD_DIR = HOTEL_BRANCH_IMAGE_FOLDER_PREFIX + oldBranch.getId();
         String pathHost = getServletContext().getRealPath("");
         String serverUploadPath = pathHost.replace("build\\", "") + UPLOAD_DIR;

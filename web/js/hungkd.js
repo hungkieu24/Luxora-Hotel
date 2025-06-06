@@ -69,6 +69,6 @@ document.addEventListener('DOMContentLoaded', function () {
             setTimeout(() => {
                 toast.remove();
             }, 500);
-        }, 3000);
+        }, 5000);
     }
 });
