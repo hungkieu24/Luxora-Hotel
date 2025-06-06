@@ -44,7 +44,7 @@ public class EmailUtility {
                 + "<body>"
                 + "<p>Chào bạn,</p>"
                 + "<p>Mã xác nhận của bạn là: <strong style='color:blue;'>" + messageText + "</strong></p>"
-                + "<p>Vui lòng không chia sẻ mã này với người khác.</p>"
+                +"<p style='color : red;'>Mã của bạn tồn tại trong 3 phút. Vui lòng không chia sẻ mã này với người khác!</p>"
                 + "</body>"
                 + "</html>";
 

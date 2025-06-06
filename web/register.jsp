@@ -97,11 +97,11 @@
                 errorSelector: '.form__error',
                 rules: [
                     Validator.isRequired('#username', 'Please enter your username'),
-                    Validator.minLength('#username', 3),
+                    Validator.lengthRange('#username', 6, 30, 'Username must be between 6 and 30 characters.'),
                     Validator.isPhoneNumber('#phone', 'Please enter your phone number'),
                     Validator.isRequired('#email', 'Please enter your email'),
                     Validator.isEmail('#email'),
-                    Validator.minLength(' #password', 10),
+                    Validator.minLength(' #password', 8),
                     Validator.isRequired('#repassword'),
                     Validator.isConfirmed(' #repassword', function () {
                         return document.querySelector('#form-register #password').value;

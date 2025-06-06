@@ -10,13 +10,13 @@ import Utility.EmailUtility;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.util.Random;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
@@ -108,25 +108,29 @@ public class RegisterServlet extends HttpServlet {
         }
 
         // Sinh mã xác nhận
-        String verificationCode = String.valueOf((int) (Math.random() * 900000 + 100000));
+        String verificationCode = String.format("%06d", new Random().nextInt(1000000));
+        int duration = 3 * 60; // 3 phut(180s)
+        long expiryTime = System.currentTimeMillis() + duration * 1000;
 
         // Gửi email
         try {
             EmailUtility.sendEmail(email, "Verify your email to register", verificationCode);
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("error", "Unable to send email");
-            request.getRequestDispatcher("./register.jsp").forward(request, response);
+            setSessionMessage(session, "Unable to send email, please check your email", "error");
+            response.sendRedirect("./register.jsp");
             return;
         }
 
         // Lưu thông tin tạm vào session
+        session.setAttribute("duration", duration);   
+        session.setAttribute("expiryTime", expiryTime);
         session.setAttribute("authCode", verificationCode);
         session.setAttribute("username", username);
         session.setAttribute("email", email);
         session.setAttribute("password", password);
         session.setAttribute("phone", phone);
-        response.sendRedirect("verify.jsp");
+        response.sendRedirect("verifyEmail.jsp");
     }
 
     public boolean isValidRegistration(String email, String username, String password, HttpServletRequest request) {
@@ -134,14 +138,10 @@ public class RegisterServlet extends HttpServlet {
 
         // Regex pattern
         String letterRegex = ".*[a-zA-Z].*";
-        String specialCharRegex = ".*[!@#$%^&*(),.?\":{}|<>].*";
         String digitRegex = ".*[0-9].*";
 
-      
-        if (!password.matches(letterRegex)
-                || !password.matches(specialCharRegex)
-                || !password.matches(digitRegex)) {
-            setSessionMessage(session, "Password must include at least one letter, one digit, and one special character!", "error");
+        if (!password.matches(letterRegex) || !password.matches(digitRegex)) {
+            setSessionMessage(session, "Password must include at least one letter, one digit!", "error");
             return false;
         }
 

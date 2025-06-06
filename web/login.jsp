@@ -14,8 +14,29 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap"/>
         <link rel="stylesheet" href="./css/loginStyles.css"/>
+        <link rel="stylesheet" href="./css/custom.css"/>
     </head>
     <body>
+        <c:if test="${not empty sessionScope.message}">
+            <div id="toastMessage" class="toast-message ${sessionScope.messageType}">
+                <c:choose>
+                    <c:when test="${sessionScope.messageType == 'success'}">
+                        <i class="fa fa-check-circle"></i>
+                    </c:when>
+                    <c:when test="${sessionScope.messageType == 'error'}">
+                        <i class="fa fa-times-circle"></i>
+                    </c:when>
+                </c:choose>
+                ${sessionScope.message}
+            </div>
+
+            <!-- Xóa message sau khi hiển thị -->
+            <c:remove var="message" scope="session" />
+            <c:remove var="messageType" scope="session" />
+            <%
+                session.invalidate();
+            %>
+        </c:if>
         <form action="login" method="post">
 
             <h3>Login here</h3>
@@ -39,5 +60,6 @@
             </div>
             <h4>You don't have an account ?<a href="register.jsp">Register</a></h4>
         </form>
+        <script src="./js/toastMessage.js"></script>  
     </body>
 </html>
