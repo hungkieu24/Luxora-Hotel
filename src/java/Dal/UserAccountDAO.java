@@ -226,6 +226,21 @@ public class UserAccountDAO extends DBContext {
             return false;
         }
     }
+    
+    public boolean updateEmail(String userId,  String email) {
+        String sql = "UPDATE UserAccount SET email = ? WHERE id = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, email);
+            ps.setString(2, userId);
+         
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
     public UserAccount getHotelOwner() {
         String sql = "SELECT TOP 1 * FROM UserAccount WHERE role = 'HotelOwner' AND status = 'Active'";
@@ -314,5 +329,20 @@ public class UserAccountDAO extends DBContext {
             e.printStackTrace();
             return false;
         }
+    }
+    
+    public boolean isFieldExists(String fieldName, String value, String excludeId) {
+        String sql = "SELECT 1 FROM UserAccount WHERE " + fieldName + " = ?" + (excludeId != null ? " AND id != ?" : "");
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, value);
+            if (excludeId != null) {
+                ps.setString(2, excludeId);
+            }
+            ResultSet rs = ps.executeQuery();
+            return rs.next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }
