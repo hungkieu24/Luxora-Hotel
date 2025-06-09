@@ -4,7 +4,9 @@
  */
 package Controller.Customer;
 
+import Dal.FeedbackDAO;
 import Dal.RoomTypeDAO;
+import Model.Feedback;
 import Model.RoomType;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -74,6 +76,22 @@ public class ViewRoomTypeDetailsServlet extends HttpServlet {
         List<RoomType> listSimilarRoom = roomTypeDAO.getSimilarRoomTypes(roomTypeId);
         request.setAttribute("roomType", roomType);
         request.setAttribute("listSimilarRoom", listSimilarRoom);
+        
+        //phan view feedback
+        int page = 1; // trang dau tien
+        int pageSize = 5; // 1 trang co 5 row
+        if (request.getParameter("page") != null) {
+            page = Integer.parseInt(request.getParameter("page"));
+        }
+        FeedbackDAO feedbackDAO = new FeedbackDAO();
+        int feedbackListSize = feedbackDAO.getListFeedbackByRoomTypeId(roomTypeId).size();
+        int totalPages = (int) Math.ceil((double) feedbackListSize / pageSize);
+        List<Feedback> listFeedback = feedbackDAO.getListFeedbackByPage1(page, pageSize, roomTypeId);
+
+        request.setAttribute("listFeedback", listFeedback);
+        request.setAttribute("currentPage", page);
+        request.setAttribute("totalPages", totalPages);
+        request.setAttribute("roomTypeId", roomTypeId);
         request.getRequestDispatcher("./viewRoomTypeDetail.jsp").forward(request, response);
     }
 

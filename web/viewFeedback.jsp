@@ -44,14 +44,14 @@
             <div class="container">
                 <div class="row align-items-center">
                     <div class="col-6">
-                        <a href="index.html" class="logo_normal"><img src="img/logo.png" width="135" height="45" alt=""></a>
+                        <a href="homepage" class="logo_normal"><img src="img/logo.png" width="135" height="45" alt=""></a>
                         <a href="index.html" class="logo_sticky"><img src="img/logo_sticky.png" width="135" height="45" alt=""></a>
                     </div>
 
                     <div class="col-6">
                         <nav class="second_nav">
                             <ul>
-                                <li><a href="#booking_section" class="btn_1 btn_scrollto">Book Now</a></li>
+                                
                                 <li>
                                     <div class="hamburger_2 open_close_nav_panel">
                                         <div class="hamburger__box">
@@ -82,7 +82,7 @@
                             <ul class="level-2">
                                 <li class="back"><a href="#0">Back</a></li>
                                 <li><a href="viewFeedback">View Feedback</a></li>
-                                <li><a href="sendFeedback1.jsp">Send Feedback</a></li>
+                                <li><a href="sendFeedback.jsp">Send Feedback</a></li>
                             </ul> 
                         </li>
                         <li><a href="./homepage?action=logout">Log out</a></li>
@@ -121,124 +121,15 @@
                 </div>
             </div>
             <!-- /Background Img Parallax -->
-
-            <div class="bg_white" id="first_section">
-                <div class="container margin_120_95">
-                    <div class="row justify-content-between">
-                        <div class="col-lg-4">
-                            <div class="title">
-                                <small>Luxury Experience</small>
-                                <h2>A deeply space that invites you to truly Switch Off.</h2>
-                            </div>
-                            <p>The dark wood panelling and furnishings, deluxe red-draped four-poster bed, and magnificent black stone bathroom evoke the charm of a secluded Sierra Nevada getaway. The intimate scale and finish give the room a distinctly personal feel.</p>
-                            <p>The dark wood panelling and furnishings, deluxe red-draped four-poster bed, and magnificent black stone bathroom evoke the charm.</p>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="room_facilities_list">
-                                <ul data-cues="slideInLeft">
-                                    <li><i class="icon-hotel-double_bed_2"></i> King Size Bed</li>
-                                    <li><i class="icon-hotel-safety_box"></i> Safety Box</li>
-                                    <li><i class="icon-hotel-patio"></i>Balcony</li>
-                                    <li><i class="icon-hotel-tv"></i> 32 Inch TV</li>
-                                    <li><i class="icon-hotel-disable"></i> Disable Access</li>
-                                    <li><i class="icon-hotel-dog"></i> Pet Allowed</li>
-                                    <li><i class="icon-hotel-bottle"></i> Welcome Bottle</li>
-                                    <li><i class="icon-hotel-wifi"></i> Wifi / Netflix access</li>
-                                    <li><i class="icon-hotel-hairdryer"></i> Air Dryer</li>
-                                    <li><i class="icon-hotel-condition"></i> Air Condition</li>
-                                    <li><i class="icon-hotel-loundry"></i>Loundry Service</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- /row -->
-                </div>
-                <!-- /container -->
-            </div>
-            <!-- /bg_white -->
-
-            <div class="bg_white add_bottom_120">
-                <div class="container-fluid p-lg-0">
-                    <div data-cues="zoomIn">
-                        <div class="owl-carousel owl-theme carousel_item_centered kenburns rounded-img">
-                            <div class="item">
-                                <img src="img/rooms/opt_5.jpg" alt="">
-                            </div>
-                            <div class="item">
-                                <img src="img/rooms/opt_1.jpg" alt="">
-                            </div>
-                            <div class="item">
-                                <img src="img/rooms/opt_4.jpg" alt="">
-                            </div>
-                            <div class="item">
-                                <img src="img/rooms/opt_6.jpg" alt="">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="text-center mt-5">
-                        <a class="btn_1 outline" data-fslightbox="gallery_1" data-type="image" href="img/rooms/opt_5.jpg">FullScreen Gallery</a>
-                        <a data-fslightbox="gallery_1" data-type="image" href="img/rooms/opt_1.jpg"></a>
-                        <a data-fslightbox="gallery_1" data-type="image" href="img/rooms/opt_4.jpg"></a>
-                        <a data-fslightbox="gallery_1" data-type="image" href="img/rooms/opt_6.jpg"></a>
-                    </div>
-                </div>
-            </div>
-            <!-- /bg_white -->
-
+            
             <div class="container margin_120_95" id="reviews">
                 <div class="row justify-content-between">
-                    <div class="col-lg-4 order-lg-2 fixed_title reviews_sum_details">
-                        <div class="title">
-                            <small>Paradise Hotel</small>
-                            <h2>Reviews</h2>
-                        </div>
-                        <p>Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus.</p>
-                        <h6>Comfort</h6>
-                        <div class="row mb-2">
-                            <div class="col-xl-10 col-lg-9 col-11">
-                                <div class="progress">
-                                    <div class="progress-bar" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                            </div>
-                            <div class="col-xl-2 col-lg-3 col-1"><strong>9.0</strong></div>
-                        </div>
-                        <!-- /row -->
-                        <h6>Facilities</h6>
-                        <div class="row mb-2">
-                            <div class="col-xl-10 col-lg-9 col-11">
-                                <div class="progress">
-                                    <div class="progress-bar" role="progressbar" aria-valuenow="95" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                            </div>
-                            <div class="col-xl-2 col-lg-3 col-1"><strong>9.5</strong></div>
-                        </div>
-                        <!-- /row -->
-                        <h6>Location</h6>
-                        <div class="row mb-2">
-                            <div class="col-xl-10 col-lg-9 col-11">
-                                <div class="progress">
-                                    <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                            </div>
-                            <div class="col-xl-2 col-lg-3 col-1"><strong>6.0</strong></div>
-                        </div>
-                        <!-- /row -->
-                        <h6>Price</h6>
-                        <div class="row mb-2">
-                            <div class="col-xl-10 col-lg-9 col-11">
-                                <div class="progress">
-                                    <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                            </div>
-                            <div class="col-xl-2 col-lg-3 col-1"><strong>6.0</strong></div>
-                        </div>
-                        <!-- /row -->
-                    </div>
-                    <div class="col-lg-7 order-lg-1">
+
+                    <div class="col-lg-12 order-lg-1">
 
 
                         <div id="feedback-container">
-
+                            <h3 class="mb-3">Feedback History</h3>
                             <c:forEach var="feedback" items="${listFeedback}"> 
 
                                 <div class="review_card">
@@ -274,127 +165,17 @@
                             </div>
                         </div>
                         <!-- /review_card -->
-                        <p class="text-end"><a href="sendFeedback1.jsp" class="btn_1">Leave a review</a></p>
+                        <p class="text-end"><a href="sendFeedback.jsp" class="btn_1">Leave a review</a></p>
 
 
 
                     </div>
+                    
                 </div>
             </div>
 
 
-            <!-- /reviews -->
 
-            <div class="bg_white">
-                <div class="container margin_120_95">
-                    <div data-cue="slideInUp">
-                        <div class="title">
-                            <small>Paradise Hotel</small>
-                            <h2>Similar Rooms</h2>
-                        </div>
-                        <div class="row" data-cues="slideInUp" data-delay="800">
-                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6">
-                                <a href="room-list-1.html" class="box_cat_rooms">
-                                    <figure>
-                                        <div class="background-image" data-background="url(img/rooms/1.jpg)"></div>
-                                        <div class="info">
-                                            <small>From $150/night</small>
-                                            <h3>Double Room</h3>
-                                            <span>Read more</span>
-                                        </div>
-                                    </figure>
-                                </a>
-                            </div>
-                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6">
-                                <a href="room-list-1.html" class="box_cat_rooms">
-                                    <figure>
-                                        <div class="background-image" data-background="url(img/rooms/2.jpg)"></div>
-                                        <div class="info">
-                                            <small>From $190/night</small>
-                                            <h3>Deluxe Room</h3>
-                                            <span>Read more</span>
-                                        </div>
-                                    </figure>
-                                </a>
-                            </div>
-                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6">
-                                <a href="room-list-1.html" class="box_cat_rooms">
-                                    <figure>
-                                        <div class="background-image" data-background="url(img/rooms/3.jpg)"></div>
-                                        <div class="info">
-                                            <small>From $240/night</small>
-                                            <h3>Superior Room</h3>
-                                            <span>Read more</span>
-                                        </div>
-                                    </figure>
-                                </a>
-                            </div>
-                        </div>
-                        <!-- /row-->
-                    </div>
-                </div>
-            </div>
-            <!-- /bg_white -->
-
-            <div class="container margin_120_95" id="booking_section">
-                <div class="row justify-content-between">
-                    <div class="col-xl-4">
-                        <div data-cue="slideInUp">
-                            <div class="title">
-                                <small>Paradise Hotel</small>
-                                <h2>Check Availability</h2>
-                            </div>
-                            <p>Mea nibh meis philosophia eu. Duis legimus efficiantur ea sea. Id placerat tacimates definitionem sea, prima quidam vim no. Duo nobis persecuti cu. </p>
-                            <p class="phone_element no_borders"><a href="tel://423424234"><i class="bi bi-telephone"></i><span><em>Info and bookings</em>+41 934 121 1334</span></a></p>
-                        </div>
-                    </div>
-                    <div class="col-xl-7">
-                        <div data-cue="slideInUp" data-delay="200">
-                            <div class="booking_wrapper">
-                                <p id="daterangepicker-result" class="d-none"></p>
-                                <input id="date_booking" type="hidden">
-                                <div id="daterangepicker-embedded-container" class="embedded-daterangepicker clearfix mb-4"></div>
-                                <div class="row">
-                                    <div class="col-lg-6">
-                                        <div class="custom_select">
-                                            <select class="wide">
-                                                <option>Select Room</option>
-                                                <option>Double Room</option>
-                                                <option>Deluxe Room</option>
-                                                <option>Superior Room</option>
-                                                <option>Junior Suite</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <div class="row">
-                                            <div class="col-6">
-                                                <div class="qty-buttons mb-3 version_2">
-                                                    <input type="button" value="+" class="qtyplus" name="adults_booking">
-                                                    <input type="text" name="adults_booking" id="adults_booking" value="" class="qty form-control" placeholder="Adults">
-                                                    <input type="button" value="-" class="qtyminus" name="adults_booking">
-                                                </div>
-                                            </div>
-                                            <div class="col-6">
-                                                <div class="mb-3 qty-buttons mb-3 version_2">
-                                                    <input type="button" value="+" class="qtyplus" name="childs_booking">
-                                                    <input type="text" name="childs_booking" id="childs_booking" value="" class="qty form-control" placeholder="Childs">
-                                                    <input type="button" value="-" class="qtyminus" name="childs_booking">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- / row -->
-                            <p class="text-end mt-5"><a href="#0" class="btn_1 outline">Book Now</a></p>
-                        </div>
-                    </div>
-                    <!-- /col -->
-                </div>
-                <!-- /row -->
-            </div>
-            <!-- /container -->
         </main>
 
         <footer class="revealed">

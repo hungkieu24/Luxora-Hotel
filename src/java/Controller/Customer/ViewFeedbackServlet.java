@@ -5,7 +5,9 @@
 package Controller.Customer;
 
 import Dal.FeedbackDAO;
+import Dal.RoomTypeDAO;
 import Model.Feedback;
+import Model.RoomType;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -60,27 +62,33 @@ public class ViewFeedbackServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        int page = 1; // trang đầu tiên
-        int pageSize = 5; // 1 trang có 5 row
+        
+        String sroomTypeId = request.getParameter("roomTypeId");
+        int roomTypeId = 0;
+        if (sroomTypeId != null || !sroomTypeId.trim().isEmpty()) {
+            roomTypeId = Integer.parseInt(sroomTypeId);
+        } else {
+            response.sendRedirect("./homepage");
+            return;
+        }
+        
+        RoomTypeDAO roomTypeDAO = new RoomTypeDAO();
+        RoomType roomType = roomTypeDAO.getRoomTypeById(roomTypeId);
+        
+        int page = 1; // trang dau tien
+        int pageSize = 5; // 1 trang co 5 row
         if (request.getParameter("page") != null) {
             page = Integer.parseInt(request.getParameter("page"));
         }
         FeedbackDAO feedbackDAO = new FeedbackDAO();
         int feedbackListSize = feedbackDAO.getAllFeedBack().size();
         int totalPages = (int) Math.ceil((double) feedbackListSize / pageSize);
-        List<Feedback> listFeedback = feedbackDAO.getListFeedbackByPage1(page, pageSize);
-//        request.setAttribute("listFeedback", listFeedback);
-//        request.setAttribute("currentPage", page);
-//        request.setAttribute("totalPages", totalPages);
-//        request.getRequestDispatcher("viewFeedback.jsp").forward(request, response);
-
-//        boolean isAjax = "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
+        List<Feedback> listFeedback = feedbackDAO.getListFeedbackByPage1(page, pageSize,roomTypeId);
 
         request.setAttribute("listFeedback", listFeedback);
         request.setAttribute("currentPage", page);
         request.setAttribute("totalPages", totalPages);
 
-// Dù là AJAX hay không thì vẫn forward về viewFeedback.jsp
         request.getRequestDispatcher("viewFeedback.jsp").forward(request, response);
 
     }
