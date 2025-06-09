@@ -6,6 +6,7 @@
 package Controller;
 import Dal.BranchReportDAO;
 import Model.BranchReport;
+import Model.UserAccount;
 import java.io.IOException;
 import java.util.List;
 import jakarta.servlet.ServletException;
@@ -30,10 +31,10 @@ public class BranchReportServlet extends HttpServlet {
             throws ServletException, IOException {
         
         HttpSession session = request.getSession(false);
-        String userId = (String) session.getAttribute("userId");
+         UserAccount user = (UserAccount) session.getAttribute("user");
         
         
-         if (userId == null || userId.trim().isEmpty()) {
+         if (user == null) {
            response.sendRedirect("login.jsp");
             return;
          }
@@ -54,7 +55,7 @@ public class BranchReportServlet extends HttpServlet {
                 reportType = "revenue";
             }
             
-            List<BranchReport> branchReports = branchReportDAO.getBranchReports(userId, startDate, endDate, reportType);
+            List<BranchReport> branchReports = branchReportDAO.getBranchReports(user.getId(), startDate, endDate, reportType);
             System.out.println("Branch reports size: " + branchReports.size());
 
             // FIX 4: Tính toán metrics chính xác
@@ -88,6 +89,32 @@ public class BranchReportServlet extends HttpServlet {
             request.setAttribute("startDate", startDate);
             request.setAttribute("endDate", endDate);
             request.setAttribute("reportType", reportType);
+            
+            // Prepare chart data
+            StringBuilder branchNames = new StringBuilder();
+            StringBuilder revenueData = new StringBuilder();
+            StringBuilder occupancyData = new StringBuilder();
+            StringBuilder bookingData = new StringBuilder();
+            
+            for (int i = 0; i < branchReports.size(); i++) {
+                BranchReport report = branchReports.get(i);
+                branchNames.append("\"").append(report.getBranchName()).append("\"");
+                revenueData.append(report.getTotalRevenue());
+                occupancyData.append(Math.round(report.getOccupancyRate() * 100));
+                bookingData.append(report.getTotalBookings());
+                
+                if (i < branchReports.size() - 1) {
+                    branchNames.append(",");
+                    revenueData.append(",");
+                    occupancyData.append(",");
+                    bookingData.append(",");
+                }
+            }
+            
+            request.setAttribute("branchNames", branchNames.toString());
+            request.setAttribute("revenueData", revenueData.toString());
+            request.setAttribute("occupancyData", occupancyData.toString());
+            request.setAttribute("bookingData", bookingData.toString());
             
             request.getRequestDispatcher("branchReport.jsp").forward(request, response);
             

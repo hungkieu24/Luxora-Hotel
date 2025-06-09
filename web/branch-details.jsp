@@ -554,6 +554,137 @@
         .summary-card:nth-child(2) { animation-delay: 0.2s; }
         .summary-card:nth-child(3) { animation-delay: 0.3s; }
         .summary-card:nth-child(4) { animation-delay: 0.4s; }
+
+        .occupancy-rate {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            justify-content: center;
+        }
+        .progress-bar {
+            width: 80px;
+            height: 10px;
+            background: #e0e0e0;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-right: 6px;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #27ae60, #f39c12);
+            border-radius: 6px 0 0 6px;
+            transition: width 0.4s;
+        }
+        .card {
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 8px 32px rgba(52, 73, 94, 0.15);
+            margin-bottom: 32px;
+            overflow: hidden;
+            border: 1px solid #f0f0f0;
+        }
+        .card-header {
+            padding: 22px 32px;
+            border-bottom: 1px solid #ecf0f1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(90deg, #34495e 60%, #6dd5fa 100%);
+        }
+        .card-header h3 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .table-responsive {
+            overflow-x: auto;
+            padding: 24px 32px 32px 32px;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .data-table th {
+            background: linear-gradient(90deg, #34495e 60%, #6dd5fa 100%);
+            color: #fff;
+            padding: 16px 12px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 16px;
+            border-bottom: 2px solid #ecf0f1;
+        }
+        .data-table th:first-child {
+            border-radius: 12px 0 0 0;
+        }
+        .data-table th:last-child {
+            border-radius: 0 12px 0 0;
+        }
+        .data-table td {
+            padding: 16px 12px;
+            border-bottom: 1px solid #ecf0f1;
+            text-align: center;
+            font-size: 15px;
+            color: #2c3e50;
+            background: #fff;
+        }
+        .data-table tr:hover {
+            background: #eaf6fb;
+            box-shadow: 0 2px 8px rgba(52, 152, 219, 0.08);
+            transition: background 0.2s, box-shadow 0.2s;
+        }
+        .data-table td i {
+            color: #3498db;
+            margin-right: 4px;
+        }
+        .occupancy-rate {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+        }
+        .progress-bar {
+            width: 90px;
+            height: 12px;
+            background: #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-right: 8px;
+            box-shadow: 0 2px 8px rgba(39, 174, 96, 0.08);
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #27ae60 60%, #f39c12 100%);
+            border-radius: 8px 0 0 8px;
+            transition: width 0.5s cubic-bezier(.4,2,.6,1);
+            box-shadow: 0 2px 8px rgba(243, 156, 18, 0.12);
+        }
+        @media (max-width: 900px) {
+            .card-header, .table-responsive {
+                padding: 16px;
+            }
+            .data-table th, .data-table td {
+                padding: 10px 6px;
+                font-size: 13px;
+            }
+        }
+        @media (max-width: 600px) {
+            .card-header, .table-responsive {
+                padding: 8px;
+            }
+            .data-table th, .data-table td {
+                padding: 6px 2px;
+                font-size: 12px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -654,72 +785,61 @@
             </section>
         </c:if>
 
-        <!-- Branch Details -->
-        <section class="table-section">
-            <div class="table-card">
-                <div class="table-header">
-                    <h3><i class="fas fa-table"></i> Branch Details</h3>
-                    <div class="table-actions">
-                        <button onclick="printReport()" class="print-btn">
-                            <i class="fas fa-print"></i> Print Report
-                        </button>
-                    </div>
-                </div>
-                <div class="table-container">
-                    <table class="report-table">
-                        <thead>
-                            <tr>
-                                <th>Branch Name</th>
-                                <th>Location</th>
-                                <th>Contact</th>
-                                <th>Total Rooms</th>
-                                <th>Bookings</th>
-                                <th>Revenue</th>
-                                <th>Occupancy Rate</th>
-                                <th>Avg Rating</th>
-                                <th>Feedbacks</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="branch-name">
-                                    <div class="branch-info">
-                                        <strong>${branchReport.branchName}</strong>
-                                    </div>
-                                </td>
-                                <td class="branch-address">${branchReport.branchAddress}</td>
-                                <td class="contact-info">
-                                    <div>
-                                        <i class="fas fa-phone"></i> ${branchReport.branchPhone}<br>
-                                        <i class="fas fa-envelope"></i> ${branchReport.branchEmail}
-                                    </div>
-                                </td>
-                                <td class="text-center">${branchReport.totalRooms}</td>
-                                <td class="text-center">${branchReport.totalBookings}</td>
-                                <td class="revenue-cell">
-                                    <fmt:formatNumber value="${branchReport.totalRevenue}" type="currency" currencySymbol="$"/>
-                                </td>
-                                <td class="occupancy-cell">
-                                    <div class="occupancy-bar">
-                                        <div class="occupancy-fill" style="width: ${branchReport.occupancyRate}%"></div>
-                                        <span><fmt:formatNumber value="${branchReport.occupancyRate}" maxFractionDigits="1"/>%</span>
-                                    </div>
-                                </td>
-                                <td class="rating-cell">
-                                    <div class="rating">
-                                        <c:forEach begin="1" end="5" var="star">
-                                            <i class="fas fa-star ${star <= branchReport.averageRating ? 'filled' : ''}"></i>
-                                        </c:forEach>
-                                        <span>(<fmt:formatNumber value="${branchReport.averageRating}" maxFractionDigits="1"/>)</span>
-                                    </div>
-                                </td>
-                                <td class="text-center">${branchReport.totalFeedbacks}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+        <!-- Card Chi tiết chi nhánh (theo template branchReport.jsp, giữ nguyên chức năng) -->
+        <div class="card">
+            <div class="card-header">
+                <h3><i class="fas fa-table"></i> Branch Details</h3>
             </div>
-        </section>
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Branch Name</th>
+                            <th>Address</th>
+                            <th>Contact</th>
+                            <th>Total Rooms</th>
+                            <th>Total Bookings</th>
+                            <th>Revenue</th>
+                            <th>Occupancy Rate</th>
+                            <th>Avg Rating</th>
+                            <th>Feedbacks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>${branchReport.branchName}</td>
+                            <td>${branchReport.branchAddress}</td>
+                            <td>
+                                <i class="fas fa-phone"></i> ${branchReport.branchPhone}<br>
+                                <i class="fas fa-envelope"></i> ${branchReport.branchEmail}
+                            </td>
+                            <td><fmt:formatNumber value="${branchReport.totalRooms}" type="number" maxFractionDigits="0"/></td>
+                            <td><fmt:formatNumber value="${branchReport.totalBookings}" type="number" maxFractionDigits="0"/></td>
+                            <td><fmt:formatNumber value="${branchReport.totalRevenue}" type="number" maxFractionDigits="0"/></td>
+                            <td>
+                                <div class="occupancy-rate">
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: ${branchReport.occupancyRate}%;"></div>
+                                    </div>
+                                    <span><fmt:formatNumber value="${branchReport.occupancyRate}" maxFractionDigits="1"/>%</span>
+                                </div>
+                            </td>
+                            <td>
+                                <c:choose>
+                                    <c:when test="${branchReport.averageRating > 0}">
+                                        <fmt:formatNumber value="${branchReport.averageRating}" maxFractionDigits="1"/>
+                                    </c:when>
+                                    <c:otherwise>
+                                        No rating yet
+                                    </c:otherwise>
+                                </c:choose>
+                            </td>
+                            <td><fmt:formatNumber value="${branchReport.totalFeedbacks}" type="number" maxFractionDigits="0"/></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
         <!-- Charts Section -->
         <section class="charts-section">
