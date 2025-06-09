@@ -17,7 +17,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
 
 body {
     background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
-                url('../img/registerbg.jpg');
+        url('../img/registerbg.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -81,6 +81,28 @@ form h3 {
     align-items: center;
 }
 
+.form__flex.verify input {
+    width: 70%;
+}
+
+.form__flex.verify .reset {
+    width: 30%;
+    /*    margin-left: 10px;
+        background: #fff;
+        color: #080710;
+        text-decoration: none;
+        padding: 12px 10px;
+        border-radius: 5px;
+        text-align: center;
+        margin-top: 8px;*/
+    box-sizing: border-box;
+    padding: 14px 10px;
+    margin-left: 10px;
+    opacity: 0.2;
+    cursor: context-menu;
+    font-size: 15px;
+}
+
 .form__flex label {
     width: 30%;
 }
@@ -95,7 +117,7 @@ label {
 input {
     display: block;
     height: 50px;
-    width: 95%;
+    width: 96%;
     background-color: rgba(255, 255, 255, 0.07);
     border-radius: 3px;
     margin-top: 8px;

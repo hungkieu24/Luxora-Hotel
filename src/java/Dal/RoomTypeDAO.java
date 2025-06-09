@@ -46,6 +46,33 @@ public class RoomTypeDAO extends DBcontext.DBContext {
         }
         return roomTypeList;
     }
+    
+    public List<RoomType> getRoomTypesByPriceRange(double minPrice, double maxPrice) {
+    List<RoomType> roomTypeList = new ArrayList<>();
+    String sql = "SELECT * FROM RoomType WHERE base_price BETWEEN ? AND ?";
+
+    try {
+        PreparedStatement st = connection.prepareStatement(sql);
+        st.setDouble(1, minPrice);
+        st.setDouble(2, maxPrice);
+        ResultSet rs = st.executeQuery();
+
+        while (rs.next()) {
+            RoomType roomtype = new RoomType(
+                    rs.getInt("id"),
+                    rs.getString("name"),
+                    rs.getString("description"),
+                    rs.getDouble("base_price"),
+                    rs.getInt("capacity"),
+                    rs.getString("image_url"));
+
+            roomTypeList.add(roomtype);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return roomTypeList;
+}
 
     public RoomType getRoomTypeById(int id) {
         RoomType roomType = null;

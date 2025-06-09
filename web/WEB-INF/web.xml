@@ -7,8 +7,8 @@
         <servlet-name>editProfile</servlet-name>
         <servlet-class>Controller.Customer.EditProfileServlet</servlet-class>
     </servlet>
-    <servlet-mapping>
+<!--    <servlet-mapping>
         <servlet-name>editProfile</servlet-name>
         <url-pattern>/editProfile</url-pattern>
-    </servlet-mapping>
+    </servlet-mapping>-->
 </web-app>
