@@ -34,7 +34,7 @@
         <link href="css/bootstrap.min.css" rel="stylesheet">
         <link href="css/style.css" rel="stylesheet">
         <link href="css/vendors.min.css" rel="stylesheet">
-
+        <link rel="stylesheet" href="css/viewRoomTypeList.css">
         <!-- YOUR CUSTOM CSS -->
         <link href="css/custom.css" rel="stylesheet">
     </head>
@@ -51,13 +51,13 @@
             <div class="container">
                 <div class="row align-items-center">
                     <div class="col-6">
-                        <a href="index.html" class="logo_normal"><img src="img/logo.png" width="135" height="45" alt=""></a>
+                        <a href="homepage" class="logo_normal"><img src="img/logo.png" width="135" height="45" alt=""></a>
                         <a href="index.html" class="logo_sticky"><img src="img/logo_sticky.png" width="135" height="45" alt=""></a>
                     </div>
                     <div class="col-6">
                         <nav>
                             <ul>
-                                <li><a href="#booking_section" class="btn_1 me-1 btn_scrollto">Book Now</a></li>
+
                                 <li>
                                     <div class="hamburger_2 open_close_nav_panel">
                                         <div class="hamburger__box">
@@ -149,16 +149,49 @@
             <!-- /Background Img Parallax -->
 
             <div class="container margin_120_95 pb-0" id="first_section">
+
+                <!-- phan search theo gia tien -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <form action="./viewRoomTypeList" method="get" class="search-form">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="minPrice">Minimum price (VND)</label>
+                                        <input type="number" class="form-control" id="minPrice" name="minPrice" 
+                                               value="${param.minPrice}" placeholder="Minimum" min="0" step="100000">
+                                    </div>  
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="maxPrice">Maximum price (VND)</label>
+                                        <input type="number" class="form-control" id="maxPrice" name="maxPrice" 
+                                               value="${param.maxPrice}" placeholder="Maximum" min="0" step="100000">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>&nbsp;</label> 
+                                        <button type="submit" class="btn btn-primary w-100">Search</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- phan search theo gia tien -->
+
                 <div class="row_list_version_1">
                     <c:forEach items="${listRoomType}" var="r">
-                    <div class="pinned-image rounded_container pinned-image--medium">
-                        <div class="pinned-image__container">
-                            <img src="${r.getImage_url()}" alt="">
+                        <div class="pinned-image rounded_container pinned-image--medium">
+                            <div class="pinned-image__container">
+                                <img src="${r.getImage_url()}" alt="">
+                            </div>
                         </div>
-                    </div>
-                    <!-- /pinned-image -->
-                    <div class="row justify-content-start">
-                        
+                        <!-- /pinned-image -->
+                        <div class="row justify-content-start">
+
                             <div class="col-lg-8">
                                 <div class="box_item_info" data-jarallax-element="-30">
                                     <small>
@@ -187,14 +220,14 @@
                                                 <span class="icon arrow"></span>
                                             </span>
                                             <span class="button-text">Book Now</span>
-                                            
+
                                         </a>
                                         <a href="#0" class="btn_4 learn-more">
                                             <span class="circle">
                                                 <span class="icon arrow"></span>
                                             </span>
                                             <span class="button-text">Add Cart</span>
-                                            
+
                                         </a>
                                         <a href="./viewRoomTypeDetail?roomTypeId=${r.getRoomTypeID()}" class="animated_link">
                                             <strong>Read more</strong>
@@ -259,66 +292,6 @@
                 <!-- /marquee-->
             </div>
             <!-- /bg_white -->
-
-            <div class="container margin_120_95" id="booking_section">
-                <div class="row justify-content-between">
-                    <div class="col-xl-4">
-                        <div data-cue="slideInUp">
-                            <div class="title">
-                                <small>Paradise Hotel</small>
-                                <h2>Check Availability</h2>
-                            </div>
-                            <p>Mea nibh meis philosophia eu. Duis legimus efficiantur ea sea. Id placerat tacimates definitionem sea, prima quidam vim no. Duo nobis persecuti cu. </p>
-                            <p class="phone_element no_borders"><a href="tel://423424234"><i class="bi bi-telephone"></i><span><em>Info and bookings</em>+41 934 121 1334</span></a></p>
-                        </div>
-                    </div>
-                    <div class="col-xl-7">
-                        <div data-cue="slideInUp" data-delay="200">
-                            <div class="booking_wrapper">
-                                <p id="daterangepicker-result" class="d-none"></p>
-                                <input id="date_booking" type="hidden">
-                                <div id="daterangepicker-embedded-container" class="embedded-daterangepicker clearfix mb-4"></div>
-                                <div class="row">
-                                    <div class="col-lg-6">
-                                        <div class="custom_select">
-                                            <select class="wide">
-                                                <option>Select Room</option>
-                                                <option>Double Room</option>
-                                                <option>Deluxe Room</option>
-                                                <option>Superior Room</option>
-                                                <option>Junior Suite</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <div class="row">
-                                            <div class="col-6">
-                                                <div class="qty-buttons mb-3 version_2">
-                                                    <input type="button" value="+" class="qtyplus" name="adults_booking">
-                                                    <input type="text" name="adults_booking" id="adults_booking" value="" class="qty form-control" placeholder="Adults">
-                                                    <input type="button" value="-" class="qtyminus" name="adults_booking">
-                                                </div>
-                                            </div>
-                                            <div class="col-6">
-                                                <div class="mb-3 qty-buttons mb-3 version_2">
-                                                    <input type="button" value="+" class="qtyplus" name="childs_booking">
-                                                    <input type="text" name="childs_booking" id="childs_booking" value="" class="qty form-control" placeholder="Childs">
-                                                    <input type="button" value="-" class="qtyminus" name="childs_booking">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- / row -->
-                            <p class="text-end mt-5"><a href="#0" class="btn_1 outline">Book Now</a></p>
-                        </div>
-                    </div>
-                    <!-- /col -->
-                </div>
-                <!-- /row -->
-            </div>
-            <!-- /container -->
 
         </main>
 
