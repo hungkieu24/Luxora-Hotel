@@ -5,9 +5,7 @@
 package Controller.Customer;
 
 import Dal.FeedbackDAO;
-import Dal.RoomTypeDAO;
 import Model.Feedback;
-import Model.RoomType;
 import Model.UserAccount;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -16,14 +14,13 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.List;
 
 /**
  *
  * @author KTC
  */
-@WebServlet(name = "ViewRoomTypeDetailsServlet", urlPatterns = {"/viewRoomTypeDetail"})
-public class ViewRoomTypeDetailsServlet extends HttpServlet {
+@WebServlet(name = "EditFeedbackServlet", urlPatterns = {"/EditFeedbackServlet"})
+public class EditFeedbackServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -42,10 +39,10 @@ public class ViewRoomTypeDetailsServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ViewRoomTypeDetailsServlet</title>");
+            out.println("<title>Servlet EditFeedbackServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet ViewRoomTypeDetailsServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet EditFeedbackServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -63,42 +60,18 @@ public class ViewRoomTypeDetailsServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String sroomTypeId = request.getParameter("roomTypeId");
-        int roomTypeId = 0;
-        if (sroomTypeId != null || !sroomTypeId.trim().isEmpty()) {
-            roomTypeId = Integer.parseInt(sroomTypeId);
-        } else {
-            response.sendRedirect("./homepage");
-            return;
-        }
+        int feedbackId = Integer.parseInt(request.getParameter("feedbackId"));
+        FeedbackDAO dao = new FeedbackDAO();
+        Feedback feedback = dao.getFeedbackById(feedbackId);
 
-        RoomTypeDAO roomTypeDAO = new RoomTypeDAO();
-        RoomType roomType = roomTypeDAO.getRoomTypeById(roomTypeId);
-        List<RoomType> listSimilarRoom = roomTypeDAO.getSimilarRoomTypes(roomTypeId);
-        request.setAttribute("roomType", roomType);
-        request.setAttribute("listSimilarRoom", listSimilarRoom);
-
-        //phan view feedback
-        int page = 1; // trang dau tien
-        int pageSize = 5; // 1 trang co 5 row
-        if (request.getParameter("page") != null) {
-            page = Integer.parseInt(request.getParameter("page"));
-        }
-        FeedbackDAO feedbackDAO = new FeedbackDAO();
-        int feedbackListSize = feedbackDAO.getListFeedbackByRoomTypeId(roomTypeId).size();
-        int totalPages = (int) Math.ceil((double) feedbackListSize / pageSize);
-        List<Feedback> listFeedback = feedbackDAO.getListFeedbackByPage1(page, pageSize, roomTypeId);
-
-        ////////////////////////////////////////////////////////////////////////
         UserAccount user = (UserAccount) request.getSession().getAttribute("user");
-        request.setAttribute("user", user);
 
-        ////////////////////////////////////////////////////////////////////////
-        request.setAttribute("listFeedback", listFeedback);
-        request.setAttribute("currentPage", page);
-        request.setAttribute("totalPages", totalPages);
-        request.setAttribute("roomTypeId", roomTypeId);
-        request.getRequestDispatcher("./viewRoomTypeDetail.jsp").forward(request, response);
+        if (feedback != null && user != null && feedback.getUser_id().equals(user.getId())) {
+            request.setAttribute("feedback", feedback);
+            request.getRequestDispatcher("/editFeedbackForm.jsp").forward(request, response);
+        } else {
+            response.sendRedirect("homepage");
+        }
     }
 
     /**
@@ -112,7 +85,22 @@ public class ViewRoomTypeDetailsServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        int id = Integer.parseInt(request.getParameter("feedbackId"));
+        int rating = Integer.parseInt(request.getParameter("rating"));
+        String comment = request.getParameter("comment");
+        String imageUrl = request.getParameter("imageUrl"); // optional
 
+        Feedback feedback = new Feedback();
+        feedback.setId(id);
+        feedback.setRating(rating);
+        feedback.setComment(comment);
+        feedback.setImage_url(imageUrl);
+
+        FeedbackDAO dao = new FeedbackDAO();
+        dao.updateFeedback(feedback);
+
+        int roomTypeId = Integer.parseInt(request.getParameter("roomTypeId"));
+        response.sendRedirect("viewRoomTypeDetail?roomTypeId=" + roomTypeId);
     }
 
     /**

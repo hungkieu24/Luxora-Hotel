@@ -22,6 +22,11 @@ public class Feedback {
     private String username;
     private String userAvatarUrl;
 
+    public Feedback() {
+    }
+    
+    
+    
     // Constructor with all fields
     public Feedback(int id, String user_id, int booking_id, int rating, 
                    String comment, String image_url, Timestamp created_at, 

@@ -118,18 +118,16 @@ public class FeedbackDAO extends DBcontext.DBContext {
 
         return feedbackList;
     }
-    
+
     public List<Feedback> getListFeedbackByRoomTypeId(int roomTypeId) {
         List<Feedback> feedbackList = new ArrayList<>();
         String sql = "SELECT  f.id, f.rating, f.comment, f.created_at, u.username, u.avatar_url,  r.id as RoomTypeId "
                 + "FROM Feedback f "
                 + "JOIN UserAccount u ON f.user_id = u.id "
-                
                 + "JOIN Booking b ON f.booking_id = b.id "
                 + "JOIN BookingRoom br ON b.id = br.booking_id "
                 + "JOIN Room r ON br.room_id = r.id "
                 + "JOIN RoomType rt ON r.room_type_id = rt.id "
-                
                 + "WHERE f.status = 'Visible' AND rt.id = ? "
                 + "ORDER BY f.created_at DESC ";
 
@@ -139,13 +137,13 @@ public class FeedbackDAO extends DBcontext.DBContext {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 Feedback feedback = new Feedback(
-                         rs.getInt("id"),
+                        rs.getInt("id"),
                         rs.getInt("rating"),
                         rs.getString("comment"),
                         rs.getTimestamp("created_at"),
                         rs.getInt("RoomTypeId"),
                         rs.getString("username"),
-                        rs.getString("avatar_url") 
+                        rs.getString("avatar_url")
                 );
                 feedbackList.add(feedback);
             }
@@ -158,15 +156,13 @@ public class FeedbackDAO extends DBcontext.DBContext {
 
     public List<Feedback> getListFeedbackByPage1(int page, int pageSize, int roomTypeId) {
         List<Feedback> feedbackList = new ArrayList<>();
-        String sql = "SELECT  f.id, f.rating, f.comment, f.created_at, u.username, u.avatar_url,  r.id as RoomTypeId "
+        String sql = "SELECT f.id, f.user_id, f.rating, f.comment, f.created_at, u.username, u.avatar_url, r.id as RoomTypeId "
                 + "FROM Feedback f "
                 + "JOIN UserAccount u ON f.user_id = u.id "
-                
                 + "JOIN Booking b ON f.booking_id = b.id "
                 + "JOIN BookingRoom br ON b.id = br.booking_id "
                 + "JOIN Room r ON br.room_id = r.id "
                 + "JOIN RoomType rt ON r.room_type_id = rt.id "
-                
                 + "WHERE f.status = 'Visible' AND rt.id = ? "
                 + "ORDER BY f.created_at DESC "
                 + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
@@ -179,14 +175,15 @@ public class FeedbackDAO extends DBcontext.DBContext {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 Feedback feedback = new Feedback(
-                         rs.getInt("id"),
+                        rs.getInt("id"),
                         rs.getInt("rating"),
                         rs.getString("comment"),
                         rs.getTimestamp("created_at"),
                         rs.getInt("RoomTypeId"),
                         rs.getString("username"),
-                        rs.getString("avatar_url") 
+                        rs.getString("avatar_url")
                 );
+                feedback.setUser_id(rs.getString("user_id"));
                 feedbackList.add(feedback);
             }
         } catch (SQLException ex) {
@@ -457,10 +454,35 @@ public class FeedbackDAO extends DBcontext.DBContext {
 
         return false;
     }
-//    
-    
+//   
+
+    public boolean deleteFeedbackById(int id) {
+        String sql = "DELETE FROM Feedback WHERE id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean updateFeedback(Feedback feedback) {
+        String sql = "UPDATE Feedback SET rating = ?, comment = ?, image_url = ? WHERE id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, feedback.getRating());
+            ps.setString(2, feedback.getComment());
+            ps.setString(3, feedback.getImage_url());
+            ps.setInt(4, feedback.getId());
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public static void main(String[] args) {
-        FeedbackDAO dao =new FeedbackDAO();
+        FeedbackDAO dao = new FeedbackDAO();
         List<Feedback> fb = dao.getListFeedbackByRoomTypeId(1);
         System.out.println(fb.size());
     }
