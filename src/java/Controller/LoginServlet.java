@@ -22,6 +22,7 @@ import   com.google.gson.JsonObject;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Form;
+import org.mindrot.jbcrypt.BCrypt;
 /**
  *
  * @author thien
@@ -95,9 +96,10 @@ public class LoginServlet extends HttpServlet {
        // Xử lý đăng nhập bằng username/password
        String username = request.getParameter("username");
        String password = request.getParameter("password");
+      
        UserAccountDAO u = new UserAccountDAO();
-       UserAccount user = u.login(username, password);
-       if(user != null && user.getStatus().equals("Active")){
+       UserAccount user = u.getUserByUserName(username);
+       if(user != null && user.getStatus().equals("Active") && BCrypt.checkpw(password, user.getPassword())){
            HttpSession session = request.getSession();
            session.setAttribute("user", user);
            if(user.getRole().equals("admin")){

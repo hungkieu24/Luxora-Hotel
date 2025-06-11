@@ -647,7 +647,7 @@ body {
     color: hsl(var(--error));
 }
 
-.status-cleaning {
+.status-booked {
     background-color: hsl(var(--primary) / 0.1);
     color: hsl(var(--primary));
 }
@@ -1032,6 +1032,7 @@ body {
     gap: 0.5rem;
     border-top: 1px solid hsl(var(--border));
 }
+
 
 /* Responsive Design */
 @media (max-width: 768px) {

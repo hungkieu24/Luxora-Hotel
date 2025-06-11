@@ -1,4 +1,4 @@
-    /*
+/*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
@@ -15,7 +15,7 @@ import java.util.List;
  *
  * @author thien
  */
-public class    UserAccountDAO extends DBContext {
+public class UserAccountDAO extends DBContext {
 
     public UserAccount login(String username, String password) {
         String sql = "SELECT * FROM UserAccount WHERE username = ? AND password = ?";
@@ -301,18 +301,42 @@ public class    UserAccountDAO extends DBContext {
         return false;
     }
 
-    public boolean updatePassword(String email, String password){
-        String sql="update UserAccount set password = ? where email = ?";
-        try{
+    public boolean updatePassword(String email, String password) {
+        String sql = "update UserAccount set password = ? where email = ?";
+        try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, password);
             ps.setString(2, email);
             int affectedRows = ps.executeUpdate();
             return affectedRows > 0;
-            
-        }catch(SQLException e){
+
+        } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public UserAccount getUserByUserName(String username) {
+        String sql = "select * from UserAccount where username = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, username);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return new UserAccount(
+                        rs.getString("id"),
+                        rs.getString("username"),
+                        rs.getString("password"),
+                        rs.getString("email"),
+                        rs.getString("avatar_url"),
+                        rs.getString("role"),
+                        rs.getString("status"),
+                        rs.getString("created_at"),
+                        rs.getString("phonenumber")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
