@@ -106,12 +106,12 @@ public class EditProfileServlet extends HttpServlet {
         UserAccount user = (UserAccount) session.getAttribute("user");
 
         UploadImage up = new UploadImage();
-        String UPLOAD_DIR = "/img/avatar";
-        // duong dan luu tru trong du an
+        String UPLOAD_DIR = "/img/avatar";// duong dan luu tru trong du an
+        
         String image = user.getAvatar_url();
-        String pathHost = getServletContext().getRealPath("");   // Lấy thư mục gốc của project trên server, 
-        //Lấy đường dẫn thực tế trên ổ đĩa nơi project đang chạy.
-        String finalPath = pathHost.replace("build\\", ""); // Xoá build\ nếu dùng NetBeans
+        String pathHost = getServletContext().getRealPath("");   // lay thu muc goc cua project tren server
+        //lay duong dan thuc te noi project đang chạy.
+        String finalPath = pathHost.replace("build\\", ""); // xoa build\ khi NetBeans
         String uploadPath = finalPath + UPLOAD_DIR;
 
         // upload anh

@@ -203,24 +203,24 @@
                     <div data-cues="zoomIn">
                         <div class="owl-carousel owl-theme carousel_item_centered kenburns rounded-img">
                             <div class="item">
-                                <img src="img/rooms/opt_5.jpg" alt="">
+                                <img src="img/room2.jpg" alt=""/>
                             </div>
                             <div class="item">
-                                <img src="img/rooms/opt_1.jpg" alt="">
+                                <img src="img/room3.jpg" alt=""/>
                             </div>
                             <div class="item">
-                                <img src="img/rooms/opt_4.jpg" alt="">
+                                <img src="img/room4.jpg" alt=""/>
                             </div>
                             <div class="item">
-                                <img src="img/rooms/opt_6.jpg" alt="">
+                                <img src="img/room5.jpg" alt=""/>
                             </div>
                         </div>
                     </div>
                     <div class="text-center mt-5">
-                        <a class="btn_1 outline" data-fslightbox="gallery_1" data-type="image" href="img/rooms/opt_5.jpg">FullScreen Gallery</a>
-                        <a data-fslightbox="gallery_1" data-type="image" href="img/rooms/opt_1.jpg"></a>
-                        <a data-fslightbox="gallery_1" data-type="image" href="img/rooms/opt_4.jpg"></a>
-                        <a data-fslightbox="gallery_1" data-type="image" href="img/rooms/opt_6.jpg"></a>
+                        <a class="btn_1 outline" data-fslightbox="gallery_1" data-type="image" href="img/room2.jpg">FullScreen Gallery</a>
+                        <a data-fslightbox="gallery_1" data-type="image" href="img/room3.jpg"></a>
+                        <a data-fslightbox="gallery_1" data-type="image" href="img/room4.jpg"></a>
+                        <a data-fslightbox="gallery_1" data-type="image" href="img/room5.jpg"></a>
                     </div>
                 </div>
             </div>
@@ -238,7 +238,8 @@
                                 <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6">
                                     <a href="./viewRoomTypeDetail?roomTypeId=${r.getRoomTypeID()}" class="box_cat_rooms">
                                         <figure>
-                                            <div class="background-image" data-background="url(${r.getImage_url()})"></div>
+<!--                                            <div class="background-image" data-background="url(${r.getImage_url()})"></div>-->
+                                            <div class="background-image" data-background="url(img/room1.jpg)"></div>
                                             <div class="info">
                                                 <small>
                                                     From 
@@ -279,13 +280,86 @@
                                             <em><fmt:formatDate value="${feedback.created_at}" pattern="dd-MM-yyyy HH:mm:ss"/></em>
                                         </div>
                                         <h4 style="word-wrap: break-word; overflow-wrap: break-word; word-break: break-word; white-space: pre-wrap;">${feedback.comment}</h4>
+
+
+                                        <c:if test="${not empty user and user.id eq feedback.user_id}">
+
+                                            <div class="feedback-actions" style="padding-left: 920px; padding-bottom: 30px;">
+                                                <button type="button"
+                                                        class="btn btn-warning btn-sm"
+                                                        onclick="openEditModal('${feedback.id}', '${feedback.rating}', `${feedback.comment}`, '${feedback.image_url}')">
+                                                    Edit
+                                                </button>
+
+
+                                                <form action="DeleteFeedbackServlet" method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this feedback?');">
+                                                    <input type="hidden" name="feedbackId" value="${feedback.id}" />
+                                                    <input type="hidden" name="roomTypeId" value="${roomTypeId}" />
+                                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                                </form>
+                                            </div>
+                                        </c:if>
+
+
+
                                     </div>
                                 </div>
 
                             </div>
 
                         </c:forEach>
-                        <div class="pagination">
+                        <!-- EDIT FEEDBACK MODAL -->
+                        <div id="editFeedbackModal" class="modal" style="display: none;">
+                            <div class="modal-content" style="width: 500px; padding: 20px; border-radius: 10px; background: #fff; position: relative;">
+                                <span class="close" onclick="closeEditModal()" style="position: absolute; top: 10px; right: 20px; font-size: 24px; cursor: pointer;">&times;</span>
+                                <h2 style="margin-bottom: 20px;">Edit Feedback</h2>
+                                <form id="editFeedbackForm" action="EditFeedbackServlet" method="post">
+                                    <input type="hidden" name="feedbackId" id="editFeedbackId" />
+                                    <input type="hidden" name="roomTypeId" value="${roomTypeId}" />
+                                    
+                                    <label>Overall Rating (1-5 Stars)</label>
+                                    <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-floating mb-4">
+                                        
+                                    <input
+                                        class="form-control"
+                                        type="range"
+                                        id="editRating"
+                                        name="rating"
+                                        min="1"
+                                        max="5"
+                                        step="1"
+                                        value="3"    
+                                        required
+                                        />
+                                    <label for="star_rating">Rating (stars)</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <div class="form-floating mb-4">
+                                        <div
+                                            id="star_display"
+                                            style="font-size: 1.5rem; color: gold; cursor: context-menu"
+                                            ></div>
+                                    </div>
+                                </div>
+
+                                    <label>Detailed Comments</label>
+                                    <textarea class="form-control" placeholder="Message" id="editComment" name="comment" required></textarea>
+
+                                    <div style="margin-top: 20px; text-align: right;">
+                                        <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Close</button>
+                                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        
+                    </div>
+                                    <div class="pagination">
                             <c:if test="${currentPage > 1}">
                                 <a href="?roomTypeId=${roomTypeId}&&page=${currentPage - 1}"  class="prev"> Previous</a>
                             </c:if>
@@ -298,8 +372,6 @@
                                 <a href="?roomTypeId=${roomTypeId}&&page=${currentPage + 1}" class="next">Next</a>
                             </c:if>
                         </div>
-                    </div>
-
                 </div>
                 <!-- /row -->
             </div>
@@ -381,21 +453,21 @@
         <script src="js/datepicker_inline.js"></script>
         <script src="phpmailer/validate.js"></script>
         <script>
-            // Progress bars animation
-            $(function () {
-                "use strict";
-                var $section = $('#reviews');
-                $(window).on('scroll', function (ev) {
-                    var scrollOffset = $(window).scrollTop();
-                    var containerOffset = $section.offset().top - window.innerHeight;
-                    if (scrollOffset > containerOffset) {
-                        $(".progress-bar").each(function () {
-                            var each_bar_width = $(this).attr('aria-valuenow');
-                            $(this).width(each_bar_width + '%');
-                        });
-                    }
-                });
-            });
+                                            // Progress bars animation
+                                            $(function () {
+                                                "use strict";
+                                                var $section = $('#reviews');
+                                                $(window).on('scroll', function (ev) {
+                                                    var scrollOffset = $(window).scrollTop();
+                                                    var containerOffset = $section.offset().top - window.innerHeight;
+                                                    if (scrollOffset > containerOffset) {
+                                                        $(".progress-bar").each(function () {
+                                                            var each_bar_width = $(this).attr('aria-valuenow');
+                                                            $(this).width(each_bar_width + '%');
+                                                        });
+                                                    }
+                                                });
+                                            });
         </script>
         <script>
             $(document).ready(function () {
@@ -419,5 +491,40 @@
                 });
             });
         </script>
+        <script>
+            function openEditModal(feedbackId, rating, comment, imageUrl) {
+                document.getElementById('editFeedbackId').value = feedbackId;
+                document.getElementById('editRating').value = rating;
+                document.getElementById('editComment').value = comment;
+                document.getElementById('editFeedbackModal').style.display = 'flex';
+                updateStars(rating);
+            }
+
+            function closeEditModal() {
+                document.getElementById('editFeedbackModal').style.display = 'none';
+            }
+        </script>
+        <script>
+                            $(document).ready(function () {
+                                
+
+                                // Khởi tạo hiển thị sao ban đầu
+                                updateStars($("#editRating").val());
+
+                                // Cập nhật khi thay đổi
+                                $("#editRating").on("input change", function () {
+                                    updateStars($(this).val());
+                                });
+                            });
+    </script>
+    <script>
+        function updateStars(value) {
+                                    let stars = "";
+                                    for (let i = 0; i < value; i++) {
+                                        stars += "⭐";
+                                    }
+                                    $("#star_display").html(stars);
+                                }
+    </script>
     </body>
 </html>

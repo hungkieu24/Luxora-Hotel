@@ -127,7 +127,6 @@ public class RoomTypeDAO extends DBcontext.DBContext {
             allOtherRooms.add(room);
         }
 
-        // Sắp xếp theo độ chênh lệch giá so với phòng mục tiêu
         allOtherRooms.sort(Comparator.comparingDouble(r -> Math.abs(r.getBase_price() - targetRoom.getBase_price())));
 
         // Lấy 3 phòng gần giá nhất
