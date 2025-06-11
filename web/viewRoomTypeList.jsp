@@ -136,9 +136,8 @@
 
 
         <main>
-
             <div class="hero medium-height jarallax" data-jarallax data-speed="0.2">
-                <img class="jarallax-img" src="img/rooms/4.jpg" alt="">
+                <img class="jarallax-img" src="img/loginBackground.jpg" alt="">
                 <div class="wrapper opacity-mask d-flex align-items-center justify-content-center text-center animate_hero" data-opacity-mask="rgba(0, 0, 0, 0.5)">
                     <div class="container">
                         <small class="slide-animated one">Luxury Hotel Experience</small>
@@ -153,7 +152,7 @@
                 <!-- phan search theo gia tien -->
                 <div class="row mb-4">
                     <div class="col-12">
-                        <form action="./viewRoomTypeList" method="get" class="search-form">
+                        <form  id="search" action="./viewRoomTypeList" method="get" class="search-form" novalidate>
                             <div class="row align-items-center">
                                 <div class="col-md-4">
                                     <div class="form-group">
@@ -167,6 +166,8 @@
                                         <label for="maxPrice">Maximum price (VND)</label>
                                         <input type="number" class="form-control" id="maxPrice" name="maxPrice" 
                                                value="${param.maxPrice}" placeholder="Maximum" min="0" step="100000">
+                                        <p style="color: red"class="form_error"></p>
+
                                     </div>
                                 </div>
                                 <div class="col-md-4">
@@ -175,6 +176,7 @@
                                         <button type="submit" class="btn btn-primary w-100">Search</button>
                                     </div>
                                 </div>
+                                               
                             </div>
                         </form>
                     </div>
@@ -186,7 +188,8 @@
                     <c:forEach items="${listRoomType}" var="r">
                         <div class="pinned-image rounded_container pinned-image--medium">
                             <div class="pinned-image__container">
-                                <img src="${r.getImage_url()}" alt="">
+<!--                                <img src="${r.getImage_url()}" alt="">-->
+                                <img src="img/room1.jpg" alt=""/>
                             </div>
                         </div>
                         <!-- /pinned-image -->
@@ -368,7 +371,19 @@
         <script src="js/common_scripts.js"></script>
         <script src="js/common_functions.js"></script>
         <script src="js/datepicker_inline.js"></script>
-        <script src="phpmailer/validate.js"></script>
-
+        <script src="./js/validationForm.js"></script>
+        <script>
+            Validator({
+                form: '#search',
+                formGroupSelector: '.form-group',
+                errorSelector: '.form_error',
+                rules: [
+                    Validator.minLessThanMax('#minPrice', '#maxPrice', 'Maximum price must be more than or equal to minimum price')
+                ],
+                onsubmit: function (formValue) {
+                    document.querySelector('#search').submit();
+                }
+            })
+        </script>
     </body>
 </html>

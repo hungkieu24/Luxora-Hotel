@@ -195,6 +195,18 @@ Validator.minNumber = function (selector, min, message) {
         }
     }
 }
+Validator.minLessThanMax = function (minSelector, maxSelector, message) {
+    return {
+        selector: maxSelector, 
+        test: function () {
+            const min = parseFloat(document.querySelector(minSelector)?.value) || 0;
+            const max = parseFloat(document.querySelector(maxSelector)?.value) || 0;
+
+            return min <= max ? undefined : message || 'Maximum price must be more than or equal to minimum price';
+        }
+    };
+};
+
 
 Validator.bankAccountNumber = function (selector, message) {
     return {
