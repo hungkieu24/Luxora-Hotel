@@ -221,3 +221,13 @@
   border-color: var(--header-act-dropdown-border-color);
   border-style: solid;
 }
+
+input[type="password"]::-ms-reveal,
+input[type="password"]::-webkit-credentials-auto-fill-button {
+    display: none !important;
+}
+
+input[type="password"]::-webkit-inner-spin-button,
+input[type="password"]::-webkit-clear-button {
+    display: none !important;
+}

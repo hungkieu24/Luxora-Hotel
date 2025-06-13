@@ -226,14 +226,14 @@ public class UserAccountDAO extends DBContext {
             return false;
         }
     }
-    
-    public boolean updateEmail(String userId,  String email) {
+
+    public boolean updateEmail(String userId, String email) {
         String sql = "UPDATE UserAccount SET email = ? WHERE id = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, email);
             ps.setString(2, userId);
-         
+
             int rowsAffected = ps.executeUpdate();
             return rowsAffected > 0;
         } catch (SQLException e) {
@@ -330,7 +330,7 @@ public class UserAccountDAO extends DBContext {
             return false;
         }
     }
-    
+
     public boolean isFieldExists(String fieldName, String value, String excludeId) {
         String sql = "SELECT 1 FROM UserAccount WHERE " + fieldName + " = ?" + (excludeId != null ? " AND id != ?" : "");
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -345,4 +345,36 @@ public class UserAccountDAO extends DBContext {
         }
         return false;
     }
+
+    // hoang create
+    public boolean checkPassword(String username, String password) {
+        String sql = "SELECT 1 FROM UserAccount WHERE username = ? AND password = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, username);
+            ps.setString(2, password);
+            ResultSet rs = ps.executeQuery();
+
+            return rs.next(); // Trả về true nếu tìm thấy dòng khớp
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    // hoang create
+    public boolean updatePassword1(String username, String newPassword) {
+        String sql = "UPDATE UserAccount SET password = ? WHERE username = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, newPassword);
+            ps.setString(2, username);
+            int rowsUpdated = ps.executeUpdate();
+            return rowsUpdated > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 }

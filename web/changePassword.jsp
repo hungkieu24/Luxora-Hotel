@@ -1,3 +1,9 @@
+<%-- 
+    Document   : changePassword
+    Created on : Jun 14, 2025, 1:00:17 AM
+    Author     : KTC
+--%>
+
 <!DOCTYPE html>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -53,8 +59,7 @@
 
         <div id="preloader">
             <div data-loader="circle-side"></div>
-        </div><!-- /Page Preload -->
-
+        </div> 
         <div class="layer"></div><!-- Opacity Mask -->
 
         <header class="reveal_header">
@@ -121,7 +126,7 @@
                 <div class="wrapper opacity-mask d-flex align-items-center justify-content-center text-center animate_hero" data-opacity-mask="rgba(0, 0, 0, 0.5)">
                     <div class="container">
                         <small class="slide-animated one">Luxury Hotel Experience</small>
-                        <h1 class="slide-animated two">Personal Information</h1>
+                        <h1 class="slide-animated two">Update Password</h1>
                     </div>
                 </div>
             </div>
@@ -129,98 +134,58 @@
 
             <div class="container margin_120_95">
                 <div class="form-wrapper">
-                        <h3 class="mb-3">Your personal details.</h3>
-                        <div id="message-contact"></div>
-                        <div class="main-content">
-                            <form id="editProfile" action="editProfile" method="post" enctype="multipart/form-data">
-                                <div class="avatar-section">
-                                    <img class="avatar" src="${sessionScope.user.getAvatar_url()}" alt="Avatar"/>
-                                    <!--                                    <p >Choose file to change avatar</p>
-                                    
-                                                                        <input type="file" id="avatar-upload" name="avatar">
-                                                                        <button type="button" class="custom-upload-button" onclick="document.getElementById('avatar-upload').click();">
-                                                                            Upload Avatar
-                                                                        </button>
-                                                                        <span class="file-name" id="file-name">No file chosen</span>-->
+                    <h3 class="mb-3">Change Password</h3>
+                    <div id="message-contact"></div>
+                    <div class="main-content">
+                        <form id="changePassword" action="changePassword" method="post">
+
+                            <div class="form-group">
+                                <label for="currentPassword">Current Password:</label>
+                                <div class="input-with-icon">
+                                    <input type="password" id="currentPassword" name="currentPassword" required>
+                                    <i class="bi bi-eye-slash toggle-password" toggle="#currentPassword"></i>
                                 </div>
+                                <!--<p class="form_error"></p>-->
+                                <c:if test="${not empty currentPasswordError}">
+                                    <p class="form_error">${currentPasswordError}</p>
+                                </c:if> 
+                            </div> 
 
-                                <div class="form-group">
-                                    <label>Username</label>
-                                    <input id="username" type="text" value="${sessionScope.user.getUsername()}" name="username" readonly>
-                                    <!--                                    <p class="form_error"></p>-->
+                            <div class="form-group">
+                                <label for="newPassword">New Password:</label>
+                                <div class="input-with-icon">
+                                    <input type="password" id="newPassword" name="newPassword" required>
+                                    <i class="bi bi-eye-slash toggle-password" toggle="#newPassword"></i>
                                 </div>
+                                <p style="color: red" class="form__error username__error"></p>
+                            </div>
 
-                                <div class="form-group">
-                                    <label>Email</label>
-                                    <input id="email" type="email" value="${sessionScope.user.getEmail()}" name="email" readonly>
-                                    <!--                                    <p class="form_error"></p>-->
+                            <div class="form-group">
+                                <label for="confirmPassword">Confirm New Password:</label>
+                                <div class="input-with-icon">
+                                    <input type="password" id="confirmPassword" name="confirmPassword" required>
+                                    <i class="bi bi-eye-slash toggle-password" toggle="#confirmPassword"></i>
                                 </div>
+                                <p style="color: red" class="form__error username__error"></p>
+                                <c:if test="${not empty confirmPasswordError}">
+                                    <p class="form_error">${confirmPasswordError}</p>
+                                </c:if>
+                            </div>
 
-                                <div class="form-group">
-                                    <label>Phone number</label>
-                                    <input id="phonenumber" type="tel" value="${sessionScope.user.getPhonenumber()}" name="phonenumber" readonly>
-                                    <!--                                    <p class="form_error"></p>-->
-                                </div>
+                            <div style="display: flex; justify-content: flex-end; gap: 15px; margin-top: 20px;">
+                                <button class="openEditProfileModal1" type="submit">Update</button>
+                                <!--                                <button class="openEditProfileModal1" type="reset">Cancel</button>-->
+                                <a href="#" class="btn_1" style="display: inline-block;">Forgot password?</a>
+                            </div>
 
-                                <!--                                <button type="button" class="cancel-btn" onclick="window.location.href = 'editProfile';">Cancel</button>
-                                
-                                                                <button  class="save-btn">Save Changes</button>-->
-                                <div style="display: flex; justify-content: flex-end; gap: 15px; margin-top: 20px;">
-                                    <button type="button" class="openEditProfileModal1" onclick="openEditProfileModal()">Edit Profile</button>
-
-                                    <a href="changePassword.jsp" class="btn_1" style="display: inline-block;">Change password</a>
-                                </div>
-
-
-                            </form>
-                        </div>
-
+                        </form>
                     </div>
-                
+
+                </div>
+
                 <!-- /row -->
             </div>
 
-            <div id="editProfileModel" class="modal" style="display: none;">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <span class="close" onclick="closeEditModal()" style="position: absolute; top: 10px; right: 20px; font-size: 24px; cursor: pointer;">&times;</span>
-
-                        <h2>Edit Profile</h2>
-                        <form id="editProfileForm" action="editProfile" method="post" enctype="multipart/form-data">
-                            <div class="avatar-section">
-                                <img class="avatar" src="${sessionScope.user.getAvatar_url()}" alt="Avatar"/>
-                                <p>Choose file to change avatar</p>
-                                <input type="file" id="avatar-upload" name="avatar" multiple accept="image/*" hidden>
-                                <button type="button" class="btn btn-secondary" onclick="document.getElementById('avatar-upload').click();">Upload Avatar</button>
-                                <span class="file-name" id="file-name">No file chosen</span>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Username</label>
-                                <input id="username" type="text" value="${sessionScope.user.getUsername()}" name="username">
-                                <p class="form_error"></p>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Email</label>
-                                <input id="email" type="email" value="${sessionScope.user.getEmail()}" name="email">
-                                <p class="form_error"></p>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Phone number</label>
-                                <input id="phonenumber" type="tel" value="${sessionScope.user.getPhonenumber()}" name="phonenumber">
-                                <p class="form_error"></p>
-                            </div>
-
-                            <div class="modal-buttons">
-                                <button type="button" class="btn btn-danger" onclick="closeEditModal()">Cancel</button>
-                                <button type="submit" class="btn btn-primary">Save Changes</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
         </main>
 
         <footer class="revealed">
@@ -299,63 +264,41 @@
         <script src="./js/toastMessage.js"></script>                
         <script src="./js/validationForm.js"></script>
         <script>
-                                    Validator({
-                                        form: '#editProfileForm',
-                                        formGroupSelector: '.form-group',
-                                        errorSelector: '.form_error',
-                                        rules: [
-                                            Validator.isRequired('#username', 'Please enter the your username'),
-                                            Validator.lengthRange('#username', 6, 30),
-                                            Validator.isPhoneNumber('#phonenumber', 'Please enter your phone number'),
-                                            Validator.isRequired('#email', 'Please enter your email'),
-                                            Validator.isEmail('#email', 'This field must be an email'),
-                                            Validator.lengthRange('#email', 16, 40),
-                                        ],
-                                        onsubmit: function (formValue) {
-                                            document.querySelector('#editProfileForm').submit();
-                                        }
-                                    })
-        </script>
-        <script>
-            const input = document.getElementById('avatar-upload');
-            const fileNameDisplay = document.getElementById('file-name');
-
-            input.addEventListener('change', function () {
-                if (input.files.length > 0) {
-                    fileNameDisplay.textContent = input.files[0].name;
-                } else {
-                    fileNameDisplay.textContent = "No file chosen";
-                }
+            document.querySelectorAll('.toggle-password').forEach(function (eyeIcon) {
+                eyeIcon.addEventListener('click', function () {
+                    const input = document.querySelector(this.getAttribute('toggle'));
+                    const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+                    input.setAttribute('type', type);
+                    this.classList.toggle('bi-eye');
+                    this.classList.toggle('bi-eye-slash');
+                });
             });
         </script>
+
         <script>
-            function openEditProfileModal() {
-                const form = document.getElementById("editProfileForm");
-                form.reset(); // Reset all fields
-
-                // Reset ảnh avatar
-                document.querySelector('#editProfileForm img.avatar').src = "${sessionScope.user.getAvatar_url()}";
-                document.getElementById('file-name').textContent = "No file chosen";
-                document.getElementById("avatar-upload").value = "";
-
-                // Hiển thị modal
-                document.getElementById("editProfileModel").style.display = "flex";
-            }
-
-
-            function closeEditModal() {
-                document.getElementById("editProfileModel").style.display = "none";
-            }
-
-// Đóng modal khi bấm ra ngoài
-            window.onclick = function (event) {
-                const modal = document.getElementById("editProfileModel");
-                if (event.target === modal) {
-                    modal.style.display = "none";
+            Validator({
+                form: '#changePassword',
+                formGroupSelector: '.form-group',
+                errorSelector: '.form__error',
+                rules: [
+                    Validator.minLength(' #newPassword', 8),
+                    Validator.isRequired('#confirmPassword'),
+                    Validator.isConfirmed(' #confirmPassword', function () {
+                        return document.querySelector('#changePassword #newPassword').value;
+                    }, 'Password re-entered is incorrect'),
+                ],
+                onsubmit: function (formValue) {
+                    document.querySelector('#changePassword').submit();
                 }
-            }
+            })
         </script>
-
+        <script>
+            window.addEventListener("load", function () {
+                const preloader = document.getElementById("preloader");
+                if (preloader)
+                    preloader.style.display = "none";
+            });
+        </script>
 
     </body>
 </html>

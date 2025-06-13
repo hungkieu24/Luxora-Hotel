@@ -152,7 +152,7 @@ public class EditProfileServlet extends HttpServlet {
             session.setAttribute("user", useraccount);
             setSessionMessage(session, "Information updated successfully!", "success");
         } else {
-            setSessionMessage(session, "Update information failed!!", "error");
+            setSessionMessage(session, "Update information failed!", "error");
         }
 
         request.getRequestDispatcher("editProfile.jsp").forward(request, response);
