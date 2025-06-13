@@ -14,7 +14,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     flex-direction: column;
     justify-content: center;
     background-color: rgba(255, 255, 255, 0.13);    backdrop-filter: blur(10px);
-
+    max-width: 600px;
+    width: 100%;
 }
 
 .main-content h2 {
@@ -44,8 +45,12 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
 .avatar-section .avatar {
     width: 100px;
     height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
     border: 3px solid #2a3b8f;
 }
+
+
 
 .avatar-section p {
     margin: 0;
@@ -205,3 +210,193 @@ button {
     .form_error{
         color: red;
     }
+    
+.openEditProfileModal1 {
+    font-family: 'Montserrat', sans-serif;
+  border: none;
+  color: #fff;
+  background: #978667;
+  outline: none;
+  cursor: pointer;
+  display: inline-flex;
+  text-decoration: none;
+  padding: 14px 25px 14px 25px;
+  font-weight: 600;
+  -moz-transition: all 0.3s ease-in-out;
+  -o-transition: all 0.3s ease-in-out;
+  -webkit-transition: all 0.3s ease-in-out;
+  -ms-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+  border-radius: 25px;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.modal-overlay {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-dialog {
+  width: 650px; /* tăng chiều rộng */
+  max-width: 95%;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 40px 30px;
+  border-radius: 15px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+  position: relative;
+}
+
+.modal-content h2 {
+  margin-bottom: 25px;
+  font-size: 28px;
+  font-weight: 600;
+  color: #333;
+}
+
+.modal-content .close {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 26px;
+  font-weight: bold;
+  color: #999;
+  cursor: pointer;
+}
+
+.avatar-section {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 25px;
+}
+
+.avatar-section img.avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 2px solid #007bff;
+  object-fit: cover;
+}
+
+.avatar-section p {
+  margin: 0;
+  font-size: 14px;
+  color: #555;
+}
+
+.avatar-section .btn-secondary {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.avatar-section .btn-secondary:hover {
+  background-color: #0056b3;
+}
+
+.file-name {
+  font-size: 13px;
+  color: #777;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px 14px;
+    font-size: 16px;
+    line-height: 1.5;
+    box-sizing: border-box;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+.modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 30px;
+}
+
+.modal-buttons .btn {
+  padding: 10px 18px;
+  font-size: 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  border: none;
+}
+
+.modal-buttons .btn-danger {
+  background-color: #dc3545;
+  color: white;
+}
+
+.modal-buttons .btn-danger:hover {
+  background-color: #b52a36;
+}
+
+.modal-buttons .btn-primary {
+  background-color: #007bff;
+  color: white;
+}
+
+.modal-buttons .btn-primary:hover {
+  background-color: #0056b3;
+}
+
+
+
+.row.justify-content-between {
+    justify-content: center !important;
+}
+.main-content input {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+
+.container.margin_120_95 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.form-wrapper {
+    background-color: rgba(255, 255, 255, 0.13);
+    backdrop-filter: blur(10px);
+    padding: 40px;
+    max-width: 600px;
+    width: 100%;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+

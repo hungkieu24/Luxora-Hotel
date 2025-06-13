@@ -128,54 +128,105 @@
             <!-- /Background Img Parallax -->
 
             <div class="container margin_120_95">
-                <div class="row justify-content-between">
-
-                    <div class="col-xl-7 col-lg-7 order-lg-1">
-                        <h3 class="mb-3">View and update your personal details.</h3>
+                <div class="form-wrapper">
+                        <h3 class="mb-3">Your personal details.</h3>
                         <div id="message-contact"></div>
                         <div class="main-content">
                             <form id="editProfile" action="editProfile" method="post" enctype="multipart/form-data">
                                 <div class="avatar-section">
                                     <img class="avatar" src="${sessionScope.user.getAvatar_url()}" alt="Avatar"/>
-                                    <p >Choose file to change avatar</p>
-
-                                    <input type="file" id="avatar-upload" name="avatar">
-                                    <button type="button" class="custom-upload-button" onclick="document.getElementById('avatar-upload').click();">
-                                        Upload Avatar
-                                    </button>
-                                    <span class="file-name" id="file-name">No file chosen</span>
+                                    <!--                                    <p >Choose file to change avatar</p>
+                                    
+                                                                        <input type="file" id="avatar-upload" name="avatar">
+                                                                        <button type="button" class="custom-upload-button" onclick="document.getElementById('avatar-upload').click();">
+                                                                            Upload Avatar
+                                                                        </button>
+                                                                        <span class="file-name" id="file-name">No file chosen</span>-->
                                 </div>
 
                                 <div class="form-group">
                                     <label>Username</label>
-                                    <input id="username" type="text" value="${sessionScope.user.getUsername()}" name="username">
-                                    <p class="form_error"></p>
+                                    <input id="username" type="text" value="${sessionScope.user.getUsername()}" name="username" readonly>
+                                    <!--                                    <p class="form_error"></p>-->
                                 </div>
 
                                 <div class="form-group">
                                     <label>Email</label>
-                                    <input id="email" type="email" value="${sessionScope.user.getEmail()}" name="email">
-                                    <p class="form_error"></p>
+                                    <input id="email" type="email" value="${sessionScope.user.getEmail()}" name="email" readonly>
+                                    <!--                                    <p class="form_error"></p>-->
                                 </div>
 
                                 <div class="form-group">
                                     <label>Phone number</label>
-                                    <input id="phonenumber" type="tel" value="${sessionScope.user.getPhonenumber()}" name="phonenumber">
-                                    <p class="form_error"></p>
+                                    <input id="phonenumber" type="tel" value="${sessionScope.user.getPhonenumber()}" name="phonenumber" readonly>
+                                    <!--                                    <p class="form_error"></p>-->
                                 </div>
 
-                                <button type="button" class="cancel-btn" onclick="window.location.href = 'editProfile';">Cancel</button>
+                                <!--                                <button type="button" class="cancel-btn" onclick="window.location.href = 'editProfile';">Cancel</button>
+                                
+                                                                <button  class="save-btn">Save Changes</button>-->
+                                <div style="display: flex; justify-content: flex-end; gap: 15px; margin-top: 20px;">
+                                    <button type="button" class="openEditProfileModal1" onclick="openEditProfileModal()">Edit Profile</button>
 
-                                <button  class="save-btn">Save Changes</button>
-                                <p class="text-end"><a href="#" class="btn_1">Change password</a></p>
+                                    <a href="#" class="btn_1" style="display: inline-block;">Change password</a>
+                                </div>
+
+
                             </form>
                         </div>
 
                     </div>
-                </div>
+                
                 <!-- /row -->
             </div>
+            <!-- /rowwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww -->
 
+            <div id="editProfileModel" class="modal" style="display: none;">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <span class="close" onclick="closeEditModal()" style="position: absolute; top: 10px; right: 20px; font-size: 24px; cursor: pointer;">&times;</span>
+
+                        <h2>Edit Profile</h2>
+                        <form id="editProfileForm" action="editProfile" method="post" enctype="multipart/form-data">
+                            <div class="avatar-section">
+                                <img class="avatar" src="${sessionScope.user.getAvatar_url()}" alt="Avatar"/>
+                                <p>Choose file to change avatar</p>
+                                <input type="file" id="avatar-upload" name="avatar" multiple accept="image/*" hidden>
+                                <button type="button" class="btn btn-secondary" onclick="document.getElementById('avatar-upload').click();">Upload Avatar</button>
+                                <span class="file-name" id="file-name">No file chosen</span>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Username</label>
+                                <input id="username" type="text" value="${sessionScope.user.getUsername()}" name="username">
+                                <p class="form_error"></p>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input id="email" type="email" value="${sessionScope.user.getEmail()}" name="email">
+                                <p class="form_error"></p>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Phone number</label>
+                                <input id="phonenumber" type="tel" value="${sessionScope.user.getPhonenumber()}" name="phonenumber">
+                                <p class="form_error"></p>
+                            </div>
+
+                            <div class="modal-buttons">
+                                <button type="button" class="btn btn-danger" onclick="closeEditModal()">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            <!-- /rowwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww -->
         </main>
 
         <footer class="revealed">
@@ -255,7 +306,7 @@
         <script src="./js/validationForm.js"></script>
         <script>
                                     Validator({
-                                        form: '#editProfile',
+                                        form: '#editProfileForm',
                                         formGroupSelector: '.form-group',
                                         errorSelector: '.form_error',
                                         rules: [
@@ -267,7 +318,7 @@
                                             Validator.lengthRange('#email', 16, 40),
                                         ],
                                         onsubmit: function (formValue) {
-                                            document.querySelector('#editProfile').submit();
+                                            document.querySelector('#editProfileForm').submit();
                                         }
                                     })
         </script>
@@ -283,6 +334,34 @@
                 }
             });
         </script>
+        <script>
+            function openEditProfileModal() {
+                const form = document.getElementById("editProfileForm");
+                form.reset(); // Reset all fields
+
+                // Reset ảnh avatar
+                document.querySelector('#editProfileForm img.avatar').src = "${sessionScope.user.getAvatar_url()}";
+                document.getElementById('file-name').textContent = "No file chosen";
+                document.getElementById("avatar-upload").value = "";
+
+                // Hiển thị modal
+                document.getElementById("editProfileModel").style.display = "flex";
+            }
+
+
+            function closeEditModal() {
+                document.getElementById("editProfileModel").style.display = "none";
+            }
+
+// Đóng modal khi bấm ra ngoài
+            window.onclick = function (event) {
+                const modal = document.getElementById("editProfileModel");
+                if (event.target === modal) {
+                    modal.style.display = "none";
+                }
+            }
+        </script>
+
 
     </body>
 </html>
