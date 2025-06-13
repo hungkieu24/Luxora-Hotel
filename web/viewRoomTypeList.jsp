@@ -154,14 +154,14 @@
                     <div class="col-12">
                         <form  id="search" action="./viewRoomTypeList" method="get" class="search-form" novalidate>
                             <div class="row align-items-center">
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="minPrice">Minimum price (VND)</label>
                                         <input type="number" class="form-control" id="minPrice" name="minPrice" 
                                                value="${param.minPrice}" placeholder="Minimum" min="0" step="100000">
                                     </div>  
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="maxPrice">Maximum price (VND)</label>
                                         <input type="number" class="form-control" id="maxPrice" name="maxPrice" 
@@ -170,13 +170,24 @@
 
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>Check in / Check out</label>
+                                        <input class="form-control" type="text" name="dates" value="${param.dates}" placeholder="YYYY-MM-DD - YYYY-MM-DD" readonly="readonly" required>
+                                        
+                                    </div>
+                                </div>  
+                                <div class="col-md-3">
                                     <div class="form-group">
                                         <label>&nbsp;</label> 
                                         <button type="submit" class="btn btn-primary w-100">Search</button>
+                                        <br>
+                                        <br>
+                                        <a href="viewRoomTypeList" class="btn btn-primary w-100">Reset</a>
+
                                     </div>
                                 </div>
-                                               
+
                             </div>
                         </form>
                     </div>
@@ -184,66 +195,65 @@
 
                 <!-- phan search theo gia tien -->
 
-                <div class="row_list_version_1">
-                    <c:forEach items="${listRoomType}" var="r">
-                        <div class="pinned-image rounded_container pinned-image--medium">
-                            <div class="pinned-image__container">
-<!--                                <img src="${r.getImage_url()}" alt="">-->
-                                <img src="img/room1.jpg" alt=""/>
-                            </div>
-                        </div>
-                        <!-- /pinned-image -->
-                        <div class="row justify-content-start">
+                <div class="container margin_120_0">
+                    <c:forEach items="${listRoomType}" var="r" varStatus="status">
 
-                            <div class="col-lg-8">
-                                <div class="box_item_info" data-jarallax-element="-30">
-                                    <small>
-                                        From 
-                                        <fmt:formatNumber value="${r.getBase_price()}" type="number" groupingUsed="true" maxFractionDigits="0" />
-                                        VND /night
-                                    </small>
-                                    <h2>${r.getName()}</h2>
-                                    <p>${r.getDescription()}</p>
-                                    <div class="facilities clearfix">
-                                        <ul>
-                                            <li>
-                                                <i class="customicon-double-bed"></i> King Size Bed
-                                            </li>
-                                            <li>
-                                                <i class="customicon-wifi"></i> Free Wifi
-                                            </li>
-                                            <li>
-                                                <i class="customicon-television"></i> 32 Inc TV
-                                            </li>
-                                        </ul>
+
+                        <div class="row_list_version_2 ${status.index % 2 != 0 ? 'inverted' : ''}">
+                            <div class="row g-0 align-items-center">
+                                <div class="col-xl-8 ${status.index % 2 != 0 ? 'order-xl-2' : ''}">
+                                    <div class="owl-carousel owl-theme carousel_item_1 kenburns rounded-img">
+                                        <div class="item">
+                                            <img src="img/room1.jpg" alt=""/>
+                                        </div>
+
                                     </div>
-                                    <div class="box_item_footer d-flex align-items-center justify-content-between">
-                                        <a href="#0" class="btn_4 learn-more">
-                                            <span class="circle">
-                                                <span class="icon arrow"></span>
-                                            </span>
-                                            <span class="button-text">Book Now</span>
-
-                                        </a>
-                                        <a href="#0" class="btn_4 learn-more">
-                                            <span class="circle">
-                                                <span class="icon arrow"></span>
-                                            </span>
-                                            <span class="button-text">Add Cart</span>
-
-                                        </a>
-                                        <a href="./viewRoomTypeDetail?roomTypeId=${r.getRoomTypeID()}" class="animated_link">
-                                            <strong>Read more</strong>
-                                        </a>
-                                    </div>
-                                    <!-- /box_item_footer -->
+                                    <!-- /carousel -->
                                 </div>
-                                <!-- /box_item_info -->
+                                <div class="col-xl-4 ${status.index % 2 != 0 ? 'order-xl-1' : ''}">
+                                    <div class="box_item_info" data-jarallax-element="-25">
+                                        <small>From 
+                                            <fmt:formatNumber value="${r.getBase_price()}" type="number" groupingUsed="true" maxFractionDigits="0" />
+                                            VND /night</small>
+                                        <h2>${r.getName()}</h2>
+                                        <p>${r.getDescription()}</p>
+                                        <div class="facilities clearfix">
+                                            <ul>
+                                                <li>
+                                                    <i class="customicon-double-bed"></i> King Size Bed
+                                                </li>
+                                                <li>
+                                                    <i class="customicon-television"></i> 32 Inc TV
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="box_item_footer d-flex align-items-center justify-content-between">
+                                            <a href="#0" class="btn_4 learn-more">
+                                                <span class="circle">
+                                                    <span class="icon arrow"></span>
+                                                </span>
+                                                <span class="button-text">Book Now</span>
+                                            </a>
+                                            <a href="#0" class="btn_4 learn-more">
+                                                <span class="circle">
+                                                    <span class="icon arrow"></span>
+                                                </span>
+                                                <span class="button-text">Add Cart</span>
+                                            </a>
+                                            <a href="./viewRoomTypeDetail?roomTypeId=${r.getRoomTypeID()}" class="animated_link">
+                                                <strong>Read more</strong>
+                                            </a>
+                                        </div>
+                                        <!-- /box_item_footer -->
+                                    </div>
+                                    <!-- /box_item_info -->
+                                </div>
+                                <!-- /col -->
                             </div>
-                        </c:forEach>
-                        <!-- /col -->
-                    </div>
-                    <!-- /row -->
+                            <!-- /row -->
+                        </div>
+                        <!-- /row_list -->
+                    </c:forEach>
                 </div>
             </div>
             <!-- /container -->
