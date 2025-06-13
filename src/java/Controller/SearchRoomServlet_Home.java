@@ -74,15 +74,13 @@ public class SearchRoomServlet_Home extends HttpServlet {
         String adults = request.getParameter("adults");
         String childs = request.getParameter("childs");
         String dates = request.getParameter("dates");
-        String branchIDString = request.getParameter("branchID");
 
-        if (adults == null || childs == null || dates == null || dates.isEmpty() || branchIDString == null || branchIDString.isEmpty() ) {
+        if (adults == null || childs == null || dates == null || dates.isEmpty()) {
             setSessionMessage(session, "Please fill in all information to search!", "error");
             response.sendRedirect("./homepage");
             return;
         }
 
-        int branchID = Integer.parseInt(branchIDString);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yy");
 
         // Tách chuỗi theo dấu ">"
@@ -105,7 +103,7 @@ public class SearchRoomServlet_Home extends HttpServlet {
         int totalPeople = childsNum + adultsNum;
 
         RoomTypeDAO roomTypeDAO = new RoomTypeDAO();
-        List<RoomType> availableRoomTypes = roomTypeDAO.searchAvailableRoomTypes(checkIn, checkOut, totalPeople, branchID);
+        List<RoomType> availableRoomTypes = roomTypeDAO.searchAvailableRoomTypes(checkIn, checkOut, totalPeople);
 
         request.setAttribute("availableRoomTypes", availableRoomTypes);
         request.getRequestDispatcher("./searchRoomResult.jsp").forward(request, response);

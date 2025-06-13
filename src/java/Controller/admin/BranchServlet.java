@@ -64,7 +64,7 @@ public class BranchServlet extends HttpServlet {
         String keyword = request.getParameter("searchKeyword");
         
         int page = 1; // trang đầu tiên
-        int pageSize = 5; // 1 trang có 10 row
+        int pageSize = 5; // 1 trang có 5 row
         int totalPages = 0;
         int brancheListSize = 0;
         

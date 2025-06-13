@@ -120,7 +120,7 @@ public class branchEventHandlerServlet extends HttpServlet {
             String specificAddress = request.getParameter("specificAddress");
             String address = specificAddress + ", " + branchAddress;
 
-            boolean isValidInformation = validateForRegister(branchEmail, branchAddress, branchPhone, request);
+            boolean isValidInformation = validateForAdd(branchEmail, branchAddress, branchPhone, request);
             if (!isValidInformation) {
                 response.sendRedirect(BRANCH_PAGE);
                 return;
@@ -149,7 +149,7 @@ public class branchEventHandlerServlet extends HttpServlet {
         }
     }
 
-    public boolean validateForRegister(String email, String address, String phone, HttpServletRequest request) {
+    public boolean validateForAdd(String email, String address, String phone, HttpServletRequest request) {
         HttpSession session = request.getSession();
 
         if (branchDAO.isFieldExists(COL_EMAIL, email, null)) {

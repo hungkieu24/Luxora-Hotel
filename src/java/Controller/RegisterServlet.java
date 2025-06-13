@@ -109,7 +109,7 @@ public class RegisterServlet extends HttpServlet {
 
         // Sinh mã xác nhận
         String verificationCode = String.format("%06d", new Random().nextInt(1000000));
-        int duration = 3 * 60; // 3 phut(180s)
+        int duration = 1 * 60; // 3 phut(180s)
         long expiryTime = System.currentTimeMillis() + duration * 1000;
 
         // Gửi email
