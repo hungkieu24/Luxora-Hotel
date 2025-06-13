@@ -211,12 +211,3 @@ document.addEventListener('keydown', function(e) {
         closeModal();
     }
 });
-
-window.RoomUtils = {
-    openAddRoomModal,
-    editRoom,
-    deleteRoom,
-    closeModal,
-    updateRoomStatus,
-    applyFilters
-};

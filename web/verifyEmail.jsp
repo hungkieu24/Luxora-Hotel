@@ -15,8 +15,27 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap"/>
         <link rel="stylesheet" href="./css/registerStyles.css"/>
+        <link rel="stylesheet" href="./css/custom.css"/>
+
     </head>
     <body>
+        <c:if test="${not empty sessionScope.message}">
+            <div id="toastMessage" class="toast-message ${sessionScope.messageType}">
+                <c:choose>
+                    <c:when test="${sessionScope.messageType == 'success'}">
+                        <i class="fa fa-check-circle"></i>
+                    </c:when>
+                    <c:when test="${sessionScope.messageType == 'error'}">
+                        <i class="fa fa-times-circle"></i>
+                    </c:when>
+                </c:choose>
+                ${sessionScope.message}
+            </div>
+
+            <!-- Xóa message sau khi hiển thị -->
+            <c:remove var="message" scope="session" />
+            <c:remove var="messageType" scope="session" />
+        </c:if>
         <form action="verifyemail" method="post" id="verifyForm">
             <h3>Verify your email</h3>
             <p style="text-align: center">We have sent a verification code to your email. Please enter it below to verify your account.</p>
@@ -30,7 +49,7 @@
             <button type="submit">Verify</button>
             <p id="countdown" style="color: #00ca92; font-size: 15px;"></p>
         </form>
-
+        <script src="./js/toastMessage.js"></script>
         <script>
             document.getElementById("reset").addEventListener("click", function () {
                 const form = document.getElementById("verifyForm");
@@ -62,11 +81,16 @@
                     var sercondFormat = seconds;
                     if (seconds < 10) {
                         sercondFormat = "0" + seconds;
+
                     }
 
                     display.textContent = "Code expires in: " + minutes + ":" + sercondFormat;
                     if (--timer < 0) {
                         clearInterval(interval);
+                        document.getElementById("countdown").textContent = "Code has expired!";
+                        document.getElementById("countdown").style.color = "red";
+                        document.getElementById("reset").style.opacity = 1;
+                        document.getElementById("reset").style.cursor = "pointer";
                     }
                 }, 1000);
             }
@@ -78,13 +102,7 @@
 
             if (remaining > 0) {
                 startCountdown(remaining, "countdown", "reset");
-            } else {
-                document.getElementById("countdown").textContent = "Code has expired!";
-                document.getElementById("countdown").style.color = "red";
-                document.getElementById("reset").style.opacity = 1;
-                document.getElementById("reset").style.cursor = "pointer";
             }
-
         </script>
 
 

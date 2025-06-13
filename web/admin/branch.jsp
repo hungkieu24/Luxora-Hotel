@@ -40,43 +40,7 @@
             <c:remove var="messageType" scope="session" />
         </c:if>
         <div class="app-container">
-            <!-- Sidebar (giữ nguyên như index.html) -->
-            <nav class="sidebar" id="sidebar">
-                <!-- ... (tương tự sidebar trong index.html, chỉ thay active class cho menu-item Quản lý Phòng) -->
-                <div class="sidebar-header">
-
-                    <button class="sidebar-toggle" id="sidebarToggle">
-                        <div class="brand">
-                            <i class="fas fa-building"></i>
-                            <span class="brand-text">Chi nhánh Mẫu</span>
-                        </div>
-
-                    </button>
-                </div>
-                <div class="sidebar-menu">
-                    <a href="/index.html" class="menu-item ">
-                        <i class="fas fa-chart-line"></i>
-                        <span class="menu-text">Dashboard</span>
-                    </a>
-                    <a href="/rooms.html" class="menu-item active">
-                        <i class="fa-solid fa-hotel"></i>
-                        <span class="menu-text">Branch</span>
-                    </a>
-                    <a href="/feedback.html" class="menu-item">
-                        <i class="fas fa-comments"></i>
-                        <span class="menu-text">Feedback</span>
-                    </a>
-                    <a href="/membership.html" class="menu-item">
-                        <i class="fas fa-users"></i>
-                        <span class="menu-text">Account</span>
-                    </a>
-                    <!--                    <a href="#" class="menu-item logout">
-                                            <i class="fas fa-sign-out-alt"></i>
-                                            <span class="menu-text">Đăng xuất</span>
-                                        </a>-->
-                </div>
-            </nav>
-
+            <%@ include file="./sidebarAdmin.jsp"%>
             <!-- Main Content -->
             <main class="main-content">
                 <header class="content-header">
@@ -177,72 +141,6 @@
             </main>
         </div>
 
-        <div class="modal" id="roomModal">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h3 id="modalTitle">Add new room</h3>
-                        <button class="modal-close" onclick="closeModal()">×</button>
-                    </div>
-                    <form id="roomForm">
-                        <div class="modal-body">
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="room_number">Room number *</label>
-                                    <input type="text" id="room_number" name="room_number" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="room_type">Room type *</label>
-                                    <select id="room_type" name="room_type" required>
-                                        <option value="">Select room type</option>
-                                        <option value="Standard">Standard</option>
-                                        <option value="Deluxe">Deluxe</option>
-                                        <option value="Suite">Suite</option>
-                                        <option value="VIP">VIP</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="status">Status *</label>
-                                    <select id="status" name="status" required>
-                                        <option value="Available">Available</option>
-                                        <option value="Occupied">Booked</option>
-                                        <option value="Maintenance">Maintenance</option>
-                                        <option value="Cleaning">Locked</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="capacity">Capacity *</label>
-                                    <input type="number" id="capacity" name="capacity" min="1" required>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="price">Price (VNĐ) *</label>
-                                <input type="number" id="price" name="price" min="0" step="1000" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="amenities">Amenities</label>
-                                <input type="text" id="amenities" name="amenities"
-                                       placeholder="VD: Wifi, Điều hòa, TV, Tủ lạnh...">
-                            </div>
-                            <div class="form-group">
-                                <label for="description">Description</label>
-                                <textarea id="description" name="description" rows="3"
-                                          placeholder="Mô tả chi tiết về phòng..."></textarea>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save"></i>
-                                Lưu
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
         <!-- Modal: Edit Product -->
         <div id="edit-modal" class="modal modal--bigest hide">
             <div class="modal__content">
@@ -284,22 +182,22 @@
                     <div class="form__row">
                         <div class="form__group">
                             <label for="userName" class="form__label form-card__label">User Name</label>
-                            <div class="form__text-input">
-                                <input type="text" name="userName" id="userName" class="form__input" placeholder="User Name" readonly/>
+                            <div class="form__text-input form__nochange">
+                                <input type="text" name="userName" id="userName" class="form__input form__nochange" placeholder="User Name" readonly/>
                             </div>
                             <p class="form__error"></p>
                         </div>
                         <div class="form__group">
                             <label for="Email" class="form__label form-card__label">Email</label>
-                            <div class="form__text-input">
-                                <input type="email" name="Email" id="Email" class="form__input" placeholder="Email" readonly/>
+                            <div class="form__text-input form__nochange">
+                                <input type="email" name="Email" id="Email" class="form__input form__nochange" placeholder="Email" readonly/>
                             </div>
                             <p class="form__error"></p>
                         </div>
                         <div class="form__group">
                             <label for="phone" class="form__label form-card__label">Phone</label>
-                            <div class="form__text-input">
-                                <input type="text" name="phone" id="phone" class="form__input" placeholder="Phone" readonly/>
+                            <div class="form__text-input form__nochange">
+                                <input type="text" name="phone" id="phone" class="form__input form__nochange" placeholder="Phone" readonly/>
                             </div>
                             <p class="form__error"></p>
                         </div>
@@ -414,7 +312,7 @@
                             <p class="form__error"></p>
                         </div>
                         <div class="form__group">
-                            <label for="imageInput" class="form__label form-card__label">Choose Another Image</label>
+                            <label for="imageInput" class="form__label form-card__label">Add Image</label>
                             <div class="form__text-input">
                                 <input type="file" name="branchImgs" id="imageInput" multiple accept="image/*">
                             </div>
@@ -489,20 +387,20 @@
                     <div class="form__row">
                         <div class="form__group">
                             <label class="form__label form-card__label">User Name</label>
-                            <div class="form__text-input">
-                                <input type="text" name="userName" id="userName-add" class="form__input" placeholder="User Name" readonly/>
+                            <div class="form__text-input form__nochange">
+                                <input type="text" name="userName" id="userName-add" class="form__input form__nochange" placeholder="User Name" readonly/>
                             </div>
                         </div>
                         <div class="form__group">
                             <label class="form__label form-card__label">Email</label>
-                            <div class="form__text-input">
-                                <input type="email" name="Email" id="Email-add" class="form__input" placeholder="Email" readonly/>
+                            <div class="form__text-input form__nochange">
+                                <input type="email" name="Email" id="Email-add" class="form__input form__nochange" placeholder="Email" readonly/>
                             </div>
                         </div>
                         <div class="form__group">
                             <label class="form__label form-card__label">Phone</label>
-                            <div class="form__text-input">
-                                <input type="text" name="phone" id="phone-add" class="form__input" placeholder="Phone" readonly/>
+                            <div class="form__text-input form__nochange">
+                                <input type="text" name="phone" id="phone-add" class="form__input form__nochange" placeholder="Phone" readonly/>
                             </div>
                         </div>
                     </div>
@@ -599,6 +497,7 @@
                             <div class="form__text-input">
                                 <input type="file" name="branchImgs" id="imageInput-add" multiple accept="image/*">
                             </div>
+                            <p class="form__error"></p>
                         </div>
                     </div>
 
@@ -651,42 +550,42 @@
 
 
         <script>
-                                // Gọi hàm với class
-                                createLocationSelectorByClass({
-                                    provinceClass: 'province',
-                                    districtClass: 'district',
-                                    wardClass: 'ward',
-                                    addressClass: 'address'
-                                });
+                // Gọi hàm với class
+                createLocationSelectorByClass({
+                    provinceClass: 'province',
+                    districtClass: 'district',
+                    wardClass: 'ward',
+                    addressClass: 'address'
+                });
 
-                                document.getElementById("chooseAnotherManager").addEventListener("change", function () {
-                                    const selectedOption = this.options[this.selectedIndex];
+                document.getElementById("chooseAnotherManager").addEventListener("change", function () {
+                    const selectedOption = this.options[this.selectedIndex];
 
-                                    // Lấy dữ liệu từ option được chọn
-                                    const username = selectedOption.getAttribute("data-username") ?? "need to set";
-                                    const email = selectedOption.getAttribute("data-email") ?? "need to set";
-                                    const phone = selectedOption.getAttribute("data-phone") ?? "need to set";
-                                    const imageUrl = selectedOption.getAttribute("data-imageUrl") ?? "need to set";
-                                    // Gán vào các input
-                                    document.getElementById("userName").value = username;
-                                    document.getElementById("Email").value = email;
-                                    document.getElementById("phone").value = phone;
-                                    document.getElementById("avatar-previewView").src = imageUrl;
-                                });
-                                document.getElementById("chooseManager").addEventListener("change", function () {
-                                    const selectedOption = this.options[this.selectedIndex];
+                    // Lấy dữ liệu từ option được chọn
+                    const username = selectedOption.getAttribute("data-username") ?? "";
+                    const email = selectedOption.getAttribute("data-email") ?? "";
+                    const phone = selectedOption.getAttribute("data-phone") ?? "";
+                    const imageUrl = selectedOption.getAttribute("data-imageUrl") ?? "";
+                    // Gán vào các input
+                    document.getElementById("userName").value = username;
+                    document.getElementById("Email").value = email;
+                    document.getElementById("phone").value = phone;
+                    document.getElementById("avatar-previewView").src = imageUrl;
+                });
+                document.getElementById("chooseManager").addEventListener("change", function () {
+                    const selectedOption = this.options[this.selectedIndex];
 
-                                    // Lấy dữ liệu từ option được chọn
-                                    const username = selectedOption.getAttribute("data-username") ?? "need to set";
-                                    const email = selectedOption.getAttribute("data-email") ?? "need to set";
-                                    const phone = selectedOption.getAttribute("data-phone") ?? "need to set";
-                                    const imageUrl = selectedOption.getAttribute("data-imageUrl") ?? "need to set";
-                                    // Gán vào các input
-                                    document.getElementById("userName-add").value = username;
-                                    document.getElementById("Email-add").value = email;
-                                    document.getElementById("phone-add").value = phone;
-                                    document.getElementById("avatar-previewView-add").src = imageUrl;
-                                });
+                    // Lấy dữ liệu từ option được chọn
+                    const username = selectedOption.getAttribute("data-username") ?? "";
+                    const email = selectedOption.getAttribute("data-email") ?? "";
+                    const phone = selectedOption.getAttribute("data-phone") ?? "";
+                    const imageUrl = selectedOption.getAttribute("data-imageUrl") ?? "";
+                    // Gán vào các input
+                    document.getElementById("userName-add").value = username;
+                    document.getElementById("Email-add").value = email;
+                    document.getElementById("phone-add").value = phone;
+                    document.getElementById("avatar-previewView-add").src = imageUrl;
+                });
         </script>
 
 
@@ -763,6 +662,9 @@
                     Validator.isRequired('#branchEmail-add', 'Please enter branch email'),
                     Validator.isEmail('#branchEmail-add', 'This field must be an email'),
                     Validator.isRequired('#specificAddress-add', 'Please enter specific branch address'),
+                    Validator.isRequiredFile('#imageInput-add', 'Please select at least one file.'),
+                    Validator.isImageFile('#imageInput-add', 'File must be an image (.jpg, .png, .gif, .webp)'),
+                    Validator.maxFileCount('#imageInput-add', 5),
                 ],
                 onsubmit: function (formValue) {
                     document.querySelector('#add-form').submit();
@@ -779,12 +681,14 @@
                     Validator.isRequired('#branchEmail', 'Please enter branch email'),
                     Validator.isEmail('#branchEmail', 'This field must be an email'),
                     Validator.isRequired('#branchAddress', 'Please enter the branch address'),
+                    Validator.isImageFile('#imageInput', 'File must be an image (.jpg, .png, .gif, .webp)'),
+                    Validator.maxFileCount('#imageInput', 5),
                 ],
                 onsubmit: function (formValue) {
                     document.querySelector('#edit-form').submit();
                 }
             })
-        </script>z
+        </script>
     </body>
 
 </html>

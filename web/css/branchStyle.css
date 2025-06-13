@@ -277,6 +277,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
   color: #ff5a5a;
 }
 
+.form__nochange {
+    background: #dedede;
+    cursor: context-menu;
+}
+
 .cart-info__separate {
   margin: 30px 0;
   height: 1px;
