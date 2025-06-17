@@ -13,6 +13,9 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 /**
@@ -65,17 +68,47 @@ public class ViewRoomTypeListServlet extends HttpServlet {
 
         String minPriceStr = request.getParameter("minPrice");
         String maxPriceStr = request.getParameter("maxPrice");
+        String dates = request.getParameter("dates");
+
+        LocalDate checkIn = null;
+        LocalDate checkOut = null;
+
+        // Parse check-in, check-out nếu có
+        if (dates != null && dates.contains(">")) {
+            String[] parts = dates.split(">");
+            if (parts.length >= 2) {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yy");
+                try {
+                    checkIn = LocalDate.parse(parts[0].trim(), formatter);
+                    checkOut = LocalDate.parse(parts[1].trim(), formatter);
+                } catch (DateTimeParseException e) {
+                    checkIn = null;
+                    checkOut = null;
+                }
+            }
+        }
 
         try {
-            if (minPriceStr != null && !minPriceStr.isEmpty() && maxPriceStr != null && !maxPriceStr.isEmpty()) {
+            if (minPriceStr != null && !minPriceStr.isEmpty()
+                    && maxPriceStr != null && !maxPriceStr.isEmpty()) {
+
                 double minPrice = Double.parseDouble(minPriceStr);
                 double maxPrice = Double.parseDouble(maxPriceStr);
-                listRoomType = roomTypeDAO.getRoomTypesByPriceRange(minPrice, maxPrice);
+
+                if (checkIn != null && checkOut != null) {
+                    listRoomType = roomTypeDAO.getAvailableRoomTypesByPriceAndDate(minPrice, maxPrice, checkIn, checkOut);
+                } else {
+                    listRoomType = roomTypeDAO.getRoomTypesByPriceRange(minPrice, maxPrice);
+                }
             } else {
                 throw new NumberFormatException();
             }
         } catch (NumberFormatException e) {
-            listRoomType = roomTypeDAO.getAllRoomType();
+            if (checkIn != null && checkOut != null) {
+                listRoomType = roomTypeDAO.getAvailableRoomTypesByDate(checkIn, checkOut);
+            } else {
+                listRoomType = roomTypeDAO.getAllRoomType();
+            }
         }
 
         request.setAttribute("listRoomType", listRoomType);
