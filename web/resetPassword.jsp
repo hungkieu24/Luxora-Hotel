@@ -121,11 +121,42 @@
             <label for="confirmPassword">Confirm Password</label>
             <input type="password" placeholder="Confirm Password" id="confirmPassword" name="confirmPassword" required>
             <input type="hidden" name="email" value="${email}">
-            <c:if test="${not empty error}">
-                <p style="color: red; font-size: 10px">${error}</p>
-            </c:if>
+
             <button type="submit">Reset Password</button>
             <h4><a href="login.jsp">Back to Login</a></h4>
         </form>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script>
+            var errorMsg = "${error != null ? error : ''}";
+            var successMsg = "${success != null ? success : ''}";
+            if (errorMsg && errorMsg.trim() !== "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: errorMsg
+                });
+            } else if (successMsg && successMsg.trim() !== "") {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: successMsg
+                });
+            }
+            // Client-side form validation
+            document.getElementById('resetPasswordForm').addEventListener('submit', function (e) {
+                var password = document.getElementById('password').value;
+                var confirmPassword = document.getElementById('confirmPassword').value;
+                if (password !== confirmPassword) {
+                    e.preventDefault();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Password Mismatch',
+                        text: 'Passwords do not match. Please re-enter.'
+                    });
+                    return false;
+                }
+                // If all good, the form will submit
+            });
+        </script>
     </body>
 </html>
