@@ -22,7 +22,7 @@ public class Booking {
     private String userName;
     private String roomNumbers; // VD: "101, 102"
     private List<Room> rooms;
-
+    
     public Booking() {
     }
 

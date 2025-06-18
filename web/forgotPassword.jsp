@@ -21,11 +21,55 @@
             <h3>Forgot Password</h3>
             <label for="email">Enter your email</label>
             <input type="email" placeholder="Email" id="email" name="email"required>
-            <c:if test="${not empty error}">
-                <p stype="color:red; font-size: 10px">${error}</p>
-            </c:if>
-                <button type="submit">Send Verification Code</button>
-                <h4><a href="login.jsp">Back to login</a></h4>
+            <button type="submit">Send Verification Code</button>
+            <h4><a href="login.jsp">Back to login</a></h4>
         </form>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script>
+            var errorMsg = "${error != null ? error : ''}";
+            var successMsg = "${success != null ? success : ''}";
+            if (errorMsg && errorMsg.trim() !== "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Lỗi',
+                    text: errorMsg
+                });
+            } else if (successMsg && successMsg.trim() !== "") {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Thành công',
+                    text: successMsg
+                });
+            }
+            // Validation phía client
+            document.querySelector('form').addEventListener('submit', function (e) {
+                var emailInput = document.getElementById('email');
+                var email = emailInput.value.trim();
+                // Regex kiểm tra định dạng email cơ bản
+                var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+                if (email === "") {
+                    e.preventDefault();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Please input mail'
+                    });
+                    emailInput.focus();
+                    return false;
+                }
+                if (!emailRegex.test(email)) {
+                    e.preventDefault();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Email invalid!'
+                    });
+                    emailInput.focus();
+                    return false;
+                }
+                // Nếu hợp lệ, cho submit form bình thường
+            });
+        </script>
     </body>
 </html>

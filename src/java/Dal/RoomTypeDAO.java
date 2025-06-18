@@ -300,4 +300,55 @@ public class RoomTypeDAO extends DBcontext.DBContext {
 
         return map;
     }
+
+    public RoomType getRoomTypeById(int roomtypeId){
+        RoomType roomtype = null;
+        String sql ="select * from RoomType where id = ?";
+        try(PreparedStatement ps = connection.prepareStatement(sql)){
+            ps.setInt(1, roomtypeId);
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()){
+                roomtype = new RoomType(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("description"),
+                        rs.getDouble("base_price"),
+                        rs.getInt("capacity"),
+                        rs.getString("image_url"));
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return roomtype;
+    }
+    public void updateRoomType(int roomtypeId, double basePrice, int capacity, String description){
+        String sql ="update RoomType set base_price = ? , capacity =?, description =? where id = ?";
+        try(PreparedStatement ps = connection.prepareStatement(sql)){
+            ps.setDouble(1, basePrice);
+            ps.setInt(2, capacity);
+            ps.setString(3, description);
+            ps.setInt(4, roomtypeId);
+            ps.executeUpdate();
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    
+    public Map<Integer, Double> getRoomTypePriceMap() {
+      Map<Integer, Double> map = new HashMap<>();
+      String sql = "SELECT id, base_price FROM RoomType";
+      try (
+           PreparedStatement ps = connection.prepareStatement(sql);
+           ResultSet rs = ps.executeQuery()) {
+          while (rs.next()) {
+              int id = rs.getInt("id");
+              double price = rs.getDouble("base_price");
+              map.put(id, price);
+          }
+      } catch (Exception e) {
+          e.printStackTrace();
+      }
+      return map;
+  }
 }

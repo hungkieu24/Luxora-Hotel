@@ -1,114 +1,122 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package Controller;
 
 import Dal.UserAccountDAO;
+import Model.UserAccount;
+import Utility.EmailUtility;
 import Utility.PasswordUtils;
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.util.Random;
 
-/**
- *
- * @author hungk
- */
 @WebServlet(name = "VerifyEmailServlet", urlPatterns = {"/verifyemail"})
 public class VerifyEmailServlet extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet VerifyEmailServlet</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet VerifyEmailServlet at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
+    private void setSessionMessage(HttpSession session, String message, String type) {
+        session.setAttribute("message", message);
+        session.setAttribute("messageType", type);
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        // Không dùng GET cho verify email
+        response.sendRedirect("login.jsp");
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String inputCode = request.getParameter("code");
+        String action = request.getParameter("action");
         HttpSession session = request.getSession();
 
+        // Nếu là yêu cầu gửi lại mã xác nhận
+        if (action != null && action.equals("resend")) {
+            sendVerificationCode(request, response);
+            return;
+        }
+
+        // Kiểm tra các trường cần thiết
+        String username = (String) session.getAttribute("username");
+        String rawPassword = (String) session.getAttribute("password");
+        String phone = (String) session.getAttribute("phone");
+        String email = (String) session.getAttribute("email");
+        if (email == null || username == null || rawPassword == null || phone == null) {
+            setSessionMessage(session, "You need to register", "error");
+            response.sendRedirect("register.jsp");
+            return;
+        }
+
+        // Kiểm tra sessionCode và expiryTime
         String sessionCode = (String) session.getAttribute("authCode");
-        PasswordUtils passwordUtils = new PasswordUtils();
-        if (sessionCode != null && sessionCode.equals(inputCode)) {
-            // Lưu user vào DB
-            String username = (String) session.getAttribute("username");
-            String email = (String) session.getAttribute("email");
-            String rawPassword = (String) session.getAttribute("password");
+        Long expiryTime = (Long) session.getAttribute("expiryTime");
+        long currentTime = System.currentTimeMillis();
+
+        if (expiryTime == null || sessionCode == null) {
+            setSessionMessage(session, "You need to register", "error");
+            response.sendRedirect("register.jsp");
+            return;
+        }
+
+        if (currentTime > expiryTime) {
+            setSessionMessage(session, "The verification code has expired. Please request a new code.", "error");
+            response.sendRedirect("verifyEmail.jsp");
+            return;
+        }
+
+        // kiểm tra code -> Lưu user vào DB
+        if (sessionCode.equals(inputCode)) {
+            PasswordUtils passwordUtils = new PasswordUtils();
             String hashedPassword = passwordUtils.hashPassword(rawPassword);
-            String phone = (String) session.getAttribute("phone");
             UserAccountDAO uadao = new UserAccountDAO();
             boolean registered = uadao.register(username, hashedPassword, email, "img/avatar/avatar.jpg", phone);
             if (registered) {
-                session.invalidate();
-                response.sendRedirect("login.jsp");
+                setSessionMessage(session, "Register successfully!", "success");
+                // SAU KHI XÁC THỰC THÀNH CÔNG, CHUYỂN VỀ TRANG searchGuest.jsp
+                response.sendRedirect("searchGuest.jsp");
             } else {
-                response.sendRedirect("500.html");
+                setSessionMessage(session, "Registration failed, please try again!", "error");
+                response.sendRedirect("register.jsp");
             }
-
         } else {
-            request.setAttribute("error", "The verification code is incorrect!");
-            request.getRequestDispatcher("verify.jsp").forward(request, response);
+            setSessionMessage(session, "The verification code is incorrect!", "error");
+            response.sendRedirect("verifyEmail.jsp");
         }
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
+    public void sendVerificationCode(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        HttpSession session = request.getSession();
+        String email = (String) session.getAttribute("email");
 
+        // Sinh mã xác nhận 6 chữ số
+        String verificationCode = String.format("%06d", new Random().nextInt(1000000));
+        int duration = 3 * 60; // 3 phút (180 giây)
+        long expiryTime = System.currentTimeMillis() + duration * 1000;
+
+        try {
+            // Gửi email xác nhận
+            EmailUtility.sendEmail(email, "Verify your email to register", verificationCode);
+        } catch (Exception e) {
+            e.printStackTrace();
+            setSessionMessage(session, "Unable to send email, please check your email", "error");
+            response.sendRedirect("register.jsp");
+            return;
+        }
+           // Get staff from session to get branchId
+        UserAccount staff = (UserAccount) request.getSession().getAttribute("user");
+        Integer branchId = (staff != null) ? staff.getBranchId() : null;
+
+        // Lưu thông tin xác nhận vào session
+        session.setAttribute("duration", duration);
+        session.setAttribute("expiryTime", expiryTime);
+        session.setAttribute("authCode", verificationCode);
+
+        // Điều hướng đến trang xác minh
+        response.sendRedirect("verifyEmail.jsp");
+    }
 }
