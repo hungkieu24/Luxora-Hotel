@@ -46,8 +46,6 @@ public class RoomTypeDAO extends DBcontext.DBContext {
         return roomTypeList;
     }
 
-
-
     public List<RoomType> searchAvailableRoomTypes(LocalDate checkIn, LocalDate checkOut, int guests, int branchId) {
         List<RoomType> availableRoomTypes = new ArrayList<>();
 
@@ -114,6 +112,7 @@ public class RoomTypeDAO extends DBcontext.DBContext {
 
         return map;
     }
+
     public RoomType getRoomTypeById(int roomtypeId){
         RoomType roomtype = null;
         String sql ="select * from RoomType where id = ?";
@@ -146,4 +145,22 @@ public class RoomTypeDAO extends DBcontext.DBContext {
             e.printStackTrace();
         }
     }
+
+    
+    public Map<Integer, Double> getRoomTypePriceMap() {
+      Map<Integer, Double> map = new HashMap<>();
+      String sql = "SELECT id, base_price FROM RoomType";
+      try (
+           PreparedStatement ps = connection.prepareStatement(sql);
+           ResultSet rs = ps.executeQuery()) {
+          while (rs.next()) {
+              int id = rs.getInt("id");
+              double price = rs.getDouble("base_price");
+              map.put(id, price);
+          }
+      } catch (Exception e) {
+          e.printStackTrace();
+      }
+      return map;
+  }
 }
