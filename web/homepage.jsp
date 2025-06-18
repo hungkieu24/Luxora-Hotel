@@ -270,7 +270,7 @@
                                 <c:forEach items="${roomTypeList}" var="r">
                                     <!-- /item-->
                                     <div class="item">
-                                        <a href="" class="box_cat_rooms">
+                                        <a href="./viewRoomTypeDetail?roomTypeId=${r.getRoomTypeID()}" class="box_cat_rooms">
                                             <figure>
                                                 <div class="background-image" 
                                                      data-background="url(${r.getImage_url()})" 
@@ -290,7 +290,7 @@
                                     </div>
                                 </c:forEach>
                         </div>
-                        <p class="text-end"><a href="searchRoomResult22.html" class="btn_1 outline mt-2">View all Rooms</a></p>
+                            <p style="opacity: 1" class="text-end"><a href="./viewRoomTypeList" class="btn_1 outline mt-2">View all Room Types</a></p>
                     </div>
                     <!-- /row-->
 

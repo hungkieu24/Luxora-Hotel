@@ -2,33 +2,44 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package Controller;
+package Controller.Customer;
 
 import Dal.BookingDAO;
 import Dal.FeedbackDAO;
-import Dal.LoyaltyPointDAO;
 import Dal.UserAccountDAO;
 import Model.Booking;
 import Model.Feedback;
-import Model.LoyaltyPoint;
 import Model.UserAccount;
+import Utility.UploadMultyImage;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Part;
+import java.io.File;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  *
  * @author KTC
  */
 @WebServlet(name = "SendFeedbackServlet", urlPatterns = {"/sendFeedback"})
+@MultipartConfig(
+        fileSizeThreshold = 1024 * 1024, // 1 MB threshold
+        maxFileSize = 1024 * 1024 * 5, // 5 MB max file size
+        maxRequestSize = 1024 * 1024 * 10 // 10 MB max request size
+)
 public class SendFeedbackServlet extends HttpServlet {
 
     /**
@@ -48,10 +59,10 @@ public class SendFeedbackServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet SendFeedbackServlet</title>");
+            out.println("<title>Servlet SendFeedbackServlet1</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet SendFeedbackServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet SendFeedbackServlet1 at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -69,18 +80,13 @@ public class SendFeedbackServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        int page = 1; // trang đầu tiên
-        int pageSize = 5; // 1 trang có 5 row
-        if (request.getParameter("page") != null) {
-            page = Integer.parseInt(request.getParameter("page"));
+        HttpSession session = request.getSession();
+
+        UserAccount user = (UserAccount) session.getAttribute("user");
+        if (user == null) {
+            response.sendRedirect("login.jsp");
+            return;
         }
-        FeedbackDAO feedbackDAO = new FeedbackDAO();
-        int feedbackListSize = feedbackDAO.getAllFeedBack().size();
-        int totalPages = (int) Math.ceil((double) feedbackListSize / pageSize);
-        List<Feedback> listFeedback = feedbackDAO.getListFeedbackByPage(page, pageSize);
-        request.setAttribute("listFeedback", listFeedback);
-        request.setAttribute("currentPage", page);
-        request.setAttribute("totalPages", totalPages);
         request.getRequestDispatcher("sendFeedback.jsp").forward(request, response);
     }
 
@@ -124,17 +130,33 @@ public class SendFeedbackServlet extends HttpServlet {
         }
         String comment = request.getParameter("comment");
         Timestamp createdAt = new Timestamp(System.currentTimeMillis());
-        Feedback feedback = new Feedback(user.getId(), bk.getId(), rating, comment, createdAt, "Visible");
 
+        //Upload anh
+        UploadMultyImage uploader = new UploadMultyImage();
+
+        String UPLOAD_DIR = "/img/feedback/customer_id" + user.getId();
+        String pathHost = getServletContext().getRealPath("");
+        String uploadPath = pathHost.replace("build\\", "") + UPLOAD_DIR;
+        String uploadPath2 = pathHost + UPLOAD_DIR;
+
+        List<String> uploadedFiles = uploader.uploadImages(request, "images", uploadPath);
+        List<String> uploadedFiles2 = uploader.uploadImages(request, "images", uploadPath2);
+        //Upload anh
+
+        Feedback feedback = new Feedback(user.getId(), bk.getId(), rating, comment, UPLOAD_DIR, createdAt, "Visible", "None");
         try {
             feedbackDAO.addFeedback(feedback);
-            request.setAttribute("message", "Feedback submitted successfully!");
+            setSessionMessage(session, "Information updated successfully!", "success");
         } catch (Exception e) {
-            request.setAttribute("message", "Error submitting feedback: " + e.getMessage());
+            setSessionMessage(session, "Update information failed!!", "error");
         }
 
-        response.sendRedirect("./sendFeedback");
+        request.getRequestDispatcher("sendFeedback.jsp").forward(request, response);
+    }
 
+    private void setSessionMessage(HttpSession session, String message, String type) {
+        session.setAttribute("message", message);
+        session.setAttribute("messageType", type);
     }
 
     /**

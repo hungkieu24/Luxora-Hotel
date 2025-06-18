@@ -132,11 +132,13 @@ public class BookingDAO extends DBcontext.DBContext {
                 b.setRooms(getRoomsByBookingIdAndBranch(b.getId(), branchId));
                 list.add(b);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
-        return list;
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+    return bookings;
+}
+
 
     // Lấy booking theo bookingId, nhưng chỉ khi booking thuộc branchId
     public Booking getBookingByIdAndBranch(int bookingId, int branchId) {

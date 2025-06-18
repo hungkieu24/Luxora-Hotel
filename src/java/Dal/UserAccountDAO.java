@@ -1,4 +1,3 @@
-
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
@@ -253,7 +252,7 @@ public class UserAccountDAO extends DBContext {
     }
 
     public boolean updateUserInfo(String userId, String username, String email, String phoneNumber, String avatarUrl) {
-        String sql = "UPDATE UserAccount SET username = ?, email = ?, phone_number = ?, avatar_url = ? WHERE id = ?";
+        String sql = "UPDATE UserAccount SET username = ?, email = ?, phonenumber = ?, avatar_url = ? WHERE id = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, username);
@@ -261,6 +260,21 @@ public class UserAccountDAO extends DBContext {
             ps.setString(3, phoneNumber);
             ps.setString(4, avatarUrl);
             ps.setString(5, userId);
+
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean updateEmail(String userId, String email) {
+        String sql = "UPDATE UserAccount SET email = ? WHERE id = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, email);
+            ps.setString(2, userId);
 
             int rowsAffected = ps.executeUpdate();
             return rowsAffected > 0;
@@ -376,6 +390,21 @@ public class UserAccountDAO extends DBContext {
         }
     }
 
+    public boolean isFieldExists(String fieldName, String value, String excludeId) {
+        String sql = "SELECT 1 FROM UserAccount WHERE " + fieldName + " = ?" + (excludeId != null ? " AND id != ?" : "");
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, value);
+            if (excludeId != null) {
+                ps.setString(2, excludeId);
+            }
+             ResultSet rs = ps.executeQuery();
+            return rs.next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
     public UserAccount getUserByUserName(String username) {
         String sql = "select * from UserAccount where username = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -535,4 +564,36 @@ public class UserAccountDAO extends DBContext {
         }
         return false;
     }
+
+    // hoang create
+    public boolean checkPassword(String username, String password) {
+        String sql = "SELECT 1 FROM UserAccount WHERE username = ? AND password = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, username);
+            ps.setString(2, password);
+            ResultSet rs = ps.executeQuery();
+
+            return rs.next(); // Trả về true nếu tìm thấy dòng khớp
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    // hoang create
+    public boolean updatePassword1(String username, String newPassword) {
+        String sql = "UPDATE UserAccount SET password = ? WHERE username = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, newPassword);
+            ps.setString(2, username);
+            int rowsUpdated = ps.executeUpdate();
+            return rowsUpdated > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 }

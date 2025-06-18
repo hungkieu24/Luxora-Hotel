@@ -17,11 +17,16 @@ public class Feedback {
     private String status;
     private String admin_action;
     private UserAccount userAccount;
-    
+    private int roomTypeId;
     // Additional fields for display
     private String username;
     private String userAvatarUrl;
 
+    public Feedback() {
+    }
+    
+    
+    
     // Constructor with all fields
     public Feedback(int id, String user_id, int booking_id, int rating, 
                    String comment, String image_url, Timestamp created_at, 
@@ -37,6 +42,24 @@ public class Feedback {
         this.admin_action = admin_action;
     }
 
+    public Feedback(int rating, String comment, Timestamp created_at, String username, String userAvatarUrl) {
+        this.rating = rating;
+        this.comment = comment;
+        this.created_at = created_at;
+        this.username = username;
+        this.userAvatarUrl = userAvatarUrl;
+    }
+
+    public Feedback(int id, int rating, String comment, Timestamp created_at, int roomTypeId, String username, String userAvatarUrl) {
+        this.id = id;
+        this.rating = rating;
+        this.comment = comment;
+        this.created_at = created_at;
+        this.roomTypeId = roomTypeId;
+        this.username = username;
+        this.userAvatarUrl = userAvatarUrl;
+    }
+    
     public Feedback(int id, int booking_id, int rating, String comment, String image_url, Timestamp created_at, String status, String admin_action, UserAccount userAccount) {
         this.id = id;
         this.booking_id = booking_id;
@@ -48,21 +71,6 @@ public class Feedback {
         this.admin_action = admin_action;
         this.userAccount = userAccount;
     }
-
-    public Feedback(int rating, String comment, Timestamp created_at, String status) {
-        this.rating = rating;
-        this.comment = comment;
-        this.created_at = created_at;
-        this.status = status;
-    }
-
-    public Feedback(int booking_id, int rating, String comment, Timestamp created_at, String username) {
-        this.booking_id = booking_id;
-        this.rating = rating;
-        this.comment = comment;
-        this.created_at = created_at;
-        this.username = username;
-    }
     public Feedback(String user_id, int booking_id, int rating, String comment, Timestamp created_at, String status) {
         this.user_id = user_id;
         this.booking_id = booking_id;
@@ -71,6 +79,52 @@ public class Feedback {
         this.created_at = created_at;
         this.status = status;
     }
+
+    public Feedback(String user_id, int booking_id, int rating, String comment, String image_url, Timestamp created_at, String status, String admin_action) {
+        this.user_id = user_id;
+        this.booking_id = booking_id;
+        this.rating = rating;
+        this.comment = comment;
+        this.image_url = image_url;
+        this.created_at = created_at;
+        this.status = status;
+        this.admin_action = admin_action;
+    }
+    
+    public Feedback(int booking_id, int rating, String comment, Timestamp created_at, String username) {
+        this.booking_id = booking_id;
+        this.rating = rating;
+        this.comment = comment;
+        this.created_at = created_at;
+        this.username = username;
+    }
+    
+    public Feedback(int rating, String comment, Timestamp created_at, String status) {
+        this.rating = rating;
+        this.comment = comment;
+        this.created_at = created_at;
+        this.status = status;
+    }
+
+    public Feedback(String user_id, int booking_id, int rating, String comment, Timestamp created_at, String status, String admin_action) {
+        this.user_id = user_id;
+        this.booking_id = booking_id;
+        this.rating = rating;
+        this.comment = comment;
+        this.created_at = created_at;
+        this.status = status;
+        this.admin_action = admin_action;
+    }
+
+    public int getRoomTypeId() {
+        return roomTypeId;
+    }
+
+    public void setRoomTypeId(int roomTypeId) {
+        this.roomTypeId = roomTypeId;
+    }
+
+    
     
     
     // Getters and Setters

@@ -195,6 +195,18 @@ Validator.minNumber = function (selector, min, message) {
         }
     }
 }
+Validator.minLessThanMax = function (minSelector, maxSelector, message) {
+    return {
+        selector: maxSelector, 
+        test: function () {
+            const min = parseFloat(document.querySelector(minSelector)?.value) || 0;
+            const max = parseFloat(document.querySelector(maxSelector)?.value) || 0;
+
+            return min <= max ? undefined : message || 'Maximum price must be more than or equal to minimum price';
+        }
+    };
+};
+
 
 Validator.bankAccountNumber = function (selector, message) {
     return {
@@ -230,6 +242,18 @@ Validator.maxLength = function (selector, max, message) {
         selector: selector,
         test: function (value) {
             return value.length <= max ? undefined : message || `Please enter no more than ${max} characters`;
+        }
+    }
+}
+
+Validator.lengthRange = function (selector, min, max, message) {
+    return {
+        selector: selector,
+        test: function (value) {
+            if (value.length < min || value.length > max) {
+                return message || `Please enter between ${min} and ${max} characters.`;
+            }
+            return undefined; // Hợp lệ
         }
     }
 }

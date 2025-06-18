@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 
-package Controller;
+package Controller.Customer;
 
 import Dal.BookingDAO;
 import Model.Booking;
@@ -67,16 +67,12 @@ public class MyBookingServlet extends HttpServlet {
             return;
         }
 
-//        String userId = String.valueOf(user.getId());
 
-        // Lấy danh sách booking của người dùng
-        BookingDAO bd = new BookingDAO();
-        List<Booking> bookings = bd.getBookingsByUserId(user.getId());
+        BookingDAO bookingdao = new BookingDAO();
+        List<Booking> bookings = bookingdao.getBookingsByUserId(user.getId());
 
-        // Đặt danh sách booking vào request để JSP hiển thị
         request.setAttribute("bookings", bookings);
 
-        // Chuyển hướng đến JSP
         request.getRequestDispatcher("myBooking.jsp").forward(request, response);
     } 
 
@@ -90,7 +86,7 @@ public class MyBookingServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        // Xử lý yêu cầu hủy booking
+        // xu ly huy yeu cau booking
         String action = request.getParameter("action");
         if ("cancel".equals(action)) {
             int bookingId = Integer.parseInt(request.getParameter("bookingId"));
@@ -105,7 +101,7 @@ public class MyBookingServlet extends HttpServlet {
                 request.setAttribute("error", "Reservation cannot be canceled. Please try again.");
             }
 
-            // Làm mới danh sách booking
+            // lam moi danh sach booking
             HttpSession session = request.getSession();
             UserAccount user = (UserAccount) session.getAttribute("user");
             String userId = String.valueOf(user.getId());
@@ -113,7 +109,6 @@ public class MyBookingServlet extends HttpServlet {
             request.setAttribute("bookings", bookings);
         }
 
-        // Chuyển hướng lại JSP
         request.getRequestDispatcher("myBooking.jsp").forward(request, response);
     }
     
