@@ -46,8 +46,6 @@ public class RoomTypeDAO extends DBcontext.DBContext {
         return roomTypeList;
     }
 
-
-
     public List<RoomType> searchAvailableRoomTypes(LocalDate checkIn, LocalDate checkOut, int guests, int branchId) {
         List<RoomType> availableRoomTypes = new ArrayList<>();
 
@@ -114,4 +112,49 @@ public class RoomTypeDAO extends DBcontext.DBContext {
 
         return map;
     }
+    // Lấy các loại phòng có phòng còn trống ở chi nhánh chỉ định
+
+    // Lấy danh sách RoomType có phòng còn trống của một branch (chi nhánh)
+    public List<RoomType> getRoomTypesByBranch(int branchId) {
+        List<RoomType> list = new ArrayList<>();
+        String sql = "SELECT DISTINCT rt.id, rt.name, rt.description, rt.base_price, rt.capacity, rt.image_url "
+                + "FROM RoomType rt "
+                + "JOIN Room r ON rt.id = r.room_type_id "
+                + "WHERE r.branch_id = ? AND r.status = 'Available'";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, branchId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                RoomType rt = new RoomType(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("description"),
+                        rs.getDouble("base_price"),
+                        rs.getInt("capacity"),
+                        rs.getString("image_url")
+                );
+                list.add(rt);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    
+    public Map<Integer, Double> getRoomTypePriceMap() {
+    Map<Integer, Double> map = new HashMap<>();
+    String sql = "SELECT id, base_price FROM RoomType";
+    try (
+         PreparedStatement ps = connection.prepareStatement(sql);
+         ResultSet rs = ps.executeQuery()) {
+        while (rs.next()) {
+            int id = rs.getInt("id");
+            double price = rs.getDouble("base_price");
+            map.put(id, price);
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return map;
+}
 }

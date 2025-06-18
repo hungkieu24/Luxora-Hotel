@@ -104,7 +104,7 @@ public class SendFeedbackServlet extends HttpServlet {
         }
         BookingDAO bkd = new BookingDAO();
         Booking bk = (Booking) session.getAttribute("bk");
-        bk = bkd.getBookingByUserId(user.getId());
+//        bk = bkd.getBookingByUserId(user.getId());
         FeedbackDAO feedbackDAO = new FeedbackDAO();
 
         if (user == null) {
