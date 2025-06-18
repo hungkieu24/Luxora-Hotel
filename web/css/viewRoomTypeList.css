@@ -1,0 +1,85 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Jun 8, 2025, 3:39:04 PM
+    Author     : KTC
+*/
+
+/* Custom styles for the search form */
+.search-form {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+.search-form .form-group {
+    margin-bottom: 20px;
+}
+
+.search-form label {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.search-form .form-control {
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    padding: 12px 15px;
+    font-size: 16px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.search-form .form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
+    outline: none;
+}
+
+.search-form .form-control::placeholder {
+    color: #6c757d;
+    opacity: 0.7;
+}
+
+.search-form .btn-primary {
+    background: linear-gradient(45deg, #978667, #c2a680);
+    border: none;
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    text-transform: uppercase;
+    transition: background 0.3s ease, transform 0.2s ease;
+    height: 48px; /* Match input height for alignment */
+}
+
+.search-form .btn-primary:hover {
+    background: linear-gradient(45deg, #0056b3, #003d80);
+    transform: translateY(-2px);
+}
+
+.search-form .btn-primary:active {
+    transform: translateY(0);
+}
+
+.search-form .row {
+    align-items: flex-end;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767px) {
+    .search-form .col-md-4 {
+        margin-bottom: 15px;
+    }
+    .search-form .btn-primary {
+        width: 100%;
+    }
+}
+a{
+    color: white;
+}

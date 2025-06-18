@@ -38,7 +38,7 @@ public class ForgotPasswordServlet extends HttpServlet {
        }
        //Tao code 6 ky tu
        String code = String.format("%06d", new Random().nextInt(999999));
-       long expiryTime = System.currentTimeMillis() + 5 * 60 * 1000;// 5 phut ke tu luc send
+       long expiryTime = System.currentTimeMillis() + 1 * 60 * 1000;// 1 phut ke tu luc send
        
        // luu thong tin vao session
        session.setAttribute("resetCode", code);

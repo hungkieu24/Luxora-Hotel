@@ -63,7 +63,7 @@ public class RegisterServlet extends HttpServlet {
             HttpSession session = request.getSession();
             UserAccount user = userDAO.getUserByEmail(emailGG);
             session.setAttribute("user", user);
-            response.sendRedirect("./homepage");
+            response.sendRedirect("homepage");
         } else {
             request.setAttribute("error", "Google login failed. Please try again.");
             request.getRequestDispatcher("register.jsp").forward(request, response);
@@ -94,6 +94,10 @@ public class RegisterServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+           // Get staff from session to get branchId
+        UserAccount staff = (UserAccount) request.getSession().getAttribute("user");
+        Integer branchId = (staff != null) ? staff.getBranchId() : null;
+
         HttpSession session = request.getSession();
         String email = request.getParameter("email");
         String username = request.getParameter("username");
@@ -118,6 +122,7 @@ public class RegisterServlet extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
             setSessionMessage(session, "Unable to send email, please check your email", "error");
+
             response.sendRedirect("./register.jsp");
             return;
         }

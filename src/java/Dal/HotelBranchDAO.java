@@ -401,6 +401,21 @@ public class HotelBranchDAO extends DBcontext.DBContext {
 
         return branchList;
     }
+    
+    
+   public String getBranchNameById(int branchId) {
+    String sql = "SELECT name FROM HotelBranch WHERE id = ?";
+    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        ps.setInt(1, branchId);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            return rs.getString("name");
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return "";
+}
 
     public boolean isPhoneExists(String phone) {
         String sql = "SELECT 1 FROM HotelBranch WHERE phone = ?";

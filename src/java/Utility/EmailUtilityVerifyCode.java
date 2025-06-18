@@ -46,7 +46,7 @@ public class EmailUtilityVerifyCode {
                 +"<body>"
                 +"<p>Chào bạn, </p>"
                 +"<p>Mã xác nhận của bạn là: <strong style = 'color blue;'>"+ messageText+"</strong></p>"
-                +"<p style='color : red;'>Mã của bạn tồn tại trong 5 phút. Vui lòng bạn không chia sẻ mã này với người khác!</p>"
+                +"<p style='color : red;'>Mã của bạn tồn tại trong 1 phút. Vui lòng bạn không chia sẻ mã này với người khác!</p>"
                 + "</body>"
                 + "</html>";
         message.setContent(htmlContent, "text/html; charset=UTF-8");

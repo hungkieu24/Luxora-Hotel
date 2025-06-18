@@ -1,8 +1,3 @@
-<%-- 
-    Document   : register
-    Created on : May 25, 2025, 9:15:28 AM
-    Author     : hungk
---%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>

@@ -104,7 +104,7 @@ public class Room {
     public void setHotelName(String hotelName) {
         this.hotelName = hotelName;
     }
-
+// author : Hung
     @Override
     public String toString() {
         return "Room{"

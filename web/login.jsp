@@ -49,9 +49,7 @@
             <div class="forgot-password">
                 <a href="forgotPassword.jsp">Forgot Password?</a>
             </div>
-            <c:if test="${not empty error}">
-                <p style="color: red; font-size: 10px">${error}</p>
-            </c:if>
+
             <button>Log In</button>
             <div class="social">
                 <a href="https://accounts.google.com/o/oauth2/auth?scope=email%20profile&redirect_uri=http://localhost:8080/ParadiseHotel/login&response_type=code&client_id=202740089898-biog485gnu7f0i8v8q0sma4bjtl6effc.apps.googleusercontent.com&approval_prompt=force">
@@ -60,6 +58,26 @@
             </div>
             <h4>You don't have an account ?<a href="register.jsp">Register</a></h4>
         </form>
+
         <script src="./js/toastMessage.js"></script>  
+
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script>
+            var errorMsg = "${error != null ? error : ''}";
+            var successMsg = "${success != null ? success : ''}";
+            if (errorMsg && errorMsg.trim() !== "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: errorMsg
+                });
+            } else if (successMsg && successMsg.trim() !== "") {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: successMsg
+                });
+            }
+        </script>
     </body>
 </html>

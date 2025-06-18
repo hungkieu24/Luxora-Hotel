@@ -13,6 +13,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.mindrot.jbcrypt.BCrypt;
 
 /**
  *
@@ -26,16 +27,11 @@ public class ResetPasswordServlet extends HttpServlet {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
         String confirmPassword = request.getParameter("confirmPassword");
-        
-        if(!password.equals(confirmPassword)){
-            request.setAttribute("error", "Password not match");
-            request.setAttribute("email", email);
-            request.getRequestDispatcher("resetPasswordServlet").forward(request, response);
-            return;
-        }
+        //mã hóa mật khẩu 
+        String hashedPassWord = BCrypt.hashpw(password, BCrypt.gensalt(12));
         // Cap nhat DB 
         UserAccountDAO dao = new UserAccountDAO();
-        boolean update = dao.updatePassword(email, password);
+        boolean update = dao.updatePassword(email, hashedPassWord);
         if(update){
             request.setAttribute("success", "Change password successfully! Can you login again.");
             request.getRequestDispatcher("login.jsp").forward(request, response);
@@ -44,6 +40,5 @@ public class ResetPasswordServlet extends HttpServlet {
             request.getRequestDispatcher("resetPassword.jsp").forward(request, response);
         }
     }
-   
-
+    
 }

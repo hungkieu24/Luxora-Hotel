@@ -1,7 +1,8 @@
-    /*
+/*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
+
 package Dal;
 
 import DBcontext.DBContext;
@@ -10,12 +11,14 @@ import Model.UserAccount;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.Set;
 
 /**
  *
  * @author thien
  */
-public class    UserAccountDAO extends DBContext {
+public class UserAccountDAO extends DBContext {
 
     public UserAccount login(String username, String password) {
         String sql = "SELECT * FROM UserAccount WHERE username = ? AND password = ?";
@@ -29,6 +32,12 @@ public class    UserAccountDAO extends DBContext {
                 Timestamp ts = rs.getTimestamp("created_at");
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 String createdAt = (ts != null) ? sdf.format(ts) : null;
+                Integer branchId = null;
+                try {
+                    branchId = rs.getObject("branch_id") != null ? rs.getInt("branch_id") : null;
+                } catch (Exception e) {
+                    branchId = null;
+                }
                 return new UserAccount(
                         rs.getString("id"),
                         rs.getString("username"),
@@ -38,7 +47,8 @@ public class    UserAccountDAO extends DBContext {
                         rs.getString("role"),
                         rs.getString("status"),
                         createdAt,
-                        rs.getString("phonenumber")
+                        rs.getString("phonenumber"),
+                        branchId
                 );
             }
         } catch (SQLException e) {
@@ -137,6 +147,15 @@ public class    UserAccountDAO extends DBContext {
             ps.setString(1, email);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
+                Integer branchId = null;
+                try {
+                    branchId = rs.getObject("branch_id") != null ? rs.getInt("branch_id") : null;
+                } catch (Exception e) {
+                    branchId = null;
+                }
+                Timestamp ts = rs.getTimestamp("created_at");
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                String createdAt = (ts != null) ? sdf.format(ts) : null;
                 return new UserAccount(
                         rs.getString("id"),
                         rs.getString("username"),
@@ -145,7 +164,9 @@ public class    UserAccountDAO extends DBContext {
                         rs.getString("avatar_url"),
                         rs.getString("role"),
                         rs.getString("status"),
-                        rs.getString("created_at")
+                        createdAt,
+                        rs.getString("phonenumber"),
+                        branchId
                 );
             }
         } catch (SQLException e) {
@@ -174,6 +195,14 @@ public class    UserAccountDAO extends DBContext {
                 pss.setString(5, createdAt);
                 pss.setString(6, email);
                 pss.executeUpdate();
+
+                Integer branchId = null;
+                try {
+                    branchId = rs.getObject("branch_id") != null ? rs.getInt("branch_id") : null;
+                } catch (Exception e) {
+                    branchId = null;
+                }
+
                 return new UserAccount(
                         rs.getString("id"),
                         rs.getString("username"),
@@ -182,7 +211,9 @@ public class    UserAccountDAO extends DBContext {
                         rs.getString("avatar_url"),
                         rs.getString("role"),
                         rs.getString("status"),
-                        createdAt
+                        createdAt,
+                        rs.getString("phonenumber"),
+                        branchId
                 );
             } else {
                 // Thêm người dùng mới
@@ -207,10 +238,11 @@ public class    UserAccountDAO extends DBContext {
                 ps.setString(7, "Active"); //dat mac dinh la active
                 ps.setTimestamp(8, new Timestamp(System.currentTimeMillis()));
                 ps.executeUpdate();
+                // Vì vừa insert nên branchId sẽ là null cho user mới (customer)
                 Timestamp ts = rs.getTimestamp("created_at");
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 String createdAt = (ts != null) ? sdf.format(ts) : null;// doc tu database
-                return new UserAccount(newId, name, "123", email, avatar_url, "Customer", "Active", createdAt);
+                return new UserAccount(newId, name, "123", email, avatar_url, "Customer", "Active", createdAt, null, null);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -225,16 +257,26 @@ public class    UserAccountDAO extends DBContext {
             ps.setString(1, id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
+                Integer branchId = null;
+                try {
+                    branchId = rs.getObject("branch_id") != null ? rs.getInt("branch_id") : null;
+                } catch (Exception e) {
+                    branchId = null;
+                }
+                Timestamp ts = rs.getTimestamp("created_at");
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                String createdAt = (ts != null) ? sdf.format(ts) : null;
                 return new UserAccount(
                         rs.getString("id"),
                         rs.getString("username"),
                         rs.getString("password"),
                         rs.getString("email"),
                         rs.getString("avatar_url"),
-                        rs.getString("phone_number"),
                         rs.getString("role"),
                         rs.getString("status"),
-                        rs.getString("created_at")
+                        createdAt,
+                        rs.getString("phonenumber"),
+                        branchId
                 );
             }
         } catch (SQLException e) {
@@ -244,7 +286,7 @@ public class    UserAccountDAO extends DBContext {
     }
 
     public boolean updateUserInfo(String userId, String username, String email, String phoneNumber, String avatarUrl) {
-        String sql = "UPDATE UserAccount SET username = ?, email = ?, phone_number = ?, avatar_url = ? WHERE id = ?";
+        String sql = "UPDATE UserAccount SET username = ?, email = ?, phonenumber = ?, avatar_url = ? WHERE id = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, username);
@@ -261,6 +303,21 @@ public class    UserAccountDAO extends DBContext {
         }
     }
 
+    public boolean updateEmail(String userId, String email) {
+        String sql = "UPDATE UserAccount SET email = ? WHERE id = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, email);
+            ps.setString(2, userId);
+
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public UserAccount getHotelOwner() {
         String sql = "SELECT TOP 1 * FROM UserAccount WHERE role = 'HotelOwner' AND status = 'Active'";
         try {
@@ -268,10 +325,15 @@ public class    UserAccountDAO extends DBContext {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
+                Integer branchId = null;
+                try {
+                    branchId = rs.getObject("branch_id") != null ? rs.getInt("branch_id") : null;
+                } catch (Exception e) {
+                    branchId = null;
+                }
                 Timestamp ts = rs.getTimestamp("created_at");
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 String createdAt = (ts != null) ? sdf.format(ts) : null;
-
                 return new UserAccount(
                         rs.getString("id"),
                         rs.getString("username"),
@@ -280,7 +342,9 @@ public class    UserAccountDAO extends DBContext {
                         rs.getString("avatar_url"),
                         rs.getString("role"),
                         rs.getString("status"),
-                        createdAt
+                        createdAt,
+                        rs.getString("phonenumber"),
+                        branchId
                 );
             }
         } catch (SQLException e) {
@@ -298,6 +362,15 @@ public class    UserAccountDAO extends DBContext {
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
+                Integer branchId = null;
+                try {
+                    branchId = rs.getObject("branch_id") != null ? rs.getInt("branch_id") : null;
+                } catch (Exception e) {
+                    branchId = null;
+                }
+                Timestamp ts = rs.getTimestamp("created_at");
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                String createdAt = (ts != null) ? sdf.format(ts) : null;
                 UserAccount staff = new UserAccount(
                         rs.getString("id"),
                         rs.getString("username"),
@@ -306,8 +379,9 @@ public class    UserAccountDAO extends DBContext {
                         rs.getString("avatar_url"),
                         rs.getString("role"),
                         rs.getString("status"),
-                        rs.getString("created_at"),
-                        rs.getString("phonenumber")
+                        createdAt,
+                        rs.getString("phonenumber"),
+                        branchId
                 );
                 staffList.add(staff);
             }
@@ -335,18 +409,225 @@ public class    UserAccountDAO extends DBContext {
         return false;
     }
 
-    public boolean updatePassword(String email, String password){
-        String sql="update UserAccount set password = ? where email = ?";
-        try{
+    public boolean updatePassword(String email, String password) {
+        String sql = "update UserAccount set password = ? where email = ?";
+        try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, password);
             ps.setString(2, email);
             int affectedRows = ps.executeUpdate();
             return affectedRows > 0;
-            
-        }catch(SQLException e){
+
+        } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
     }
+
+    public boolean isFieldExists(String fieldName, String value, String excludeId) {
+        String sql = "SELECT 1 FROM UserAccount WHERE " + fieldName + " = ?" + (excludeId != null ? " AND id != ?" : "");
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, value);
+            if (excludeId != null) {
+                ps.setString(2, excludeId);
+            }
+             ResultSet rs = ps.executeQuery();
+            return rs.next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
+    public UserAccount getUserByUserName(String username) {
+        String sql = "select * from UserAccount where username = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, username);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+              return new UserAccount(
+                        rs.getString("id"),
+                        rs.getString("username"),
+                        rs.getString("password"),
+                        rs.getString("email"),
+                        rs.getString("avatar_url"),
+                        rs.getString("role"),
+                        rs.getString("status"),
+                        rs.getString("created_at"),
+                        rs.getString("phonenumber")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    //lay thong tin khach hang
+    public UserAccount getUserInfoById(String id) {
+        String sql = "SELECT * FROM UserAccount WHERE id = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                Integer branchId = null;
+                try {
+                    branchId = rs.getObject("branch_id") != null ? rs.getInt("branch_id") : null;
+                } catch (Exception e) {
+                    branchId = null;
+                }
+                Timestamp ts = rs.getTimestamp("created_at");
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                String createdAt = (ts != null) ? sdf.format(ts) : null;
+                return new UserAccount(
+                        rs.getString("id"),
+                        rs.getString("username"),
+                        rs.getString("password"),
+                        rs.getString("email"),
+                        rs.getString("avatar_url"),
+                        rs.getString("role"),
+                        rs.getString("status"),
+                        createdAt,
+                        rs.getString("phonenumber"),
+                        branchId
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    // Lấy staff theo ID (nếu cần xác thực staff)
+    public UserAccount getStaffById(String id) {
+        String sql = "SELECT * FROM UserAccount WHERE id = ? AND role = 'Staff'";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return extractUserAccount(rs);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    // Hàm tiện ích mapping ResultSet về UserAccount
+    private UserAccount extractUserAccount(ResultSet rs) throws SQLException {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String createdAtStr = null;
+        Timestamp ts = rs.getTimestamp("created_at");
+        if (ts != null) {
+            createdAtStr = sdf.format(ts);
+        }
+        Integer branchId = rs.getObject("branch_id") != null ? rs.getInt("branch_id") : null;
+        return new UserAccount(
+                rs.getString("id"),
+                rs.getString("username"),
+                rs.getString("password"),
+                rs.getString("email"),
+                rs.getString("avatar_url"),
+                rs.getString("role"),
+                rs.getString("status"),
+                createdAtStr,
+                rs.getString("phonenumber"),
+                branchId
+        );
+    }
+    
+    // Lấy User bằng phone (ưu tiên số điện thoại)
+    public UserAccount getUserByPhone(String phone) {
+        String sql = "SELECT * FROM UserAccount WHERE phonenumber = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, phone);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return extractUserAccount(rs);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public UserAccount getUserByEmailOrPhone(String keyword) {
+        String sql = "SELECT * FROM UserAccount WHERE email = ? OR phonenumber = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, keyword);
+            ps.setString(2, keyword);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return extractUserAccount(rs);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    // Tìm user theo id
+    public UserAccount findById(String id) {
+        String sql = "SELECT * FROM UserAccount WHERE id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return extractUserAccount(rs);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    public boolean isUsernameExist(String username) {
+        String sql = "SELECT 1 FROM UserAccount WHERE username = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, username);
+            ResultSet rs = ps.executeQuery();
+            return rs.next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    // hoang create
+    public boolean checkPassword(String username, String password) {
+        String sql = "SELECT 1 FROM UserAccount WHERE username = ? AND password = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, username);
+            ps.setString(2, password);
+            ResultSet rs = ps.executeQuery();
+
+            return rs.next(); // Trả về true nếu tìm thấy dòng khớp
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    // hoang create
+    public boolean updatePassword1(String username, String newPassword) {
+        String sql = "UPDATE UserAccount SET password = ? WHERE username = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, newPassword);
+            ps.setString(2, username);
+            int rowsUpdated = ps.executeUpdate();
+            return rowsUpdated > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 }

@@ -1,14 +1,10 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package Controller;
 
 import Dal.UserAccountDAO;
+import Model.UserAccount;
 import Utility.EmailUtility;
 import Utility.PasswordUtils;
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -17,10 +13,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.Random;
 
-/**
- *
- * @author hungk
- */
 @WebServlet(name = "VerifyEmailServlet", urlPatterns = {"/verifyemail"})
 public class VerifyEmailServlet extends HttpServlet {
 
@@ -32,6 +24,9 @@ public class VerifyEmailServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        // Không dùng GET cho verify email
+        response.sendRedirect("login.jsp");
+
     }
 
     @Override
@@ -39,6 +34,7 @@ public class VerifyEmailServlet extends HttpServlet {
             throws ServletException, IOException {
         String inputCode = request.getParameter("code");
         String action = request.getParameter("action");
+
         if (action != null && action.equals("resend")) {
             sendVerificationCode(request, response);
             return;
@@ -83,7 +79,6 @@ public class VerifyEmailServlet extends HttpServlet {
                 setSessionMessage(session, "Register successfully!", "success");
                 response.sendRedirect("./login.jsp");
             }
-
         } else {
             setSessionMessage(session, "The verification code is incorrect!", "error");
             response.sendRedirect("./verifyEmail.jsp");
@@ -118,4 +113,25 @@ public class VerifyEmailServlet extends HttpServlet {
         response.sendRedirect("verifyEmail.jsp");
     }
 
+        try {
+            // Gửi email xác nhận
+            EmailUtility.sendEmail(email, "Verify your email to register", verificationCode);
+        } catch (Exception e) {
+            e.printStackTrace();
+            setSessionMessage(session, "Unable to send email, please check your email", "error");
+            response.sendRedirect("register.jsp");
+            return;
+        }
+           // Get staff from session to get branchId
+        UserAccount staff = (UserAccount) request.getSession().getAttribute("user");
+        Integer branchId = (staff != null) ? staff.getBranchId() : null;
+
+        // Lưu thông tin xác nhận vào session
+        session.setAttribute("duration", duration);
+        session.setAttribute("expiryTime", expiryTime);
+        session.setAttribute("authCode", verificationCode);
+
+        // Điều hướng đến trang xác minh
+        response.sendRedirect("verifyEmail.jsp");
+    }
 }
