@@ -112,26 +112,4 @@ public class VerifyEmailServlet extends HttpServlet {
         // Điều hướng đến trang xác minh
         response.sendRedirect("verifyEmail.jsp");
     }
-
-        try {
-            // Gửi email xác nhận
-            EmailUtility.sendEmail(email, "Verify your email to register", verificationCode);
-        } catch (Exception e) {
-            e.printStackTrace();
-            setSessionMessage(session, "Unable to send email, please check your email", "error");
-            response.sendRedirect("register.jsp");
-            return;
-        }
-           // Get staff from session to get branchId
-        UserAccount staff = (UserAccount) request.getSession().getAttribute("user");
-        Integer branchId = (staff != null) ? staff.getBranchId() : null;
-
-        // Lưu thông tin xác nhận vào session
-        session.setAttribute("duration", duration);
-        session.setAttribute("expiryTime", expiryTime);
-        session.setAttribute("authCode", verificationCode);
-
-        // Điều hướng đến trang xác minh
-        response.sendRedirect("verifyEmail.jsp");
-    }
 }

@@ -107,7 +107,6 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-
     throws ServletException, IOException {
        // Xử lý đăng nhập bằng username/password
        String username = request.getParameter("username");
@@ -132,34 +131,5 @@ public class LoginServlet extends HttpServlet {
            request.setAttribute("error", "Invalid credentials or account banned");
            request.getRequestDispatcher("login.jsp").forward(request, response);
        }
-    }
-
-
-            // Sửa tại đây: set userRole và branchId cho staff
-            String role = user.getRole();
-            if ("admin".equalsIgnoreCase(role)) {
-                session.setAttribute("userRole", "admin");
-                response.sendRedirect("admindashboard.jsp");
-            } else if ("Customer".equalsIgnoreCase(role)) {
-                session.setAttribute("userRole", "Customer");
-                response.sendRedirect("homepage");
-            } else if ("staff".equalsIgnoreCase(role)) {
-                session.setAttribute("userRole", "staff");
-                session.setAttribute("branchId", user.getBranchId());
-                // Set branchName cho staff
-                if (user.getBranchId() != null) {
-                    HotelBranchDAO branchDAO = new HotelBranchDAO();
-                    String branchName = branchDAO.getBranchNameById(user.getBranchId());
-                    session.setAttribute("branchName", branchName);
-                }
-                response.sendRedirect("staff-dashboard.jsp");
-            } else {
-                session.setAttribute("userRole", role);
-                response.sendRedirect("homepage");
-            }
-        } else {
-            request.setAttribute("error", "Invalid credentials or account banned");
-            request.getRequestDispatcher("login.jsp").forward(request, response);
-        }
     }
 }

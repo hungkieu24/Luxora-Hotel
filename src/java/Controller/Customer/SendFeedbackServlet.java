@@ -139,8 +139,8 @@ public class SendFeedbackServlet extends HttpServlet {
         String uploadPath = pathHost.replace("build\\", "") + UPLOAD_DIR;
         String uploadPath2 = pathHost + UPLOAD_DIR;
 
-        List<String> uploadedFiles = uploader.uploadImages(request, "images", uploadPath);
-        List<String> uploadedFiles2 = uploader.uploadImages(request, "images", uploadPath2);
+        uploader.uploadImages(request, "images", uploadPath);
+        uploader.uploadImages(request, "images", uploadPath2);
         //Upload anh
 
         Feedback feedback = new Feedback(user.getId(), bk.getId(), rating, comment, UPLOAD_DIR, createdAt, "Visible", "None");

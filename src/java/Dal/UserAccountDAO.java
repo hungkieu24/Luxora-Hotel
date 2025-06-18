@@ -585,19 +585,6 @@ public class UserAccountDAO extends DBContext {
         }
         return null;
     }
-    
-    public boolean isUsernameExist(String username) {
-        String sql = "SELECT 1 FROM UserAccount WHERE username = ?";
-        try {
-            PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setString(1, username);
-            ResultSet rs = ps.executeQuery();
-            return rs.next();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
 
     // hoang create
     public boolean checkPassword(String username, String password) {
