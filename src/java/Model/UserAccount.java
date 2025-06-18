@@ -1,15 +1,11 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Model;
-
 
 /**
  *
  * @author thien
  */
 public class UserAccount {
+
     private String id;
     private String username;
     private String password;
@@ -18,7 +14,10 @@ public class UserAccount {
     private String role;
     private String status;
     private String create_at;
-   private String phonenumber;
+    private String phonenumber;
+    // Thêm thuộc tính branchId cho staff
+    private Integer branchId;
+    private String branchName;
 
     public UserAccount() {
     }
@@ -46,6 +45,28 @@ public class UserAccount {
         this.phonenumber = phonenumber;
     }
 
+    // Thêm constructor mới có branchId
+    public UserAccount(String id, String username, String password, String email, String avatar_url, String role, String status, String create_at, String phonenumber, Integer branchId) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.avatar_url = avatar_url;
+        this.role = role;
+        this.status = status;
+        this.create_at = create_at;
+        this.phonenumber = phonenumber;
+        this.branchId = branchId;
+    }
+
+    public String getBranchName() {
+        return branchName;
+    }
+
+    public void setBranchName(String branchName) {
+        this.branchName = branchName;
+    }
+
     public String getId() {
         return id;
     }
@@ -69,7 +90,6 @@ public class UserAccount {
     public void setPassword(String password) {
         this.password = password;
     }
-    
 
     public String getEmail() {
         return email;
@@ -119,9 +139,17 @@ public class UserAccount {
         this.phonenumber = phonenumber;
     }
 
+    // Getter và Setter cho branchId
+    public Integer getBranchId() {
+        return branchId;
+    }
+
+    public void setBranchId(Integer branchId) {
+        this.branchId = branchId;
+    }
+
     @Override
     public String toString() {
-        return "UserAccount{" + "id=" + id + ", username=" + username + ", password=" + password + ", email=" + email + ", avatar_url=" + avatar_url + ", role=" + role + ", status=" + status + ", create_at=" + create_at + ", phonenumber=" + phonenumber + '}';
+        return "UserAccount{" + "id=" + id + ", username=" + username + ", password=" + password + ", email=" + email + ", avatar_url=" + avatar_url + ", role=" + role + ", status=" + status + ", create_at=" + create_at + ", phonenumber=" + phonenumber + ", branchId=" + branchId + '}';
     }
-    
 }

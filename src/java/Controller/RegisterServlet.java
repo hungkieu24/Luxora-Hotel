@@ -4,24 +4,19 @@
  */
 package Controller;
 
-import static Controller.LoginServlet.CLIENT_ID;
-import static Controller.LoginServlet.CLIENT_SECRET;
-import static Controller.LoginServlet.GRANT_TYPE;
-import static Controller.LoginServlet.LINK_GET_TOKEN;
-import static Controller.LoginServlet.REDIRECT_URI;
 import Dal.UserAccountDAO;
 import Model.UserAccount;
 import Utility.EmailUtility;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.util.Random;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
@@ -45,46 +40,11 @@ public class RegisterServlet extends HttpServlet {
 
     private static final String GOOGLE_GRANT_TYPE = "authorization_code";
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet RegisterServlet</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet RegisterServlet at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
-    }
-
     private void setSessionMessage(HttpSession session, String message, String type) {
         session.setAttribute("message", message);
         session.setAttribute("messageType", type);
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -103,7 +63,7 @@ public class RegisterServlet extends HttpServlet {
             HttpSession session = request.getSession();
             UserAccount user = userDAO.getUserByEmail(emailGG);
             session.setAttribute("user", user);
-            response.sendRedirect("./homepage");
+            response.sendRedirect("homepage");
         } else {
             request.setAttribute("error", "Google login failed. Please try again.");
             request.getRequestDispatcher("register.jsp").forward(request, response);
@@ -112,7 +72,7 @@ public class RegisterServlet extends HttpServlet {
 
     public static String getToken(String code) throws ClientProtocolException, IOException {
         // Call API to get token
-            String response = Request.Post(GOOGLE_LINK_GET_TOKEN)
+        String response = Request.Post(GOOGLE_LINK_GET_TOKEN)
                 .bodyForm(Form.form()
                         .add("client_id", GOOGLE_CLIENT_ID)
                         .add("client_secret", GOOGLE_CLIENT_SECRET)
@@ -131,59 +91,77 @@ public class RegisterServlet extends HttpServlet {
         return new Gson().fromJson(response, JsonObject.class);
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+           // Get staff from session to get branchId
+        UserAccount staff = (UserAccount) request.getSession().getAttribute("user");
+        Integer branchId = (staff != null) ? staff.getBranchId() : null;
+
         HttpSession session = request.getSession();
         String email = request.getParameter("email");
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         String phone = request.getParameter("phone");
 
-        if (email == null || username == null || password == null || phone == null) {
-            setSessionMessage(session, "Please fill in all information to register!", "error");
-            response.sendRedirect("./register.jsp");
+        boolean isValidRegistration = isValidRegistration(email, username, password, request);
+
+        if (!isValidRegistration) {
+            response.sendRedirect("register.jsp");
             return;
         }
 
         // Sinh mã xác nhận
-        String verificationCode = String.valueOf((int) (Math.random() * 900000 + 100000));
+        String verificationCode = String.format("%06d", new Random().nextInt(1000000));
+        int duration = 1 * 60; // 3 phut(180s)
+        long expiryTime = System.currentTimeMillis() + duration * 1000;
 
         // Gửi email
         try {
             EmailUtility.sendEmail(email, "Verify your email to register", verificationCode);
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("error", "Unable to send email");
-            request.getRequestDispatcher("register.jsp").forward(request, response);
+            setSessionMessage(session, "Unable to send email, please check your email", "error");
+            response.sendRedirect("register.jsp");
             return;
         }
 
         // Lưu thông tin tạm vào session
+        session.setAttribute("duration", duration);   
+        session.setAttribute("expiryTime", expiryTime);
         session.setAttribute("authCode", verificationCode);
         session.setAttribute("username", username);
         session.setAttribute("email", email);
         session.setAttribute("password", password);
         session.setAttribute("phone", phone);
-        response.sendRedirect("verify.jsp");
+        response.sendRedirect("verifyEmail.jsp");
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
+    public boolean isValidRegistration(String email, String username, String password, HttpServletRequest request) {
+        HttpSession session = request.getSession();
 
+        // Regex pattern
+        String letterRegex = ".*[a-zA-Z].*";
+        String digitRegex = ".*[0-9].*";
+
+        if (!password.matches(letterRegex) || !password.matches(digitRegex)) {
+            setSessionMessage(session, "Password must include at least one letter, one digit!", "error");
+            return false;
+        }
+
+        // Kiểm tra email và username đã tồn tại chưa
+        UserAccountDAO accountDAO = new UserAccountDAO();
+        if (accountDAO.isEmailExist(email)) {
+            setSessionMessage(session, "Email already exists!", "error");
+            return false;
+        }
+
+        if (accountDAO.isUsernameExist(username)) {
+            setSessionMessage(session, "Username already exists!", "error");
+            return false;
+        }
+
+        // Nếu qua hết thì hợp lệ
+        return true;
+    }
 }

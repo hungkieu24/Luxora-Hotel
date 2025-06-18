@@ -35,7 +35,8 @@ public class ViewUserInfoServlet extends HttpServlet {
             response.sendRedirect("login.jsp");
             return;
         }
-
+        
+        
         
         String userId = request.getParameter("userId");
         if (userId != null && !userId.trim().isEmpty()) {

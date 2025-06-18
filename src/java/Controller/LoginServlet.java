@@ -1,8 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
-package Controller;
+    package Controller;
 
 import java.io.IOException;
 
@@ -12,6 +8,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import Dal.UserAccountDAO;
+import Dal.HotelBranchDAO;
 import Model.UserAccount;
 import jakarta.servlet.http.HttpSession;
 
@@ -21,10 +18,6 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Form;
 
-/**
- *
- * @author thien
- */
 @WebServlet(name = "LoginServlet", urlPatterns = {"/login"})
 public class LoginServlet extends HttpServlet {
 
@@ -38,7 +31,7 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-            // Xử lý logout nếu action=logout
+        // Xử lý logout nếu action=logout
         String action = request.getParameter("action");
         if ("logout".equals(action)) {
             HttpSession session = request.getSession(false);
@@ -61,18 +54,29 @@ public class LoginServlet extends HttpServlet {
             // save or update user in database
             UserAccountDAO userDAO = new UserAccountDAO();
             UserAccount user = userDAO.saveUserToDatabase(email, name, avatar_url);
+            
             // get user to login
             UserAccount user1 = userDAO.getUserByEmail(email);
             if (user1 != null && user1.getStatus().equals("Active")) {
                 HttpSession session = request.getSession();
                 session.setAttribute("user", user1);
+                // Optional: set userRole for social login if needed
+                session.setAttribute("userRole", user1.getRole());
+                if ("staff".equalsIgnoreCase(user1.getRole())) {
+                    session.setAttribute("branchId", user1.getBranchId());
+                    // Set branchName cho staff
+                    if (user1.getBranchId() != null) {
+                        HotelBranchDAO branchDAO = new HotelBranchDAO();
+                        String branchName = branchDAO.getBranchNameById(user1.getBranchId());
+                        session.setAttribute("branchName", branchName);
+                    }
+                }
                 response.sendRedirect("homepage");
             }
         } catch (IOException e) {
             request.setAttribute("error", "Google login failed. Please try again.");
             request.getRequestDispatcher("login.jsp").forward(request, response);
         }
-
     }
 
     public static String getToken(String code) throws ClientProtocolException, IOException {
@@ -107,20 +111,32 @@ public class LoginServlet extends HttpServlet {
         if (user != null && user.getStatus().equals("Active")) {
             HttpSession session = request.getSession();
             session.setAttribute("user", user);
-            if (user.getRole().equals("admin")) {
-                response.sendRedirect("admindashboard.jsp");// phản hồi lại trang page mặc định khi đăng nhập vào của admin
-            } // tương tự như các useraccount còn lại 
-            else if (user.getRole().equals("Customer")) {
+
+            // Sửa tại đây: set userRole và branchId cho staff
+            String role = user.getRole();
+            if ("admin".equalsIgnoreCase(role)) {
+                session.setAttribute("userRole", "admin");
+                response.sendRedirect("admindashboard.jsp");
+            } else if ("Customer".equalsIgnoreCase(role)) {
+                session.setAttribute("userRole", "Customer");
                 response.sendRedirect("homepage");
-            } else if (user.getRole().equalsIgnoreCase("staff")) {
+            } else if ("staff".equalsIgnoreCase(role)) {
+                session.setAttribute("userRole", "staff");
+                session.setAttribute("branchId", user.getBranchId());
+                // Set branchName cho staff
+                if (user.getBranchId() != null) {
+                    HotelBranchDAO branchDAO = new HotelBranchDAO();
+                    String branchName = branchDAO.getBranchNameById(user.getBranchId());
+                    session.setAttribute("branchName", branchName);
+                }
                 response.sendRedirect("staff-dashboard.jsp");
             } else {
-                response.sendRedirect("homepage");// phản hồi lại trang home mặc định khi đăng nhập vào của customer
+                session.setAttribute("userRole", role);
+                response.sendRedirect("homepage");
             }
         } else {
             request.setAttribute("error", "Invalid credentials or account banned");
             request.getRequestDispatcher("login.jsp").forward(request, response);
         }
     }
-
 }

@@ -1,12 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
-
 package Controller.Staff;
 
+import Dal.HotelBranchDAO;
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -14,24 +9,43 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-/**
- *
- * @author Admin
- */
-@WebServlet(name="StaffDashboardServlet", urlPatterns={"/staff-dashboard"})
+@WebServlet(name = "StaffDashboardServlet", urlPatterns = {"/staff-dashboard"})
 public class StaffDashboardServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
-        
-         // --- VALIDATION: Check staff session/role ---
+            throws ServletException, IOException {
+
+        // --- VALIDATION: Check staff session/role ---
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("userRole") == null
-                || !"staff".equals(session.getAttribute("userRole"))) {
+        Object roleObj = (session != null) ? session.getAttribute("userRole") : null;
+        String role = (roleObj != null) ? roleObj.toString() : "";
+
+        if (session == null || role.isEmpty() || !"staff".equalsIgnoreCase(role)) {
             response.sendRedirect("login.jsp");
             return;
         }
+        
+         // --- Đảm bảo branchName luôn có trong session ---
+        if (session.getAttribute("branchName") == null) {
+            Object branchIdObj = session.getAttribute("branchId");
+            Integer branchId = null;
+            if (branchIdObj instanceof Integer) {
+                branchId = (Integer) branchIdObj;
+            } else if (branchIdObj instanceof String) {
+                try {
+                    branchId = Integer.parseInt((String) branchIdObj);
+                } catch (NumberFormatException e) {
+                    branchId = null;
+                }
+            }
+            if (branchId != null) {
+                HotelBranchDAO branchDAO = new HotelBranchDAO();
+                String branchName = branchDAO.getBranchNameById(branchId);
+                session.setAttribute("branchName", branchName);
+            }
+        }
+        
         request.getRequestDispatcher("staff-dashboard.jsp").forward(request, response);
     }
 }
