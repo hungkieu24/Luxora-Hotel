@@ -26,6 +26,7 @@ public class VerifyEmailServlet extends HttpServlet {
             throws ServletException, IOException {
         // Không dùng GET cho verify email
         response.sendRedirect("login.jsp");
+
     }
 
     @Override
@@ -33,13 +34,12 @@ public class VerifyEmailServlet extends HttpServlet {
             throws ServletException, IOException {
         String inputCode = request.getParameter("code");
         String action = request.getParameter("action");
-        HttpSession session = request.getSession();
 
-        // Nếu là yêu cầu gửi lại mã xác nhận
         if (action != null && action.equals("resend")) {
             sendVerificationCode(request, response);
             return;
         }
+        HttpSession session = request.getSession();
 
         // Kiểm tra các trường cần thiết
         String username = (String) session.getAttribute("username");
@@ -48,7 +48,7 @@ public class VerifyEmailServlet extends HttpServlet {
         String email = (String) session.getAttribute("email");
         if (email == null || username == null || rawPassword == null || phone == null) {
             setSessionMessage(session, "You need to register", "error");
-            response.sendRedirect("register.jsp");
+            response.sendRedirect("./register.jsp");
             return;
         }
 
@@ -59,13 +59,13 @@ public class VerifyEmailServlet extends HttpServlet {
 
         if (expiryTime == null || sessionCode == null) {
             setSessionMessage(session, "You need to register", "error");
-            response.sendRedirect("register.jsp");
+            response.sendRedirect("./register.jsp");
             return;
         }
 
         if (currentTime > expiryTime) {
             setSessionMessage(session, "The verification code has expired. Please request a new code.", "error");
-            response.sendRedirect("verifyEmail.jsp");
+            response.sendRedirect("./verifyEmail.jsp");
             return;
         }
 
@@ -77,15 +77,11 @@ public class VerifyEmailServlet extends HttpServlet {
             boolean registered = uadao.register(username, hashedPassword, email, "img/avatar/avatar.jpg", phone);
             if (registered) {
                 setSessionMessage(session, "Register successfully!", "success");
-                // SAU KHI XÁC THỰC THÀNH CÔNG, CHUYỂN VỀ TRANG searchGuest.jsp
-                response.sendRedirect("searchGuest.jsp");
-            } else {
-                setSessionMessage(session, "Registration failed, please try again!", "error");
-                response.sendRedirect("register.jsp");
+                response.sendRedirect("./login.jsp");
             }
         } else {
             setSessionMessage(session, "The verification code is incorrect!", "error");
-            response.sendRedirect("verifyEmail.jsp");
+            response.sendRedirect("./verifyEmail.jsp");
         }
     }
 
@@ -97,6 +93,25 @@ public class VerifyEmailServlet extends HttpServlet {
         String verificationCode = String.format("%06d", new Random().nextInt(1000000));
         int duration = 3 * 60; // 3 phút (180 giây)
         long expiryTime = System.currentTimeMillis() + duration * 1000;
+
+        try {
+            // Gửi email xác nhận
+            EmailUtility.sendEmail(email, "Verify your email to register", verificationCode);
+        } catch (Exception e) {
+            e.printStackTrace();
+            setSessionMessage(session, "Unable to send email, please check your email", "error");
+            response.sendRedirect("./register.jsp");
+            return;
+        }
+
+        // Lưu thông tin xác nhận vào session
+        session.setAttribute("duration", duration);
+        session.setAttribute("expiryTime", expiryTime);
+        session.setAttribute("authCode", verificationCode);
+
+        // Điều hướng đến trang xác minh
+        response.sendRedirect("verifyEmail.jsp");
+    }
 
         try {
             // Gửi email xác nhận

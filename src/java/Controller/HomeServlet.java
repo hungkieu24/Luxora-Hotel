@@ -46,13 +46,10 @@ public class HomeServlet extends HttpServlet {
         
         RoomTypeDAO roomTypeDao = new RoomTypeDAO();
         FeedbackDAO feedbackDAO = new FeedbackDAO();
-        HotelBranchDAO branchDAO = new HotelBranchDAO();
         
-        List<HotelBranch> branchList = branchDAO.getAllHotelBranchesSimple();
         List<RoomType> roomTypeList = roomTypeDao.getAllRoomType();
         List<Feedback> feedbackList = feedbackDAO.getUniqueFiveStarFeedbacksFromCustomers();
         
-        request.setAttribute("branchList", branchList);
         request.setAttribute("feedbackList", feedbackList);
         request.setAttribute("roomTypeList", roomTypeList);
         request.getRequestDispatcher("./homepage.jsp").forward(request, response);

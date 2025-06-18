@@ -107,7 +107,7 @@ public class RegisterServlet extends HttpServlet {
         boolean isValidRegistration = isValidRegistration(email, username, password, request);
 
         if (!isValidRegistration) {
-            response.sendRedirect("register.jsp");
+            response.sendRedirect("./register.jsp");
             return;
         }
 
@@ -122,7 +122,8 @@ public class RegisterServlet extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
             setSessionMessage(session, "Unable to send email, please check your email", "error");
-            response.sendRedirect("register.jsp");
+
+            response.sendRedirect("./register.jsp");
             return;
         }
 

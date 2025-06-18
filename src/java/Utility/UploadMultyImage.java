@@ -20,10 +20,8 @@ import java.util.List;
  * @author hungk
  */
 public class UploadMultyImage {
-    public List<String> uploadImages(HttpServletRequest request, String inputName, String uploadFolderPath)
+    public void uploadImages(HttpServletRequest request, String inputName, String uploadFolderPath)
             throws ServletException, IOException {
-
-        List<String> uploadedFileNames = new ArrayList<>();
 
         File uploadDir = new File(uploadFolderPath);
         if (!uploadDir.exists()) {
@@ -47,11 +45,10 @@ public class UploadMultyImage {
 
                     File filePath = new File(uploadFolderPath + File.separator + fileName);
                     Files.copy(part.getInputStream(), filePath.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                    uploadedFileNames.add(fileName);
+    
                 }
             }
         }
 
-        return uploadedFileNames;
     }
 }

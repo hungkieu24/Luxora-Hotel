@@ -345,10 +345,14 @@ public class HotelBranchDAO extends DBcontext.DBContext {
     }
 
     public int getTotalHotelBranchAfterSearching(String keyword) {
-        String sql = "SELECT COUNT(*) FROM HotelBranch WHERE name LIKE ?";
+        String sql = "SELECT COUNT(*) FROM HotelBranch "
+                + "WHERE name LIKE ? OR address LIKE ? OR phone LIKE ? OR email LIKE ? OR owner_id LIKE ? OR manager_id LIKE ?";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, "%" + keyword + "%");
+            String wildcardKeyword = "%" + keyword + "%";
+            for (int i = 1; i <= 6; i++) {
+                stmt.setString(i, wildcardKeyword);
+            }
 
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -362,14 +366,19 @@ public class HotelBranchDAO extends DBcontext.DBContext {
         return 0;
     }
 
-    public List<HotelBranch> searchHotelBranchByName(String keyword, int page, int pageSize) {
+    public List<HotelBranch> searchHotelBranches(String keyword, int page, int pageSize) {
         List<HotelBranch> branchList = new ArrayList<>();
-        String sql = "SELECT * FROM HotelBranch WHERE name LIKE ? ORDER BY id OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+        String sql = "SELECT * FROM HotelBranch "
+                + "WHERE name LIKE ? OR address LIKE ? OR phone LIKE ? OR email LIKE ? OR owner_id LIKE ? OR manager_id LIKE ? "
+                + "ORDER BY id OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, "%" + keyword + "%");
-            stmt.setInt(2, (page - 1) * pageSize);
-            stmt.setInt(3, pageSize);
+            String wildcardKeyword = "%" + keyword + "%";
+            for (int i = 1; i <= 6; i++) {
+                stmt.setString(i, wildcardKeyword);
+            }
+            stmt.setInt(7, (page - 1) * pageSize);
+            stmt.setInt(8, pageSize);
 
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
@@ -407,5 +416,56 @@ public class HotelBranchDAO extends DBcontext.DBContext {
     }
     return "";
 }
+
+    public boolean isPhoneExists(String phone) {
+        String sql = "SELECT 1 FROM HotelBranch WHERE phone = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, phone);
+            ResultSet rs = ps.executeQuery();
+            return rs.next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean isEmailExists(String email) {
+        String sql = "SELECT 1 FROM HotelBranch WHERE email = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+            return rs.next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean isAddressExists(String address) {
+        String sql = "SELECT 1 FROM HotelBranch WHERE address = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, address);
+            ResultSet rs = ps.executeQuery();
+            return rs.next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean isFieldExists(String fieldName, String value, Integer excludeId) {
+        String sql = "SELECT 1 FROM HotelBranch WHERE " + fieldName + " = ?" + (excludeId != null ? " AND id != ?" : "");
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, value);
+            if (excludeId != null) {
+                ps.setInt(2, excludeId);
+            }
+            ResultSet rs = ps.executeQuery();
+            return rs.next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
 }

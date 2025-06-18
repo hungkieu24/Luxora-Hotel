@@ -267,6 +267,17 @@ Validator.maxValue = function (selector, max, message) {
     }
 }
 
+Validator.lengthRange = function (selector, min, max, message) {
+    return {
+        selector: selector,
+        test: function (value) {
+            if (value.length < min || value.length > max) {
+                return message || `Please enter between ${min} and ${max} characters.`;
+            }
+            return undefined; // Hợp lệ
+        }
+    }
+}
 
 Validator.isConfirmed = function (selector, getConfirmValue, message) {
     return {
@@ -295,3 +306,50 @@ Validator.isPhoneNumber = function (selector, message) {
         }
     }
 }
+
+Validator.isRequiredFile = function (selector, message) {
+    return {
+        selector: selector,
+        test: function () {
+            const input = document.querySelector(selector);
+            if (!input || !input.files || input.files.length === 0) {
+                return message || "Please select at least one file.";
+            }
+            return undefined;
+        }
+    };
+};
+
+Validator.isImageFile = function (selector, message) {
+    return {
+        selector: selector,
+        test: function () {
+            const input = document.querySelector(selector);
+            const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+
+            for (let i = 0; i < input.files.length; i++) {
+                if (!validTypes.includes(input.files[i].type)) {
+                    return message || 'File must be an image (.jpg, .png, .gif, .webp)';
+                }
+            }
+
+            return undefined;
+        }
+    };
+};
+
+Validator.maxFileCount = function (selector, maxCount, message) {
+    return {
+        selector: selector,
+        test: function () {
+            const input = document.querySelector(selector);
+            if (!input || !input.files) return undefined;
+
+            if (input.files.length > maxCount) {
+                return message || `Only up to ${maxCount} images can be uploaded.`;
+            }
+
+            return undefined;
+        }
+    };
+};
