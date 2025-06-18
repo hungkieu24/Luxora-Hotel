@@ -95,7 +95,7 @@ public class BookingDAO extends DBcontext.DBContext {
     }
 
     // Lấy danh sách booking theo userId và branch (nếu cần)
-    public List<Booking> getBookingsByUserIdAndBranch(String userId, int branchId) {
+    public List<Booking> getBookingsByUserIdAndBranch(String userId, int branchId) throws SQLException {
         List<Booking> list = new ArrayList<>();
         String sql = "SELECT b.*, u.username, "
                 + "STRING_AGG(rt.name, ', ') AS roomTypes "
@@ -132,12 +132,11 @@ public class BookingDAO extends DBcontext.DBContext {
                 b.setRooms(getRoomsByBookingIdAndBranch(b.getId(), branchId));
                 list.add(b);
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
+        return list;
     }
-    return bookings;
-}
 
 
     // Lấy booking theo bookingId, nhưng chỉ khi booking thuộc branchId

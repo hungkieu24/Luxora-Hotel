@@ -186,8 +186,6 @@ public class RoomDAO extends DBContext {
         }
     }
 
- 
-
     public List<Room> getRooms(String status, String roomTypeId, String search) {
         List<Room> rooms = new ArrayList<>();
         String sql = "SELECT r.id, r.room_number, r.branch_id, r.room_type_id, r.status, r.image_url, "
@@ -481,7 +479,7 @@ public class RoomDAO extends DBContext {
         }
         return branchId;
     }
-    
+
     // author : thien
     // Content: get all room by branch id
     public List<Room> getAllRoomByBranchId(int branchId, int page, int pageSize) {
@@ -582,7 +580,6 @@ public class RoomDAO extends DBContext {
             }
             stmt.setInt(index++, offset);
             stmt.setInt(index++, pageSize);
-            
 
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
@@ -619,6 +616,10 @@ public class RoomDAO extends DBContext {
             ps.setInt(1, roomId);
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
     // Đếm tổng số phòng theo tên loại phòng và branch
     public int countRoomsByRoomTypeNameAndBranch(String roomTypeNameKeyword, int branchId) {
@@ -708,7 +709,7 @@ public class RoomDAO extends DBContext {
         }
         return list;
     }
-    
+
     //
     public boolean updateRoomStatus(int roomId, String status) {
         String sql = "UPDATE Room SET status = ? WHERE id = ?";
@@ -832,4 +833,3 @@ public class RoomDAO extends DBContext {
         return 0;
     }
 }
-    
