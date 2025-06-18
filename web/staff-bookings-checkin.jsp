@@ -6,6 +6,8 @@
     List<Booking> bookings = (List<Booking>) request.getAttribute("bookings");
     String keyword = request.getAttribute("keyword") != null ? (String)request.getAttribute("keyword") : "";
     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+    int currentPage = request.getAttribute("currentPage") != null ? (Integer)request.getAttribute("currentPage") : 1;
+    int totalPage = request.getAttribute("totalPage") != null ? (Integer)request.getAttribute("totalPage") : 1;
 %>
 <!DOCTYPE html>
 <html>
@@ -14,6 +16,22 @@
     <title>Today's Bookings & Check-in/Check-out</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <style>
+        .pagination { margin: 20px 0 0 0; display: flex; justify-content: center; }
+        .pagination a, .pagination span {
+            margin: 0 4px;
+            padding: 6px 14px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            text-decoration: none;
+        }
+        .pagination .active, .pagination span[aria-current="page"] {
+            background: #0d6efd;
+            color: #fff;
+            font-weight: bold;
+            border-color: #0d6efd;
+        }
+    </style>
 </head>
 <body class="bg-light">
 <div class="container py-5">
@@ -56,6 +74,7 @@
                         <th>Check-out</th>
                         <th>Status</th>
                         <th>Action</th>
+                        <th>View</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -96,18 +115,59 @@
                                 <span class="text-muted">-</span>
                             <% } %>
                         </td>
+                        <td>
+                            <a href="view-user-info?userId=<%= b.getUserId() %>" class="btn btn-info btn-sm" title="View Customer Info">
+                                <i class="bi bi-eye"></i> View
+                            </a>
+                        </td>
                     </tr>
                 <%
                     }
                 } else {
                 %>
                 <tr>
-                    <td colspan="7" class="text-center text-muted">No bookings found for today.</td>
+                    <td colspan="8" class="text-center text-muted">No bookings found for today.</td>
                 </tr>
                 <% } %>
                 </tbody>
             </table>
         </div>
+    </div>
+
+    <!-- Pagination Bar -->
+    <div class="pagination">
+        <%
+            String queryStr = "";
+            if (keyword != null && !keyword.isEmpty()) {
+                queryStr += "&keyword=" + java.net.URLEncoder.encode(keyword, "UTF-8");
+            }
+            if (totalPage > 1) {
+                // Previous
+                if(currentPage > 1){
+        %>
+            <a href="staff-bookings-checkin?page=<%=currentPage-1%><%=queryStr%>">&laquo;</a>
+        <%
+                }
+                // Page numbers
+                for (int i = 1; i <= totalPage; i++) {
+                    if (i == currentPage) {
+        %>
+            <span class="active" aria-current="page"><%=i%></span>
+        <%
+                    } else {
+        %>
+            <a href="staff-bookings-checkin?page=<%=i%><%=queryStr%>"><%=i%></a>
+        <%
+                    }
+                }
+                // Next
+                if(currentPage < totalPage){
+        %>
+            <a href="staff-bookings-checkin?page=<%=currentPage+1%><%=queryStr%>">&raquo;</a>
+        <%
+                }
+            }
+        %>
     </div>
 </div>
 </body>
