@@ -246,6 +246,7 @@
                                         <p>Can you create new room</p>
                                 </div>
                             </c:if>
+                            
                             <!-- Thêm các phòng mẫu khác nếu cần -->
                         </div>
 

@@ -327,7 +327,9 @@ public class RoomDAO extends DBContext {
         }
         return branchId;
     }
-
+    
+    // author : thien
+    // Content: get all room by branch id
     public List<Room> getAllRoomByBranchId(int branchId, int page, int pageSize) {
         List<Room> rooms = new ArrayList<>();
         int offset = (page - 1) * pageSize;
@@ -390,7 +392,7 @@ public class RoomDAO extends DBContext {
         String sql = "SELECT r.id, r.room_number, r.branch_id, r.room_type_id, r.status, r.image_url, "
                 + "rt.id AS rt_id, rt.name AS rt_name, rt.description AS rt_description, "
                 + "rt.base_price, rt.capacity, rt.image_url AS rt_image_url "
-                + "FROM Room r JOIN RoomType rt ON r.room_type_id = rt.id WHERE r.branch_id = ?";
+                + "FROM Room r JOIN RoomType rt ON r.room_type_id = rt.id WHERE r.is_deleted = 0 and r.branch_id = ?";
         List<String> conditions = new ArrayList<>();
         if (status != null && !status.isEmpty()) {
             conditions.add("r.status = ?");
