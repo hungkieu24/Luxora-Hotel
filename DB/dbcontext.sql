@@ -28,6 +28,7 @@ CREATE TABLE UserAccount (
     created_at DATETIME DEFAULT GETDATE(),
     phonenumber VARCHAR(20),
     branch_id INT NULL,
+	last_login_at DATETIME NULL,
     is_deleted BIT DEFAULT 0
 );
 
@@ -355,13 +356,31 @@ GO
 -- Insert data in correct order to avoid foreign key violations
 
 -- 1. UserAccount (with branch_id = NULL initially)
-INSERT INTO UserAccount (id, username, password, fullname, email, login_type, avatar_url, role, status, created_at, phonenumber, branch_id, is_deleted) VALUES
-('U001', 'john_doe', 'hashed_password1', N'John Doe', 'john.doe@email.com', 'Local', 'https://example.com/avatar1.jpg', 'Customer', 'Active', GETDATE(), '1234567890', NULL, 0),
-('U002', 'jane_smith', 'hashed_password2', N'Jane Smith', 'jane.smith@email.com', 'Google', 'https://example.com/avatar2.jpg', 'Staff', 'Active', GETDATE(), '0987654321', NULL, 0),
-('U003', 'mike_manager', 'hashed_password3', N'Mike Johnson', 'mike.johnson@email.com', 'Local', 'https://example.com/avatar3.jpg', 'Manager', 'Active', GETDATE(), '5551234567', NULL, 0),
-('U004', 'anna_owner', 'hashed_password4', N'Anna Brown', 'anna.brown@email.com', 'Local', 'https://example.com/avatar4.jpg', 'HotelOwner', 'Active', GETDATE(), '5559876543', NULL, 0),
-('U005', 'admin_user', 'hashed_password5', N'Admin User', 'admin@email.com', 'Local', 'https://example.com/avatar5.jpg', 'Admin', 'Active', GETDATE(), '5551112222', NULL, 0);
-
+INSERT INTO UserAccount (
+    id, username, password, fullname, email, login_type,
+    avatar_url, role, status, created_at, phonenumber, branch_id, is_deleted, last_login_at
+) VALUES
+-- Active users with recent login times
+('U001', 'john_doe', 'hashed_password1', N'John Doe', 'john.doe@email.com', 'Local', 
+ 'https://example.com/avatar1.jpg', 'Customer', 'Active', GETDATE(), '1234567890', NULL, 0, DATEADD(HOUR, -2, GETDATE())), -- Logged in 2 hours ago
+('U002', 'jane_smith', 'hashed_password2', N'Jane Smith', 'jane.smith@email.com', 'Google', 
+ 'https://example.com/avatar2.jpg', 'Staff', 'Active', GETDATE(), '0987654321', NULL, 0, DATEADD(DAY, -1, GETDATE())), -- Logged in 1 day ago
+('U003', 'mike_manager', 'hashed_password3', N'Mike Johnson', 'mike.johnson@email.com', 'Local', 
+ 'https://example.com/avatar3.jpg', 'Manager', 'Active', GETDATE(), '5551234567', NULL, 0, DATEADD(HOUR, -5, GETDATE())), -- Logged in 5 hours ago
+('U004', 'anna_owner', 'hashed_password4', N'Anna Brown', 'anna.brown@email.com', 'Local', 
+ 'https://example.com/avatar4.jpg', 'HotelOwner', 'Active', GETDATE(), '5559876543', NULL, 0, DATEADD(DAY, -2, GETDATE())), -- Logged in 2 days ago
+('U005', 'admin_user', 'hashed_password5', N'Admin User', 'admin@email.com', 'Local', 
+ 'https://example.com/avatar5.jpg', 'Admin', 'Active', GETDATE(), '5551112222', NULL, 0, DATEADD(HOUR, -1, GETDATE())), -- Logged in 1 hour ago
+-- Inactive user, no recent login
+('U006', 'truongminhquan', 'pass123', N'Trương Minh Quân', 'quan.truong@example.com', 
+ 'Local', NULL, 'Customer', 'Inactive', GETDATE(), '0901000001', NULL, 0, NULL),
+-- Banned user, no recent login
+('U007', 'nguyenthuytrang', 'pass456', N'Nguyễn Thùy Trang', 'trang.nguyen@example.com', 
+ 'Local', NULL, 'Customer', 'Banned', GETDATE(), '0902000002', NULL, 0, NULL),
+-- Soft-deleted user, no recent login (status changed to 'Active' to satisfy CHECK constraint)
+('U008', 'phamducthinh', 'pass789', N'Phạm Đức Thịnh', 'thinh.pham@example.com', 
+ 'Local', NULL, 'Customer', 'Active', GETDATE(), '0903000003', NULL, 1, NULL);
+GO
 -- 2. HotelBranch
 INSERT INTO HotelBranch (name, address, phone, email, image_url, owner_id, manager_id, created_at, is_deleted) VALUES
 (N'Sunshine Hotel Hanoi', N'123 Tran Phu, Hanoi', '0241234567', 'hanoi@sunshinehotel.com', 'https://example.com/hotel1.jpg', 'U004', 'U003', GETDATE(), 0),
